@@ -43,8 +43,15 @@ class BukuKasController extends BaseController
 
     public function store()
     {
-        $sppgId    = session()->get('sppg_id') ?: 1;
+        $sppgId    = session()->get('sppg_id');
         $createdBy = session()->get('user_id');
+        
+        // Fallback: get sppg_id from user record if session is stale
+        if (!$sppgId && $createdBy) {
+            $user = (new \App\Models\UserModel())->find($createdBy);
+            $sppgId = $user['sppg_id'] ?? null;
+            if ($sppgId) session()->set('sppg_id', $sppgId);
+        }
         
         $tanggal    = $this->request->getPost('tanggal');
         $keterangan = $this->request->getPost('keterangan');
@@ -71,15 +78,17 @@ class BukuKasController extends BaseController
 
     public function report()
     {
-        $sppgId = session()->get('sppg_id') ?: 1;
+        $sppgId = session()->get('sppg_id');
         $start  = $this->request->getGet('start') ?: date('Y-m-d');
         $end    = $this->request->getGet('end') ?: $start;
 
-        $entries = $this->bukuKasModel->where('sppg_id', $sppgId)
-                                     ->where('tanggal >=', $start)
+        $builder = $this->bukuKasModel->where('tanggal >=', $start)
                                      ->where('tanggal <=', $end)
-                                     ->orderBy('tanggal', 'ASC')
-                                     ->findAll();
+                                     ->orderBy('tanggal', 'ASC');
+        if ($sppgId) {
+            $builder->where('sppg_id', $sppgId);
+        }
+        $entries = $builder->findAll();
 
         $data = [
             'title'   => 'Laporan Operasional',
@@ -94,15 +103,17 @@ class BukuKasController extends BaseController
 
     public function exportPdf()
     {
-        $sppgId = session()->get('sppg_id') ?: 1;
+        $sppgId = session()->get('sppg_id');
         $start  = $this->request->getGet('start');
         $end    = $this->request->getGet('end');
 
-        $entries = $this->bukuKasModel->where('sppg_id', $sppgId)
-                                     ->where('tanggal >=', $start)
+        $builder = $this->bukuKasModel->where('tanggal >=', $start)
                                      ->where('tanggal <=', $end)
-                                     ->orderBy('tanggal', 'ASC')
-                                     ->findAll();
+                                     ->orderBy('tanggal', 'ASC');
+        if ($sppgId) {
+            $builder->where('sppg_id', $sppgId);
+        }
+        $entries = $builder->findAll();
 
         $data = [
             'title'   => 'Laporan Buku Kas Operasional',
@@ -111,9 +122,9 @@ class BukuKasController extends BaseController
             'end'     => $end,
             'summary' => $this->bukuKasModel->getSummary($sppgId, $start, $end),
             'header'  => [
-                'nama_sppg' => session()->get('sppg_nama') ?? 'Dapur SPPG Bunar',
-                'alamat_sppg' => 'KP. BEJI No.001, RT.004, Bunar, Kec. Sukamulya, Kabupaten Tangerang, Banten',
-                'kepala_sppg' => 'M. Rizki Waluya, S.P.W.K'
+                'nama_sppg' => session()->get('sppg_nama') ?? 'Dapur SPPG',
+                'alamat_sppg' => session()->get('sppg_alamat') ?? 'Alamat belum diatur',
+                'kepala_sppg' => 'PIC SPPG'
             ]
         ];
 
@@ -122,15 +133,17 @@ class BukuKasController extends BaseController
 
     public function exportExcel()
     {
-        $sppgId = session()->get('sppg_id') ?: 1;
+        $sppgId = session()->get('sppg_id');
         $start  = $this->request->getGet('start');
         $end    = $this->request->getGet('end');
 
-        $entries = $this->bukuKasModel->where('sppg_id', $sppgId)
-                                     ->where('tanggal >=', $start)
+        $builder = $this->bukuKasModel->where('tanggal >=', $start)
                                      ->where('tanggal <=', $end)
-                                     ->orderBy('tanggal', 'ASC')
-                                     ->findAll();
+                                     ->orderBy('tanggal', 'ASC');
+        if ($sppgId) {
+            $builder->where('sppg_id', $sppgId);
+        }
+        $entries = $builder->findAll();
 
         $filename = "Laporan_Operasional_".date('Ymd', strtotime($start))."_".date('Ymd', strtotime($end)).".csv";
         
@@ -169,7 +182,17 @@ class BukuKasController extends BaseController
     public function delete($id)
     {
         $sppgId = session()->get('sppg_id');
-        $this->bukuKasModel->where(['id' => $id, 'sppg_id' => $sppgId])->delete();
-        return redirect()->back()->with('success', 'Data dihapus');
+        $entry = $this->bukuKasModel->find($id);
+        
+        if (!$entry) {
+            return redirect()->back()->with('error', 'Data tidak ditemukan.');
+        }
+        
+        if ($sppgId && $entry['sppg_id'] != $sppgId) {
+            return redirect()->back()->with('error', 'Anda tidak memiliki akses untuk menghapus data ini.');
+        }
+        
+        $this->bukuKasModel->delete($id);
+        return redirect()->back()->with('success', 'Data berhasil dihapus.');
     }
 }

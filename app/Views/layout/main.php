@@ -657,6 +657,17 @@
                     <i class="bi bi-receipt-cutoff"></i> Purchase Order
                 </a>
             <?php endif; ?>
+
+            <?php if ($role === 'pic'): ?>
+                <div class="nav-label">General Affairs</div>
+                <a href="<?= base_url('po') ?>" class="nav-link <?= str_starts_with(uri_string(), 'po') ? 'active' : '' ?>">
+                    <i class="bi bi-receipt-cutoff"></i> Purchase Order
+                </a>
+                <div class="nav-label">Pengaturan Dapur</div>
+                <a href="<?= site_url('pic/settings') ?>" class="nav-link <?= uri_string() === 'pic/settings' ? 'active' : '' ?>">
+                    <i class="bi bi-geo-alt-fill"></i> Alamat SPPG
+                </a>
+            <?php endif; ?>
         </nav>
 
         <div class="sidebar-user">

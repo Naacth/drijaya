@@ -118,8 +118,8 @@ class AbsensiController extends BaseController
             'absensi' => $absensi,
             'items'   => $this->itemModel->getByAbsensi($id),
             'header'  => [
-                'nama_sppg' => session()->get('sppg_nama') ?? 'Dapur SPPG Bunar',
-                'alamat_sppg' => 'KP. BEJI No.001, RT.004, Bunar, Kec. Sukamulya, Kabupaten Tangerang, Banten'
+                'nama_sppg' => session()->get('sppg_nama') ?? 'Dapur SPPG',
+                'alamat_sppg' => session()->get('sppg_alamat') ?? 'Alamat belum diatur'
             ]
         ];
 

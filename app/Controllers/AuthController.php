@@ -32,11 +32,13 @@ class AuthController extends BaseController
 
         $sppgId   = $user['sppg_id'];
         $sppgName = 'Pusat (Admin)';
+        $sppgAlamat = 'Alamat belum diatur oleh PIC';
         
         if ($sppgId) {
             $sppgModel = new \App\Models\SppgModel();
             $sppg = $sppgModel->find($sppgId);
             $sppgName = $sppg['nama_sppg'] ?? 'Dapur SPPG';
+            $sppgAlamat = $sppg['alamat'] ?: 'Alamat belum diatur oleh PIC';
         }
 
         session()->set([
@@ -46,6 +48,7 @@ class AuthController extends BaseController
             'role'       => $user['role'],
             'sppg_id'    => $sppgId,
             'sppg_nama'  => $sppgName,
+            'sppg_alamat'=> $sppgAlamat,
             'isLoggedIn' => true,
         ]);
 

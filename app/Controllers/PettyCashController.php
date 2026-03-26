@@ -51,8 +51,15 @@ class PettyCashController extends BaseController
 
     public function store()
     {
-        $sppgId    = session()->get('sppg_id') ?: 1;
+        $sppgId    = session()->get('sppg_id');
         $createdBy = session()->get('user_id');
+        
+        // Fallback: get sppg_id from user record if session is stale
+        if (!$sppgId && $createdBy) {
+            $user = (new \App\Models\UserModel())->find($createdBy);
+            $sppgId = $user['sppg_id'] ?? null;
+            if ($sppgId) session()->set('sppg_id', $sppgId);
+        }
         
         $tanggal    = $this->request->getPost('tanggal');
         $keterangan = $this->request->getPost('keterangan');
@@ -79,24 +86,28 @@ class PettyCashController extends BaseController
 
     public function report()
     {
-        $sppgId = session()->get('sppg_id') ?: 1;
+        $sppgId = session()->get('sppg_id');
         $start  = $this->request->getGet('start') ?: date('Y-m-d');
         $end    = $this->request->getGet('end') ?: $start;
 
         // Calculate Saldo Awal (before start date)
-        $prevBalance = $this->pettyCashModel->selectSum('pemasukkan', 'in')
+        $prevBuilder = $this->pettyCashModel->selectSum('pemasukkan', 'in')
                                           ->selectSum('pengeluaran', 'out')
-                                          ->where('sppg_id', $sppgId)
-                                          ->where('tanggal <', $start)
-                                          ->first();
+                                          ->where('tanggal <', $start);
+        if ($sppgId) {
+            $prevBuilder->where('sppg_id', $sppgId);
+        }
+        $prevBalance = $prevBuilder->first();
         
         $saldoAwal = ($prevBalance['in'] ?? 0) - ($prevBalance['out'] ?? 0);
 
-        $entries = $this->pettyCashModel->where('sppg_id', $sppgId)
-                                       ->where('tanggal >=', $start)
+        $entryBuilder = $this->pettyCashModel->where('tanggal >=', $start)
                                        ->where('tanggal <=', $end)
-                                       ->orderBy('tanggal', 'ASC')
-                                       ->findAll();
+                                       ->orderBy('tanggal', 'ASC');
+        if ($sppgId) {
+            $entryBuilder->where('sppg_id', $sppgId);
+        }
+        $entries = $entryBuilder->findAll();
 
         $data = [
             'title'     => 'Laporan Petty Cash',
@@ -112,23 +123,27 @@ class PettyCashController extends BaseController
 
     public function exportPdf()
     {
-        $sppgId = session()->get('sppg_id') ?: 1;
+        $sppgId = session()->get('sppg_id');
         $start  = $this->request->getGet('start');
         $end    = $this->request->getGet('end');
 
-        $prevBalance = $this->pettyCashModel->selectSum('pemasukkan', 'in')
+        $prevBuilder = $this->pettyCashModel->selectSum('pemasukkan', 'in')
                                           ->selectSum('pengeluaran', 'out')
-                                          ->where('sppg_id', $sppgId)
-                                          ->where('tanggal <', $start)
-                                          ->first();
+                                          ->where('tanggal <', $start);
+        if ($sppgId) {
+            $prevBuilder->where('sppg_id', $sppgId);
+        }
+        $prevBalance = $prevBuilder->first();
         
         $saldoAwal = ($prevBalance['in'] ?? 0) - ($prevBalance['out'] ?? 0);
 
-        $entries = $this->pettyCashModel->where('sppg_id', $sppgId)
-                                       ->where('tanggal >=', $start)
+        $entryBuilder = $this->pettyCashModel->where('tanggal >=', $start)
                                        ->where('tanggal <=', $end)
-                                       ->orderBy('tanggal', 'ASC')
-                                       ->findAll();
+                                       ->orderBy('tanggal', 'ASC');
+        if ($sppgId) {
+            $entryBuilder->where('sppg_id', $sppgId);
+        }
+        $entries = $entryBuilder->findAll();
 
         $data = [
             'title'     => 'LAPORAN PEMASUKKAN & PENGELUARAN PETTY CASH',
@@ -144,23 +159,27 @@ class PettyCashController extends BaseController
 
     public function exportExcel()
     {
-        $sppgId = session()->get('sppg_id') ?: 1;
+        $sppgId = session()->get('sppg_id');
         $start  = $this->request->getGet('start');
         $end    = $this->request->getGet('end');
 
-        $prevBalance = $this->pettyCashModel->selectSum('pemasukkan', 'in')
+        $prevBuilder = $this->pettyCashModel->selectSum('pemasukkan', 'in')
                                           ->selectSum('pengeluaran', 'out')
-                                          ->where('sppg_id', $sppgId)
-                                          ->where('tanggal <', $start)
-                                          ->first();
+                                          ->where('tanggal <', $start);
+        if ($sppgId) {
+            $prevBuilder->where('sppg_id', $sppgId);
+        }
+        $prevBalance = $prevBuilder->first();
         
         $saldoAwal = ($prevBalance['in'] ?? 0) - ($prevBalance['out'] ?? 0);
 
-        $entries = $this->pettyCashModel->where('sppg_id', $sppgId)
-                                       ->where('tanggal >=', $start)
+        $entryBuilder = $this->pettyCashModel->where('tanggal >=', $start)
                                        ->where('tanggal <=', $end)
-                                       ->orderBy('tanggal', 'ASC')
-                                       ->findAll();
+                                       ->orderBy('tanggal', 'ASC');
+        if ($sppgId) {
+            $entryBuilder->where('sppg_id', $sppgId);
+        }
+        $entries = $entryBuilder->findAll();
 
         $filename = "Petty_Cash_".date('Ymd', strtotime($start))."_".date('Ymd', strtotime($end)).".csv";
         
@@ -196,7 +215,17 @@ class PettyCashController extends BaseController
     public function delete($id)
     {
         $sppgId = session()->get('sppg_id');
-        $this->pettyCashModel->where(['id' => $id, 'sppg_id' => $sppgId])->delete();
-        return redirect()->back()->with('success', 'Catatan dihapus');
+        $entry = $this->pettyCashModel->find($id);
+        
+        if (!$entry) {
+            return redirect()->back()->with('error', 'Data tidak ditemukan.');
+        }
+        
+        if ($sppgId && $entry['sppg_id'] != $sppgId) {
+            return redirect()->back()->with('error', 'Anda tidak memiliki akses untuk menghapus data ini.');
+        }
+        
+        $this->pettyCashModel->delete($id);
+        return redirect()->back()->with('success', 'Catatan berhasil dihapus.');
     }
 }

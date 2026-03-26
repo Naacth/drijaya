@@ -26,7 +26,7 @@
                 </div>
                 <div class="col-md-12">
                     <label class="form-label">Alamat Lengkap SPPG</label>
-                    <input type="text" name="alamat_sppg" class="form-control" placeholder="Contoh: Alamat RT 00 RW 00, Desa, Kec, Kab. Pekalongan, Jawa Tengah" value="Desa Bunar Kec. Balaraja Kab. Tangerang" required>
+                    <input type="text" name="alamat_sppg" class="form-control" placeholder="Contoh: Alamat RT 00 RW 00, Desa, Kec, Kab. Pekalongan, Jawa Tengah" value="<?= esc(session()->get('sppg_alamat') ?? '') ?>" required>
                 </div>
                 <div class="col-md-6">
                     <label class="form-label">Nama Kepala SPPG</label>

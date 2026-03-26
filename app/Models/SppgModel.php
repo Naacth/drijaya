@@ -9,5 +9,5 @@ class SppgModel extends Model
     protected $table         = 'sppgs';
     protected $primaryKey    = 'id';
     protected $useTimestamps = true;
-    protected $allowedFields = ['nama_sppg'];
+    protected $allowedFields = ['nama_sppg', 'alamat'];
 }

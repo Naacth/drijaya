@@ -159,7 +159,7 @@
                     <td style="text-align: center;">
                         <h2>SPPG BUNAR SUKAMULYA</h2>
                         <h3>YAYASAN BUMI PANGAN INDONESIA</h3>
-                        <p>KP. BEJI No.001, RT.004, Bunar, Kec. Sukamulya, Kabupaten Tangerang, Banten</p>
+                        <p><?= esc(session()->get('sppg_alamat') ?? 'Alamat belum diatur') ?></p>
                         <p>15610</p>
                     </td>
                     <td width="120" style="text-align: center; vertical-align: middle;">
