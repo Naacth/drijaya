@@ -1,0 +1,1 @@
+<?php namespace App\Models; use CodeIgniter\Model; class PengeluaranChemicalModel extends Model { protected $table = 'pengeluaran_chemical'; protected $primaryKey = 'id'; protected $useTimestamps = true; protected $allowedFields = ['tanggal', 'nama_chemical', 'jumlah', 'unit', 'nama_personil', 'nama_gizi', 'created_by']; }

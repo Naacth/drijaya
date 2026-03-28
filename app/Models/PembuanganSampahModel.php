@@ -1,0 +1,1 @@
+<?php namespace App\Models; use CodeIgniter\Model; class PembuanganSampahModel extends Model { protected $table = 'pembuangan_sampah'; protected $primaryKey = 'id'; protected $useTimestamps = true; protected $allowedFields = ['bulan', 'tahun', 'rekap_data', 'nama_kappg', 'created_by']; }

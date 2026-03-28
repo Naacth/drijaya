@@ -1,0 +1,1 @@
+<?php namespace App\Models; use CodeIgniter\Model; class PembersihanMingguanModel extends Model { protected $table = 'pembersihan_mingguan'; protected $primaryKey = 'id'; protected $useTimestamps = true; protected $allowedFields = ['area_pencucian', 'minggu_ke', 'bulan', 'checklist_data', 'nama_verifikator', 'created_by']; }

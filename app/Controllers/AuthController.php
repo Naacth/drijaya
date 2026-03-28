@@ -37,8 +37,14 @@ class AuthController extends BaseController
         if ($sppgId) {
             $sppgModel = new \App\Models\SppgModel();
             $sppg = $sppgModel->find($sppgId);
-            $sppgName = $sppg['nama_sppg'] ?? 'Dapur SPPG';
-            $sppgAlamat = $sppg['alamat'] ?: 'Alamat belum diatur oleh PIC';
+            
+            if ($sppg) {
+                $sppgName = $sppg['nama_sppg'] ?? 'Dapur SPPG';
+                $sppgAlamat = !empty($sppg['alamat']) ? $sppg['alamat'] : 'Alamat belum diatur oleh PIC';
+            } else {
+                $sppgName = 'Dapur SPPG';
+                $sppgAlamat = 'Alamat belum diatur oleh PIC';
+            }
         }
 
         session()->set([

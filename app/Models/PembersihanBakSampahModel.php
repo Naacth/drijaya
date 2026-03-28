@@ -1,0 +1,1 @@
+<?php namespace App\Models; use CodeIgniter\Model; class PembersihanBakSampahModel extends Model { protected $table = 'pembersihan_bak_sampah'; protected $primaryKey = 'id'; protected $useTimestamps = true; protected $allowedFields = ['tanggal', 'nama_personil', 'jam', 'keterangan', 'created_by']; }

@@ -1,0 +1,104 @@
+﻿
+CodeIgniter v4.7.0 Command Line Tool - Server Time: 2026-03-28 05:22:44 UTC+00:00
+
+Running all new migrations...
+[CodeIgniter\Database\Exceptions\DatabaseException]
+Table 'uji_cita_rasa' already exists
+at SYSTEMPATH\Database\BaseConnection.php:724
+
+  Caused by:
+  [CodeIgniter\Database\Exceptions\DatabaseException]
+  Table 'uji_cita_rasa' already exists
+  at SYSTEMPATH\Database\MySQLi\Connection.php:310
+
+  Caused by:
+  [mysqli_sql_exception]
+  Table 'uji_cita_rasa' already exists
+  at SYSTEMPATH\Database\MySQLi\Connection.php:300
+
+Backtrace:
+  1    SYSTEMPATH\Database\MySQLi\Connection.php:300
+       mysqli()->query('CREATE TABLE `uji_cita_rasa` (
+	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`tanggal` DATE NOT NULL,
+	`nama_checker` VARCHAR(255) NOT NULL,
+	`nama_chef` VARCHAR(255) NULL,
+	`nama_ahli_gizi` VARCHAR(255) NULL,
+	`created_by` INT UNSIGNED NOT NULL,
+	`created_at` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+	`updated_at` DATETIME NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	CONSTRAINT `pk_uji_cita_rasa` PRIMARY KEY(`id`)
+) DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci', 0)
+
+  2    SYSTEMPATH\Database\BaseConnection.php:769
+       CodeIgniter\Database\MySQLi\Connection()->execute('CREATE TABLE `uji_cita_rasa` (
+	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`tanggal` DATE NOT NULL,
+	`nama_checker` VARCHAR(255) NOT NULL,
+	`nama_chef` VARCHAR(255) NULL,
+	`nama_ahli_gizi` VARCHAR(255) NULL,
+	`created_by` INT UNSIGNED NOT NULL,
+	`created_at` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+	`updated_at` DATETIME NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	CONSTRAINT `pk_uji_cita_rasa` PRIMARY KEY(`id`)
+) DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci')
+
+  3    SYSTEMPATH\Database\BaseConnection.php:686
+       CodeIgniter\Database\BaseConnection()->simpleQuery('CREATE TABLE `uji_cita_rasa` (
+	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`tanggal` DATE NOT NULL,
+	`nama_checker` VARCHAR(255) NOT NULL,
+	`nama_chef` VARCHAR(255) NULL,
+	`nama_ahli_gizi` VARCHAR(255) NULL,
+	`created_by` INT UNSIGNED NOT NULL,
+	`created_at` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+	`updated_at` DATETIME NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	CONSTRAINT `pk_uji_cita_rasa` PRIMARY KEY(`id`)
+) DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci')
+
+  4    SYSTEMPATH\Database\Forge.php:570
+       CodeIgniter\Database\BaseConnection()->query('CREATE TABLE `uji_cita_rasa` (
+	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`tanggal` DATE NOT NULL,
+	`nama_checker` VARCHAR(255) NOT NULL,
+	`nama_chef` VARCHAR(255) NULL,
+	`nama_ahli_gizi` VARCHAR(255) NULL,
+	`created_by` INT UNSIGNED NOT NULL,
+	`created_at` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+	`updated_at` DATETIME NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	CONSTRAINT `pk_uji_cita_rasa` PRIMARY KEY(`id`)
+) DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci')
+
+  5    APPPATH\Database\Migrations\2026-03-28-000001_CreateUjiCitaRasaTables.php:24
+       CodeIgniter\Database\Forge()->createTable('uji_cita_rasa')
+
+  6    SYSTEMPATH\Database\MigrationRunner.php:1014
+       App\Database\Migrations\CreateUjiCitaRasaTables()->up()
+
+  7    SYSTEMPATH\Database\MigrationRunner.php:202
+       CodeIgniter\Database\MigrationRunner()->migrate('up', Object(stdClass))
+
+  8    SYSTEMPATH\Commands\Database\Migrate.php:89
+       CodeIgniter\Database\MigrationRunner()->latest(null)
+
+  9    SYSTEMPATH\CLI\SignalTrait.php:245
+       CodeIgniter\Commands\Database\Migrate::CodeIgniter\Commands\Database\{closure}()
+
+ 10    SYSTEMPATH\Commands\Database\Migrate.php:88
+       CodeIgniter\Commands\Database\Migrate()->withSignalsBlocked(Object(Closure))
+
+ 11    SYSTEMPATH\CLI\Commands.php:74
+       CodeIgniter\Commands\Database\Migrate()->run([])
+
+ 12    SYSTEMPATH\CLI\Console.php:47
+       CodeIgniter\CLI\Commands()->run('migrate', [])
+
+ 13    SYSTEMPATH\Boot.php:442
+       CodeIgniter\CLI\Console()->run()
+
+ 14    SYSTEMPATH\Boot.php:166
+       CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+
+ 15    ROOTPATH\spark:87
+       CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+

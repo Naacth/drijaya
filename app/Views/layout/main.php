@@ -648,6 +648,58 @@
                 </a>
             <?php endif; ?>
 
+            <?php if ($role === 'ahli_gizi' || $role === 'admin'): ?>
+                <div class="nav-label">Manajemen Mutu & Gizi</div>
+                <?php
+                $mutuMenus = [
+                    'uji-cita-rasa'          => ['Uji Cita Rasa', 'bi-palette'],
+                    'pemeriksaan-sampel'     => ['Pemeriksaan & Sampel', 'bi-search'],
+                    'makanan-lebih'          => ['Penanganan Makanan Lebih', 'bi-trash3'],
+                    'serah-terima-bahan'     => ['Serah Terima Bahan', 'bi-truck'],
+                    'monitoring-suhu-masak'  => ['Suhu Pemasakan', 'bi-thermometer-high'],
+                    'thawing-air'            => ['Thawing (Air)', 'bi-water'],
+                    'thawing-chiller'        => ['Thawing (Chiller)', 'bi-snow2'],
+                    'suhu-ruangan'           => ['Suhu Ruangan', 'bi-thermometer-half'],
+                    'suhu-chiller-freezer'   => ['Suhu Chiller/Freezer', 'bi-thermometer-snow'],
+                    'pencucian-bahan'        => ['Pencucian Bahan', 'bi-droplet-half'],
+                ];
+                foreach ($mutuMenus as $uri => $menu): ?>
+                <a href="<?= site_url($uri) ?>" class="nav-link <?= str_starts_with(uri_string(), $uri) ? 'active' : '' ?>">
+                    <i class="bi <?= $menu[1] ?>"></i> <?= $menu[0] ?>
+                </a>
+                <?php endforeach; ?>
+
+                <div class="nav-label">Operasional & Sanitasi</div>
+                <?php
+                $opsMenus = [
+                    'sanitasi-ruangan'       => ['Sanitasi Ruangan', 'bi-door-closed'],
+                    'pembersihan-harian'     => ['Pembersihan Harian', 'bi-clock-history'],
+                    'pembersihan-mingguan'   => ['Pembersihan Mingguan', 'bi-calendar-check'],
+                    'pembuangan-sampah'      => ['Pembuangan Sampah', 'bi-recycle'],
+                    'pembersihan-bak-sampah' => ['Pembersihan Bak Sampah', 'bi-bucket'],
+                    'pembersihan-lantai'     => ['Pembersihan Lantai', 'bi-layers'],
+                    'pengeluaran-chemical'   => ['Pengeluaran Chemical', 'bi-vial'],
+                ];
+                foreach ($opsMenus as $uri => $menu): ?>
+                <a href="<?= site_url($uri) ?>" class="nav-link <?= str_starts_with(uri_string(), $uri) ? 'active' : '' ?>">
+                    <i class="bi <?= $menu[1] ?>"></i> <?= $menu[0] ?>
+                </a>
+                <?php endforeach; ?>
+
+                <div class="nav-label">Pemeliharaan & Higiene</div>
+                <?php
+                $maintMenus = [
+                    'pembersihan-transportasi' => ['Pembersihan Transportasi', 'bi-truck-flatbed'],
+                    'pembersihan-trolly'       => ['Pembersihan Trolly', 'bi-cart-check'],
+                    'higiene-personil'         => ['Higiene Personil', 'bi-person-check'],
+                ];
+                foreach ($maintMenus as $uri => $menu): ?>
+                <a href="<?= site_url($uri) ?>" class="nav-link <?= str_starts_with(uri_string(), $uri) ? 'active' : '' ?>">
+                    <i class="bi <?= $menu[1] ?>"></i> <?= $menu[0] ?>
+                </a>
+                <?php endforeach; ?>
+            <?php endif; ?>
+
             <?php if ($role === 'ahli_gizi'): ?>
                 <div class="nav-label">Nutrisi</div>
                 <a href="<?= site_url('ahli-gizi/upload') ?>" class="nav-link <?= uri_string() === 'ahli-gizi/upload' ? 'active' : '' ?>">
@@ -742,6 +794,24 @@
         overlay?.addEventListener('click', () => {
             sidebar.classList.remove('show');
             overlay.classList.remove('show');
+        });
+
+        // Prevent double submission global fix
+        document.addEventListener('submit', function(e) {
+            const form = e.target;
+            const submitBtn = form.querySelector('button[type="submit"]');
+            
+            if (submitBtn && form.checkValidity()) {
+                // Disable button in next tick to allow form submission to proceed
+                setTimeout(() => {
+                    submitBtn.disabled = true;
+                }, 10);
+                
+                // Show loading state
+                if (!submitBtn.innerHTML.includes('spinner-border')) {
+                    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Menyimpan...';
+                }
+            }
         });
     </script>
 </body>

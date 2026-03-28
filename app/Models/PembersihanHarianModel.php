@@ -1,0 +1,1 @@
+<?php namespace App\Models; use CodeIgniter\Model; class PembersihanHarianModel extends Model { protected $table = 'pembersihan_harian'; protected $primaryKey = 'id'; protected $useTimestamps = true; protected $allowedFields = ['tanggal', 'unit_type', 'area_data', 'nama_petugas', 'nama_verifikator', 'created_by']; }
