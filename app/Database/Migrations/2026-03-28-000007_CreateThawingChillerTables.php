@@ -31,8 +31,8 @@ class CreateThawingChillerTables extends Migration
             'paraf'                         => ['type' => 'VARCHAR', 'constraint' => 255, 'null' => true],
         ]);
         $this->forge->addKey('id', true);
-        $this->forge->addForeignKey('monitoring_thawing_chiller_id', 'monitoring_thawing_chiller', 'id', 'CASCADE', 'CASCADE');
-        $this->forge->createTable('monitoring_thawing_chiller_items');
+        $this->forge->addForeignKey('monitoring_thawing_chiller_id', 'monitoring_thawing_chiller', 'id', 'CASCADE', 'CASCADE', 'fk_mtc_items_id');
+        $this->forge->createTable('monitoring_thawing_chiller_items', true);
     }
 
     public function down()

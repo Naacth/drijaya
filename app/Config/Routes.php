@@ -23,7 +23,7 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
         $routes->post('store', 'RelawanController::store');
         $routes->get('edit/(:num)', 'RelawanController::edit/$1');
         $routes->post('update/(:num)', 'RelawanController::update/$1');
-        $routes->get('delete/(:num)', 'RelawanController::delete/$1');
+        $routes->post('delete/(:num)', 'RelawanController::delete/$1', ['filter' => 'role:admin']);
     });
 
     $routes->group('absensi', ['filter' => 'role:aslap'], function($routes) {
@@ -108,7 +108,7 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
         $routes->post('store', 'RouteController::store');
         $routes->get('edit/(:num)', 'RouteController::edit/$1');
         $routes->post('update/(:num)', 'RouteController::update/$1');
-        $routes->post('delete/(:num)', 'RouteController::delete/$1');
+        $routes->post('delete/(:num)', 'RouteController::delete/$1', ['filter' => 'role:admin']);
         $routes->get('show/(:num)', 'RouteController::show/$1');
         $routes->post('approve/(:num)', 'RouteController::approve/$1');
         $routes->post('reject/(:num)', 'RouteController::reject/$1');
@@ -245,7 +245,7 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
         $routes->get('show/(:num)', 'PengajuanBarangRusakController::show/$1');
         $routes->get('edit/(:num)', 'PengajuanBarangRusakController::edit/$1', ['filter' => 'role:pic']);
         $routes->post('update/(:num)', 'PengajuanBarangRusakController::update/$1', ['filter' => 'role:pic']);
-        $routes->get('delete/(:num)', 'PengajuanBarangRusakController::delete/$1', ['filter' => 'role:admin']);
+        $routes->post('delete/(:num)', 'PengajuanBarangRusakController::delete/$1', ['filter' => 'role:admin']);
         $routes->get('export-pdf/(:num)', 'PengajuanBarangRusakController::exportPdf/$1');
         $routes->get('export-excel/(:num)', 'PengajuanBarangRusakController::exportExcel/$1');
         $routes->post('approve/(:num)', 'PengajuanBarangRusakController::approve/$1', ['filter' => 'role:admin']);
@@ -260,7 +260,7 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
         $routes->get('show/(:num)', 'PengadaanBarangController::show/$1');
         $routes->get('edit/(:num)', 'PengadaanBarangController::edit/$1', ['filter' => 'role:pic']);
         $routes->post('update/(:num)', 'PengadaanBarangController::update/$1', ['filter' => 'role:pic']);
-        $routes->get('delete/(:num)', 'PengadaanBarangController::delete/$1', ['filter' => 'role:admin']);
+        $routes->post('delete/(:num)', 'PengadaanBarangController::delete/$1', ['filter' => 'role:admin']);
         $routes->get('export-pdf/(:num)', 'PengadaanBarangController::exportPdf/$1');
         $routes->get('export-excel/(:num)', 'PengadaanBarangController::exportExcel/$1');
         $routes->post('approve/(:num)', 'PengadaanBarangController::approve/$1', ['filter' => 'role:admin']);

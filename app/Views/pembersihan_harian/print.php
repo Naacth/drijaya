@@ -62,23 +62,7 @@
         <button onclick="window.close()" style="padding: 6px 16px; cursor: pointer; border-radius: 6px; border: 1px solid #cbd5e1; background: white; color: #64748b; font-weight: 600; margin-left: 8px;">Tutup</button>
     </div>
     <div class="page-container">
-        <div class="header-block">
-            <table class="header-table">
-                <tr>
-                    <td class="header-logo" style="text-align: left;">
-                        <img src="<?= base_url('bgn.png') ?>" alt="Logo BGN" style="width: 70px; height: auto;">
-                    </td>
-                    <td class="header-text">
-                        <h2>SPPG BUNAR SUKAMULYA</h2>
-                        <h3>YAYASAN BUMI PANGAN INDONESIA</h3>
-                        <p><?= esc(session()->get('sppg_alamat') ?? 'Kabupaten Tangerang, Banten') ?></p>
-                    </td>
-                    <td class="header-logo" style="text-align: right;">
-                        <img src="<?= base_url('yayasan.png') ?>" alt="Logo Yayasan" style="width: 65px; height: auto;">
-                    </td>
-                </tr>
-            </table>
-        </div>
+        <?= view('layout/print_header') ?>
         <div class="title-main">CHECKLIST PEMBERSIHAN HARIAN (UNIT <?= strtoupper($header['unit_type']) ?>)</div>
 
         <div style="margin-bottom: 15px;">

@@ -83,23 +83,7 @@
 
     <div class="page-container">
         <!-- HEADER -->
-        <div class="header-block">
-            <table class="header-table">
-                <tr>
-                    <td width="100" style="text-align: left;">
-                        <img src="<?= base_url('bgn.png') ?>" alt="Logo" style="width: 90px; height: auto;">
-                    </td>
-                    <td class="header-text">
-                        <h2>SPPG BUNAR SUKAMULYA</h2>
-                        <h3>YAYASAN BUMI PANGAN INDONESIA</h3>
-                        <p><?= esc(session()->get('sppg_alamat') ?: 'Kabupaten Tangerang, Banten') ?></p>
-                    </td>
-                    <td width="100" style="text-align: right;">
-                        <img src="<?= base_url('yayasan.png') ?>" alt="Logo" style="width: 85px; height: auto;">
-                    </td>
-                </tr>
-            </table>
-        </div>
+        <?= view('layout/print_header') ?>
 
         <div class="title-main">ESTIMASI ANGGARAN (MENU KERING)</div>
 

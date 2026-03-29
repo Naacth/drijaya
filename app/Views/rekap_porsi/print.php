@@ -88,24 +88,7 @@
         $hari = $days[date('l', strtotime($header['tanggal']))];
         $tgl = date('d', strtotime($header['tanggal'])) . ' ' . $months[(int)date('m', strtotime($header['tanggal']))] . ' ' . date('Y', strtotime($header['tanggal']));
         ?>
-
-        <div class="header-block">
-            <table class="header-table">
-                <tr>
-                    <td class="header-logo" style="text-align: left;">
-                        <img src="<?= base_url('bgn.png') ?>" alt="Logo BGN" style="width: 70px; height: auto;">
-                    </td>
-                    <td class="header-text">
-                        <h2>SPPG BUNAR SUKAMULYA</h2>
-                        <h3>YAYASAN BUMI PANGAN INDONESIA</h3>
-                        <p><?= esc(session()->get('sppg_alamat') ?? 'Kabupaten Tangerang, Banten') ?></p>
-                    </td>
-                    <td class="header-logo" style="text-align: right;">
-                        <img src="<?= base_url('yayasan.png') ?>" alt="Logo Yayasan" style="width: 65px; height: auto;">
-                    </td>
-                </tr>
-            </table>
-        </div>
+        <?= view('layout/print_header') ?>
 
         <div class="title-main">REKAPITULASI DISTRIBUSI PORSI PM</div>
         <div class="header-info">Hari dan TGL: <span><?= $hari ?>, <?= $tgl ?></span></div>

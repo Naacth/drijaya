@@ -28,26 +28,83 @@ class DashboardController extends BaseController
         }
     }
 
+    private function getOperationalTables()
+    {
+        return [
+            'ba_kehilangan', 'uji_organoleptik', 'uji_cita_rasa', 'stok_opname',
+            'pengajuan_barang_rusak', 'pengadaan_barang', 'barang_datang', 'cek_bahan_baku',
+            'checklist_masakan', 'analisis_gizi', 'estimasi_anggaran', 'higiene_personil',
+            'makanan_lebih', 'monitoring_suhu_masak', 'pembersihan_bak_sampah', 'pembersihan_harian',
+            'pembersihan_lantai', 'pembersihan_mingguan', 'pembersihan_transportasi', 'pembersihan_trolly',
+            'pembuangan_sampah', 'pemeriksaan_sampel', 'pencucian_bahan', 'pengeluaran_chemical',
+            'rekap_porsi', 'sanitasi_ruangan', 'serah_terima_bahan', 'suhu_chiller_freezer',
+            'suhu_ruangan', 'thawing_air', 'thawing_chiller', 'purchase_orders', 'absensi'
+        ];
+    }
+
     private function adminDashboard()
     {
         $reportModel = new ReportModel();
         $userModel   = new UserModel();
         $sppgModel   = new \App\Models\SppgModel();
+        $db          = \Config\Database::connect();
 
         $currentSppgId = session()->get('sppg_id');
-
-        $reportBuilder = $reportModel->select('reports.*')
-                                     ->join('users', 'users.id = reports.user_id');
         
-        $userBuilder   = $userModel;
+        // Modules for cards
+        $topModules = [
+            'Purchase Order'     => ['table' => 'purchase_orders', 'icon' => 'bi-receipt', 'color' => '#6366f1'],
+            'Absensi Relawan'    => ['table' => 'absensi', 'icon' => 'bi-calendar-check', 'color' => '#8b5cf6'],
+            'Barang Datang'      => ['table' => 'barang_datang', 'icon' => 'bi-box-seam', 'color' => '#06b6d4'],
+            'Uji Organoleptik'   => ['table' => 'uji_organoleptik', 'icon' => 'bi-eyedropper', 'color' => '#f59e0b'],
+            'BA Kehilangan'      => ['table' => 'ba_kehilangan', 'icon' => 'bi-exclamation-triangle', 'color' => '#ef4444'],
+            'Uji Cita Rasa'      => ['table' => 'uji_cita_rasa', 'icon' => 'bi-palette', 'color' => '#14b8a6'],
+            'Checklist Masakan'  => ['table' => 'checklist_masakan', 'icon' => 'bi-clipboard-check', 'color' => '#ec4899'],
+            'Monitoring Suhu'    => ['table' => 'monitoring_suhu_masak', 'icon' => 'bi-thermometer-high', 'color' => '#f97316'],
+            'Stok Opname'        => ['table' => 'stok_opname', 'icon' => 'bi-calculator', 'color' => '#0ea5e9'],
+            'Sanitasi Ruangan'   => ['table' => 'sanitasi_ruangan', 'icon' => 'bi-door-closed', 'color' => '#10b981'],
+        ];
 
-        if ($currentSppgId) {
-            $reportBuilder->where('users.sppg_id', $currentSppgId);
-            $userBuilder->where('sppg_id', $currentSppgId);
+        $moduleStats = [];
+        foreach ($topModules as $name => $meta) {
+            $builder = $db->table($meta['table'])->join('users', 'users.id = ' . $meta['table'] . '.created_by', 'left');
+            if ($currentSppgId) $builder->where('users.sppg_id', $currentSppgId);
+            if ($meta['table'] == 'purchase_orders') {
+                $builder = $db->table('purchase_orders')->join('users', 'users.id = purchase_orders.user_id', 'left');
+                if ($currentSppgId) $builder->where('users.sppg_id', $currentSppgId);
+            }
+            $moduleStats[$name] = array_merge($meta, ['count' => $builder->countAllResults()]);
+        }
+
+        // Aggregate All Tables for Kitchen Status (Total Report Count) - Optimized
+        $tables = $this->getOperationalTables();
+        $sppgs  = $sppgModel->findAll();
+        $sppgCounts = array_fill_keys(array_column($sppgs, 'id'), 0);
+        
+        foreach ($tables as $table) {
+            if ($db->tableExists($table)) {
+                $joinCol = ($table == 'purchase_orders') ? 'user_id' : 'created_by';
+                $counts = $db->table($table)
+                             ->select('users.sppg_id, COUNT(*) as qty')
+                             ->join('users', 'users.id = ' . $table . '.' . $joinCol)
+                             ->groupBy('users.sppg_id')
+                             ->get()->getResultArray();
+                
+                foreach ($counts as $row) {
+                    if (isset($sppgCounts[$row['sppg_id']])) {
+                        $sppgCounts[$row['sppg_id']] += (int)$row['qty'];
+                    }
+                }
+            }
+        }
+
+        $kitchenStatus = [];
+        foreach ($sppgs as $sppg) {
+            $sppg['report_count'] = $sppgCounts[$sppg['id']] ?? 0;
+            $kitchenStatus[] = $sppg;
         }
 
         // Pending PIC Submissions
-        $db = \Config\Database::connect();
         $pendingBarangRusak = [];
         if ($db->tableExists('pengajuan_barang_rusak')) {
             $builder = $db->table('pengajuan_barang_rusak')
@@ -68,18 +125,19 @@ class DashboardController extends BaseController
             $pendingPengadaan = $builder->get()->getResultArray();
         }
 
+        $userRoleStats = $userModel->select('role, COUNT(*) as count')->groupBy('role')->findAll();
+
         $data = [
             'title'              => 'Dashboard Admin',
-            'totalReports'       => (clone $reportBuilder)->countAllResults(),
-            'pendingReports'     => (clone $reportBuilder)->where('reports.status', 'pending')->countAllResults(),
-            'acceptedReports'    => (clone $reportBuilder)->where('reports.status', 'diterima')->countAllResults(),
-            'rejectedReports'    => (clone $reportBuilder)->where('reports.status', 'ditolak')->countAllResults(),
-            'totalUsers'         => $userBuilder->countAllResults(),
-            'recentReports'      => $reportModel->getWithUser($currentSppgId)->limit(10)->findAll(),
+            'totalUsers'         => $userModel->countAllResults(),
             'pendingBarangRusak' => $pendingBarangRusak,
             'pendingPengadaan'   => $pendingPengadaan,
-            'allSppg'            => $sppgModel->findAll(),
-            'currentSppgId'      => $currentSppgId
+            'allSppg'            => $sppgs,
+            'currentSppgId'      => $currentSppgId,
+            'userRoleStats'      => $userRoleStats,
+            'moduleStats'        => $moduleStats,
+            'kitchenStatus'      => $kitchenStatus,
+            'recentReports'      => $reportModel->getWithUser($currentSppgId)->limit(5)->findAll()
         ];
 
         return view('dashboard/admin', $data);
@@ -160,22 +218,24 @@ class DashboardController extends BaseController
     private function aslapDashboard()
     {
         $userId = session()->get('user_id');
+        $sppgId = session()->get('sppg_id');
         
-        // Models - filter by created_by to show only user's own data
         $models = [
-            'barang_datang'       => new \App\Models\BarangDatangModel(),
-            'cek_bahan'           => new \App\Models\CekBahanBakuModel(),
-            'uji_organoleptik'    => new \App\Models\UjiOrganoleptikModel(),
-            'ba_kehilangan'       => new \App\Models\BaKehilanganModel(),
-            'pemberitahuan_kerja' => new \App\Models\PemberitahuanKerjaModel(),
-            'stok_gudang'         => new \App\Models\StokGudangModel(),
-            'stok_opname'         => new \App\Models\StokOpnameModel(),
-            'rekap_porsi'         => new \App\Models\RekapPorsiModel(),
+            'barang_datang'       => ['model' => new \App\Models\BarangDatangModel(), 'table' => 'barang_datang'],
+            'cek_bahan'           => ['model' => new \App\Models\CekBahanBakuModel(),  'table' => 'cek_bahan_baku'],
+            'uji_organoleptik'    => ['model' => new \App\Models\UjiOrganoleptikModel(), 'table' => 'uji_organoleptik'],
+            'ba_kehilangan'       => ['model' => new \App\Models\BaKehilanganModel(), 'table' => 'ba_kehilangan'],
+            'pemberitahuan_kerja' => ['model' => new \App\Models\PemberitahuanKerjaModel(), 'table' => 'pemberitahuan_kerja'],
+            'stok_gudang'         => ['model' => new \App\Models\StokGudangModel(), 'table' => 'stok_gudang'],
+            'stok_opname'         => ['model' => new \App\Models\StokOpnameModel(), 'table' => 'stok_opname'],
+            'rekap_porsi'         => ['model' => new \App\Models\RekapPorsiModel(), 'table' => 'rekap_porsi'],
         ];
 
         $stats = [];
-        foreach ($models as $key => $model) {
-            $stats[$key] = $model->where('created_by', $userId)->countAllResults();
+        foreach ($models as $key => $m) {
+            $stats[$key] = $m['model']->join('users', 'users.id = ' . $m['table'] . '.created_by')
+                                      ->where('users.sppg_id', $sppgId)
+                                      ->countAllResults();
         }
 
         // Quick Access Menu

@@ -88,25 +88,7 @@
     <div class="page-container">
 
         <!-- HEADER -->
-        <div class="header-block">
-            <table>
-                <tr>
-                    <td width="120" style="text-align: center; vertical-align: middle;">
-                        <img src="<?= base_url('bgn.png') ?>" alt="Logo BGN" style="width: 100px; height: auto;">
-                    </td>
-                    <td style="text-align: center;">
-                        <h2>SPPG BUNAR SUKAMULYA</h2>
-                        <h3>YAYASAN BUMI PANGAN INDONESIA</h3>
-                        <p><?= esc(session()->get('sppg_alamat') ?? 'Alamat belum diatur') ?></p>
-                        <p>15610</p>
-                    </td>
-                    <td width="120" style="text-align: center; vertical-align: middle;">
-                        <img src="<?= base_url('yayasan.png') ?>" alt="Logo Yayasan" style="width: 95px; height: auto;">
-                    </td>
-                </tr>
-            </table>
-            <hr>
-        </div>
+        <?= view('layout/print_header') ?>
 
         <!-- TITLE -->
         <div class="title-section">

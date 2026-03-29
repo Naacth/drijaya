@@ -103,22 +103,7 @@
     <div class="page-container <?= $index !== count($items) - 1 ? 'page-break' : '' ?>">
         
         <!-- HEADER -->
-        <div class="header-block">
-            <table class="header-table">
-                <tr>
-                    <td width="70">
-                        <div class="header-logo-box">
-                            BADAN GIZI<br>NASIONAL
-                        </div>
-                    </td>
-                    <td class="header-text">
-                        <h2>BADAN GIZI NASIONAL - SATUAN PELAYANAN PEMENUHAN GIZI</h2>
-                        <h3>SPPG <?= strtoupper($header['sppg']) ?></h3>
-                    </td>
-                    <td width="70"></td>
-                </tr>
-            </table>
-        </div>
+        <?= view('layout/print_header') ?>
 
         <div class="title-main">
             SURAT JALAN / DELIVERY ORDER<br>
