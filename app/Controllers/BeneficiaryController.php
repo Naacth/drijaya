@@ -28,6 +28,13 @@ class BeneficiaryController extends BaseController
 
         if ($role == 'aslap') {
             $query->where('beneficiaries.created_by', $userId);
+        } elseif ($role == 'pic' || $role == 'admin') {
+            $sppgId = session()->get('sppg_id');
+            if ($sppgId) {
+                // We need to join users to check sppg_id
+                $query->join('users as creators', 'creators.id = beneficiaries.created_by')
+                      ->where('creators.sppg_id', $sppgId);
+            }
         }
 
         if ($status) {
@@ -200,5 +207,20 @@ class BeneficiaryController extends BaseController
         
         fclose($output);
         exit;
+    }
+
+    public function delete($id)
+    {
+        if (session()->get('role') !== 'admin') {
+            return redirect()->back()->with('error', 'Hanya Admin yang dapat menghapus data.');
+        }
+
+        $db = \Config\Database::connect();
+        $db->transStart();
+        $this->itemModel->where('beneficiary_id', $id)->delete();
+        $this->beneficiaryModel->delete($id);
+        $db->transComplete();
+
+        return redirect()->to('/penerima-manfaat')->with('success', 'Data Penerima Manfaat berhasil dihapus.');
     }
 }

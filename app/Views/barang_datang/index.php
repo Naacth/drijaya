@@ -46,6 +46,13 @@
                             <a href="<?= site_url('barang-datang/show/' . $form['id']) ?>" class="btn btn-sm btn-outline-primary rounded-pill px-3">
                                 <i class="bi bi-eye"></i> Detail
                             </a>
+                            <?php if (session()->get('role') === 'admin'): ?>
+                            <form action="<?= site_url('barang-datang/delete/' . $form['id']) ?>" method="post" class="d-inline">
+                                <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-3" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
+                            <?php endif; ?>
                         </td>
                     </tr>
                     <?php endforeach; ?>

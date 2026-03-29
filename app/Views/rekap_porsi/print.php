@@ -4,42 +4,80 @@
     <meta charset="UTF-8">
     <title><?= $title ?></title>
     <style>
-        body { font-family: Calibri, sans-serif; font-size: 11px; color: #000; background: #fff; margin: 0; padding: 20px; }
-        .page-container { width: 1000px; margin: 0 auto; }
-
-        @media print {
-            body { padding: 0; }
-            .page-container { width: 100%; }
-            .no-print { display: none !important; }
-            * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        /* PDF Print Optimizations */
+        @page {
+            size: A4;
+            margin: 1.5cm;
         }
-
-        .header-title { font-size: 16px; font-weight: bold; margin-bottom: 20px; }
-        .header-title span { font-weight: normal; margin-left: 10px; }
-
-        .data-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 11px; }
-        .data-table th, .data-table td { border: 1px solid #000; padding: 4px 6px; text-align: center; vertical-align: middle; }
-        .data-table th { background-color: #d9d9d9; font-weight: bold; }
-        .data-table td.sekolah { text-align: left; }
+        body { 
+            font-family: Calibri, 'Times New Roman', serif; 
+            font-size: 10px; 
+            line-height: 1.3;
+            color: #000; 
+            margin: 0;
+            padding: 0;
+            background: #fff;
+        }
+        .page-container { width: 100%; margin: 0 auto; }
         
-        /* Pastel Colors for Tingkatan based on reference image */
-        .bg-paud { background-color: #c4e5c4 !important; } /* Light green */
-        .bg-tk { background-color: #f7dac4 !important; } /* Light orange/peach */
-        .bg-sd13 { background-color: #d1dcf0 !important; } /* Light blue */
-        .bg-sd46 { background-color: #fcebd2 !important; } /* Light yellowish orange */
-        .bg-mi13 { background-color: #dcedc1 !important; } /* Pale green */
-        .bg-mi46 { background-color: #c3d9ff !important; } /* Pale blue */
-        .bg-smp { background-color: #d9d9d9 !important; } /* Gray */
-        .bg-mts { background-color: #f5ccb0 !important; } /* Darker peach */
-        .bg-sma { background-color: #fff2cc !important; } /* Light yellow */
+        /* Header Styling */
+        .header-block { border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 15px; }
+        .header-table { width: 100%; border-collapse: collapse; }
+        .header-logo { width: 70px; }
+        .header-text { text-align: center; }
+        .header-text h2 { margin: 0; font-size: 16px; font-weight: bold; }
+        .header-text h3 { margin: 1px 0; font-size: 12px; font-weight: normal; }
+        .header-text p { margin: 0; font-size: 9px; color: #333; }
+        
+        .title-main { 
+            text-align: center; 
+            font-size: 14px; 
+            font-weight: bold; 
+            margin: 15px 0; 
+            text-transform: uppercase;
+            text-decoration: underline;
+        }
+        
+        .header-info { font-size: 12px; font-weight: bold; margin-bottom: 10px; }
+        .header-info span { font-weight: normal; border-bottom: 1px dotted #000; padding: 0 10px; }
 
+        /* Table Data Styling */
+        .data-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; table-layout: fixed; }
+        .data-table th, .data-table td { 
+            border: 1px solid #000; 
+            padding: 6px 3px; 
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            font-size: 9px;
+            text-align: center;
+        }
+        .data-table th { background-color: #d9d9d9; font-weight: bold; }
+        .text-left { text-align: left !important; padding-left: 5px !important; }
+        
+        /* Pastel Colors for Tingkatan */
+        .bg-paud { background-color: #e2efda !important; } 
+        .bg-tk { background-color: #fff2cc !important; } 
+        .bg-sd13 { background-color: #ddebf7 !important; } 
+        .bg-sd46 { background-color: #fce4d6 !important; } 
+        .bg-mi13 { background-color: #e2f0d9 !important; } 
+        .bg-mi46 { background-color: #d9e1f2 !important; } 
+        .bg-smp { background-color: #f2f2f2 !important; } 
+        .bg-mts { background-color: #fee6d2 !important; } 
+        .bg-sma { background-color: #fff9e6 !important; } 
+
+        /* Print Utilities */
+        @media print { 
+            .no-print { display: none !important; } 
+            body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .data-table tr { page-break-inside: avoid; }
+        }
     </style>
 </head>
 <body onload="window.print()">
 
-    <div class="no-print" style="text-align: center; margin-bottom: 20px;">
-        <button onclick="window.print()" style="padding: 10px 20px; font-size: 16px; cursor: pointer; background: #333; color: #fff; border: none; border-radius: 5px;">Cetak</button>
-        <button onclick="window.close()" style="padding: 10px 20px; font-size: 16px; cursor: pointer; margin-left: 10px; border-radius: 5px;">Tutup</button>
+    <div class="no-print" style="position: fixed; top: 20px; right: 20px; z-index: 9999; background: rgba(255,255,255,0.9); padding: 15px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border: 1px solid #e2e8f0;">
+        <button onclick="window.print()" style="padding: 8px 20px; cursor: pointer; border-radius: 6px; border: 1px solid #6366f1; background: #6366f1; color: white; font-weight: 600;">Cetak PDF</button>
+        <button onclick="window.close()" style="padding: 8px 20px; cursor: pointer; border-radius: 6px; border: 1px solid #cbd5e1; background: white; color: #64748b; font-weight: 600; margin-left: 8px;">Tutup</button>
     </div>
 
     <div class="page-container">
@@ -51,32 +89,38 @@
         $tgl = date('d', strtotime($header['tanggal'])) . ' ' . $months[(int)date('m', strtotime($header['tanggal']))] . ' ' . date('Y', strtotime($header['tanggal']));
         ?>
 
-        <!-- HEADER LOGOS -->
-        <table style="width: 100%; margin-bottom: 15px;">
-            <tr>
-                <td width="120" style="text-align: left; vertical-align: middle;">
-                    <img src="<?= base_url('bgn.png') ?>" alt="Logo BGN" style="height: 100px; width: auto;">
-                </td>
-                <td style="text-align: center;"></td>
-                <td width="120" style="text-align: right; vertical-align: middle;">
-                    <img src="<?= base_url('yayasan.png') ?>" alt="Logo Yayasan" style="height: 95px; width: auto;">
-                </td>
-            </tr>
-        </table>
+        <div class="header-block">
+            <table class="header-table">
+                <tr>
+                    <td class="header-logo" style="text-align: left;">
+                        <img src="<?= base_url('bgn.png') ?>" alt="Logo BGN" style="width: 70px; height: auto;">
+                    </td>
+                    <td class="header-text">
+                        <h2>SPPG BUNAR SUKAMULYA</h2>
+                        <h3>YAYASAN BUMI PANGAN INDONESIA</h3>
+                        <p><?= esc(session()->get('sppg_alamat') ?? 'Kabupaten Tangerang, Banten') ?></p>
+                    </td>
+                    <td class="header-logo" style="text-align: right;">
+                        <img src="<?= base_url('yayasan.png') ?>" alt="Logo Yayasan" style="width: 65px; height: auto;">
+                    </td>
+                </tr>
+            </table>
+        </div>
 
-        <div class="header-title">Hari dan TGL <span><?= $hari ?> &nbsp;&nbsp;&nbsp; <?= $tgl ?></span></div>
+        <div class="title-main">REKAPITULASI DISTRIBUSI PORSI PM</div>
+        <div class="header-info">Hari dan TGL: <span><?= $hari ?>, <?= $tgl ?></span></div>
 
         <table class="data-table">
             <thead>
                 <tr>
-                    <th width="30"></th>
-                    <th width="80">TINGKATAN</th>
-                    <th width="200">SEKOLAH</th>
-                    <th width="70">JUMLAH PM</th>
-                    <th width="80">JUMLAH PM<br>Ter<br>DISTRIBUSI</th>
-                    <th width="90">Jumlah PM<br>tidak<br>terdistribusi</th>
-                    <th width="120">Keterangan</th>
-                    <th width="120">Pengalihan</th>
+                    <th style="width: 30px;">No</th>
+                    <th style="width: 80px;">TINGKATAN</th>
+                    <th>SEKOLAH / PENERIMA</th>
+                    <th style="width: 60px;">JUMLAH PM</th>
+                    <th style="width: 70px;">DISTRIBUSI</th>
+                    <th style="width: 70px;">SISA PM</th>
+                    <th>Keterangan</th>
+                    <th>Pengalihan</th>
                 </tr>
             </thead>
             <tbody>

@@ -502,6 +502,41 @@
             .main-content { margin-left: 0; }
         }
 
+        /* ===== DROPDOWN NAV ===== */
+        .nav-dropdown {
+            margin-bottom: 2px;
+        }
+        .nav-dropdown-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            background: none;
+            border: none;
+            outline: none;
+            cursor: pointer;
+        }
+        .nav-dropdown-toggle i:last-child {
+            font-size: 0.75rem;
+            transition: transform 0.3s;
+        }
+        .nav-dropdown.show .nav-dropdown-toggle i:last-child {
+            transform: rotate(180deg);
+        }
+        .nav-dropdown-menu {
+            display: none;
+            padding-left: 1.5rem;
+            list-style: none;
+            margin: 0;
+        }
+        .nav-dropdown.show .nav-dropdown-menu {
+            display: block;
+        }
+        .nav-dropdown-menu .nav-link {
+            padding: 0.5rem 0.85rem;
+            font-size: 0.8rem;
+        }
+
         /* ===== ANIMATION ===== */
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(16px); }
@@ -546,22 +581,95 @@
             <?php $role = session()->get('role'); ?>
 
             <?php if ($role === 'admin'): ?>
-                <div class="nav-label">Administrasi</div>
+                <div class="nav-label">Administrasi Utama</div>
+                <?php
+                    $db = \Config\Database::connect();
+                    $pendingReportsCount = $db->table('reports')->where('status', 'pending')->countAllResults();
+                    $pendingBarangRusakCount = $db->tableExists('pengajuan_barang_rusak') ? $db->table('pengajuan_barang_rusak')->where('status', 'diajukan')->countAllResults() : 0;
+                    $pendingPengadaanCount = $db->tableExists('pengadaan_barang') ? $db->table('pengadaan_barang')->where('status', 'diajukan')->countAllResults() : 0;
+                    $totalPendingPIC = $pendingBarangRusakCount + $pendingPengadaanCount;
+                ?>
                 <a href="<?= site_url('admin/reports') ?>" class="nav-link <?= str_starts_with(uri_string(), 'admin/reports') ? 'active' : '' ?>">
                     <i class="bi bi-file-earmark-text-fill"></i> Semua Laporan
+                    <?php if ($pendingReportsCount > 0): ?>
+                        <span class="badge rounded-pill bg-danger ms-auto animate-pulse"><?= $pendingReportsCount ?></span>
+                    <?php endif; ?>
                 </a>
                 <a href="<?= base_url('penerima-manfaat') ?>" class="nav-link <?= str_starts_with(uri_string(), 'penerima-manfaat') ? 'active' : '' ?>">
                     <i class="bi bi-people-fill"></i> Penerima Manfaat
                 </a>
-                <a href="<?= base_url('routes') ?>" class="nav-link <?= str_starts_with(uri_string(), 'routes') ? 'active' : '' ?>">
-                    <i class="bi bi-map-fill"></i> Rute Pengiriman
-                </a>
-                <a href="<?= site_url('buku-kas/report') ?>" class="nav-link <?= str_starts_with(uri_string(), 'buku-kas') ? 'active' : '' ?>">
-                    <i class="bi bi-journal-text"></i> Buku Kas Operasional
-                </a>
-                <a href="<?= site_url('petty-cash/report') ?>" class="nav-link <?= str_starts_with(uri_string(), 'petty-cash') ? 'active' : '' ?>">
-                    <i class="bi bi-cash-stack"></i> Laporan Petty Cash
-                </a>
+
+                <div class="nav-label">Manajemen Role</div>
+                
+                <!-- Aslap Group -->
+                <div class="nav-dropdown">
+                    <button class="nav-link nav-dropdown-toggle" onclick="toggleDropdown(this)">
+                        <span><i class="bi bi-person-workspace"></i> Menu Aslap</span>
+                        <?php if ($totalPendingPIC > 0): ?>
+                            <span class="badge rounded-pill bg-warning text-dark ms-2" style="font-size: 0.65rem;">NEW</span>
+                        <?php endif; ?>
+                        <i class="bi bi-chevron-down ms-active"></i>
+                    </button>
+                    <div class="nav-dropdown-menu">
+                        <a href="<?= site_url('barang-datang') ?>" class="nav-link"><i class="bi bi-box-seam"></i> Barang Datang</a>
+                        <a href="<?= site_url('cek-bahan-baku') ?>" class="nav-link"><i class="bi bi-clipboard-check"></i> Cek Bahan</a>
+                        <a href="<?= site_url('uji-organoleptik') ?>" class="nav-link"><i class="bi bi-eyedropper"></i> Organoleptik</a>
+                        <a href="<?= site_url('ba-kehilangan') ?>" class="nav-link"><i class="bi bi-exclamation-triangle"></i> BA Kehilangan</a>
+                        <a href="<?= site_url('pemberitahuan-kerja') ?>" class="nav-link"><i class="bi bi-megaphone"></i> Hasil Kerja</a>
+                        <a href="<?= site_url('stok-gudang') ?>" class="nav-link"><i class="bi bi-building"></i> Stok Gudang</a>
+                        <a href="<?= site_url('stok-opname') ?>" class="nav-link"><i class="bi bi-calculator"></i> Stok Opname</a>
+                        <a href="<?= site_url('rekap-porsi') ?>" class="nav-link"><i class="bi bi-pie-chart"></i> Rekap Porsi</a>
+                        <a href="<?= site_url('absensi') ?>" class="nav-link"><i class="bi bi-clock-history"></i> Absensi Relawan</a>
+                        <a href="<?= site_url('relawan') ?>" class="nav-link"><i class="bi bi-people"></i> Manage Relawan</a>
+                        <a href="<?= site_url('routes') ?>" class="nav-link"><i class="bi bi-map-fill"></i> Rute Pengiriman</a>
+                    </div>
+                </div>
+
+                <!-- Ahli Gizi Group -->
+                <div class="nav-dropdown">
+                    <button class="nav-link nav-dropdown-toggle" onclick="toggleDropdown(this)">
+                        <span><i class="bi bi-heart-pulse"></i> Menu Ahli Gizi</span>
+                        <i class="bi bi-chevron-down"></i>
+                    </button>
+                    <div class="nav-dropdown-menu">
+                        <a href="<?= site_url('uji-cita-rasa') ?>"      class="nav-link"><i class="bi bi-palette"></i> Uji Cita Rasa</a>
+                        <a href="<?= site_url('analisis-gizi') ?>"      class="nav-link"><i class="bi bi-pie-chart"></i> Analisis Gizi</a>
+                        <a href="<?= site_url('checklist-masakan') ?>"  class="nav-link"><i class="bi bi-clipboard-check"></i> QC Masakan</a>
+                        <a href="<?= site_url('pemeriksaan-sampel') ?>" class="nav-link"><i class="bi bi-search"></i> Sampel</a>
+                        <a href="<?= site_url('monitoring-suhu-masak') ?>" class="nav-link"><i class="bi bi-thermometer-high"></i> Suhu Masak</a>
+                        <a href="<?= site_url('estimasi-anggaran') ?>"   class="nav-link"><i class="bi bi-calculator"></i> Estimasi Anggaran</a>
+                        <a href="<?= site_url('makanan-lebih') ?>"       class="nav-link"><i class="bi bi-trash3"></i> Makanan Lebih</a>
+                        <a href="<?= site_url('serah-terima-bahan') ?>"  class="nav-link"><i class="bi bi-truck"></i> Serah Terima Bahan</a>
+                        <a href="<?= site_url('thawing-air') ?>"         class="nav-link"><i class="bi bi-water"></i> Thawing (Air)</a>
+                        <a href="<?= site_url('thawing-chiller') ?>"     class="nav-link"><i class="bi bi-snow2"></i> Thawing (Chiller)</a>
+                        <a href="<?= site_url('suhu-ruangan') ?>"        class="nav-link"><i class="bi bi-thermometer-half"></i> Suhu Ruangan</a>
+                        <a href="<?= site_url('suhu-chiller-freezer') ?>" class="nav-link"><i class="bi bi-thermometer-snow"></i> Suhu Chiller</a>
+                        <a href="<?= site_url('pencucian-bahan') ?>"      class="nav-link"><i class="bi bi-droplet-half"></i> Pencucian Bahan</a>
+                        <a href="<?= site_url('sanitasi-ruangan') ?>"     class="nav-link"><i class="bi bi-door-closed"></i> Sanitasi Ruangan</a>
+                        <a href="<?= site_url('pembersihan-harian') ?>"   class="nav-link"><i class="bi bi-clock-history"></i> Pembersihan Harian</a>
+                        <a href="<?= site_url('pembersihan-mingguan') ?>" class="nav-link"><i class="bi bi-calendar-check"></i> Pembersihan Mingguan</a>
+                        <a href="<?= site_url('pembuangan-sampah') ?>"    class="nav-link"><i class="bi bi-recycle"></i> Pembuangan Sampah</a>
+                        <a href="<?= site_url('pembersihan-bak-sampah') ?>" class="nav-link"><i class="bi bi-bucket"></i> Bak Sampah</a>
+                        <a href="<?= site_url('pembersihan-lantai') ?>"   class="nav-link"><i class="bi bi-layers"></i> Pembersihan Lantai</a>
+                        <a href="<?= site_url('pengeluaran-chemical') ?>" class="nav-link"><i class="bi bi-vial"></i> Pengeluaran Chemical</a>
+                        <a href="<?= site_url('pembersihan-transportasi') ?>" class="nav-link"><i class="bi bi-truck-flatbed"></i> Pembersihan Transport</a>
+                        <a href="<?= site_url('pembersihan-trolly') ?>"   class="nav-link"><i class="bi bi-cart-check"></i> Pembersihan Trolly</a>
+                        <a href="<?= site_url('higiene-personil') ?>"    class="nav-link"><i class="bi bi-person-check"></i> Higiene Personil</a>
+                    </div>
+                </div>
+
+                <!-- Akuntan Group -->
+                <div class="nav-dropdown">
+                    <button class="nav-link nav-dropdown-toggle" onclick="toggleDropdown(this)">
+                        <span><i class="bi bi-cash-coin"></i> Menu Akuntan</span>
+                        <i class="bi bi-chevron-down"></i>
+                    </button>
+                    <div class="nav-dropdown-menu">
+                        <a href="<?= site_url('buku-kas/report') ?>" class="nav-link"><i class="bi bi-journal-text"></i> Buku Kas</a>
+                        <a href="<?= site_url('petty-cash/report') ?>" class="nav-link"><i class="bi bi-cash-stack"></i> Petty Cash</a>
+                        <a href="<?= site_url('po') ?>" class="nav-link"><i class="bi bi-receipt-cutoff"></i> Purchase Order</a>
+                    </div>
+                </div>
             <?php endif; ?>
 
             <?php if ($role === 'aslap'): ?>
@@ -653,6 +761,9 @@
                 <?php
                 $mutuMenus = [
                     'uji-cita-rasa'          => ['Uji Cita Rasa', 'bi-palette'],
+                    'estimasi-anggaran'      => ['Estimasi Anggaran', 'bi-calculator'],
+                    'analisis-gizi'          => ['Analisis Gizi (AKG)', 'bi-pie-chart'],
+                    'checklist-masakan'      => ['Checklist QC Masakan', 'bi-clipboard-check'],
                     'pemeriksaan-sampel'     => ['Pemeriksaan & Sampel', 'bi-search'],
                     'makanan-lebih'          => ['Penanganan Makanan Lebih', 'bi-trash3'],
                     'serah-terima-bahan'     => ['Serah Terima Bahan', 'bi-truck'],
@@ -715,6 +826,100 @@
                 <a href="<?= base_url('po') ?>" class="nav-link <?= str_starts_with(uri_string(), 'po') ? 'active' : '' ?>">
                     <i class="bi bi-receipt-cutoff"></i> Purchase Order
                 </a>
+                <a href="<?= site_url('pengajuan-barang-rusak') ?>" class="nav-link <?= str_starts_with(uri_string(), 'pengajuan-barang-rusak') ? 'active' : '' ?>">
+                    <i class="bi bi-tools"></i> Pengajuan Barang Rusak
+                </a>
+                <a href="<?= site_url('pengadaan-barang') ?>" class="nav-link <?= str_starts_with(uri_string(), 'pengadaan-barang') ? 'active' : '' ?>">
+                    <i class="bi bi-cart-plus"></i> Pengadaan Barang
+                </a>
+
+                <div class="nav-label">Monitoring Kinerja</div>
+                
+                <!-- Aslap Dropdown -->
+                <div class="nav-dropdown">
+                    <button class="nav-link nav-dropdown-toggle" onclick="toggleDropdown(this)">
+                        <span><i class="bi bi-person-workspace"></i> Menu Aslap</span>
+                        <i class="bi bi-chevron-down"></i>
+                    </button>
+                    <div class="nav-dropdown-menu">
+                        <a href="<?= site_url('barang-datang') ?>" class="nav-link"><i class="bi bi-box-seam"></i> Barang Datang</a>
+                        <a href="<?= site_url('cek-bahan-baku') ?>" class="nav-link"><i class="bi bi-clipboard-check"></i> Cek Bahan</a>
+                        <a href="<?= site_url('uji-organoleptik') ?>" class="nav-link"><i class="bi bi-eyedropper"></i> Organoleptik</a>
+                        <a href="<?= site_url('ba-kehilangan') ?>" class="nav-link"><i class="bi bi-exclamation-triangle"></i> BA Kehilangan</a>
+                        <a href="<?= site_url('pemberitahuan-kerja') ?>" class="nav-link"><i class="bi bi-megaphone"></i> Hasil Kerja</a>
+                        <a href="<?= site_url('stok-gudang') ?>" class="nav-link"><i class="bi bi-building"></i> Stok Gudang</a>
+                        <a href="<?= site_url('stok-opname') ?>" class="nav-link"><i class="bi bi-calculator"></i> Stok Opname</a>
+                        <a href="<?= site_url('rekap-porsi') ?>" class="nav-link"><i class="bi bi-pie-chart"></i> Rekap Porsi</a>
+                        <a href="<?= site_url('absensi') ?>" class="nav-link"><i class="bi bi-clock-history"></i> Absensi Relawan</a>
+                        <a href="<?= site_url('relawan') ?>" class="nav-link"><i class="bi bi-people"></i> Manage Relawan</a>
+                        <a href="<?= site_url('penerima-manfaat') ?>" class="nav-link"><i class="bi bi-people-fill"></i> Penerima Manfaat</a>
+                        <a href="<?= site_url('routes') ?>" class="nav-link"><i class="bi bi-map-fill"></i> Rute Pengiriman</a>
+                        <a href="<?= site_url('aslap/upload/data_siswa') ?>" class="nav-link"><i class="bi bi-people-fill"></i> Data Siswa</a>
+                        <a href="<?= site_url('aslap/upload/alergi_siswa') ?>" class="nav-link"><i class="bi bi-heart-pulse-fill"></i> Alergi Siswa</a>
+                        <a href="<?= site_url('aslap/upload/data_guru') ?>" class="nav-link"><i class="bi bi-person-badge-fill"></i> Data Guru</a>
+                        <a href="<?= site_url('aslap/upload/data_bahan_baku') ?>" class="nav-link"><i class="bi bi-basket3-fill"></i> Bahan Baku</a>
+                        <a href="<?= site_url('signatures') ?>" class="nav-link"><i class="bi bi-pen-fill"></i> Tanda Tangan</a>
+                    </div>
+                </div>
+
+                <!-- Ahli Gizi Dropdown -->
+                <div class="nav-dropdown">
+                    <button class="nav-link nav-dropdown-toggle" onclick="toggleDropdown(this)">
+                        <span><i class="bi bi-heart-pulse"></i> Menu Ahli Gizi</span>
+                        <i class="bi bi-chevron-down"></i>
+                    </button>
+                    <div class="nav-dropdown-menu">
+                        <a href="<?= site_url('uji-cita-rasa')    ?>" class="nav-link"><i class="bi bi-palette"></i> Uji Cita Rasa</a>
+                        <a href="<?= site_url('analisis-gizi')    ?>" class="nav-link"><i class="bi bi-pie-chart"></i> Analisis Gizi</a>
+                        <a href="<?= site_url('checklist-masakan') ?>" class="nav-link"><i class="bi bi-clipboard-check"></i> QC Masakan</a>
+                        <a href="<?= site_url('pemeriksaan-sampel') ?>" class="nav-link"><i class="bi bi-search"></i> Sampel</a>
+                        <a href="<?= site_url('monitoring-suhu-masak') ?>" class="nav-link"><i class="bi bi-thermometer-high"></i> Suhu Masak</a>
+                        <a href="<?= site_url('estimasi-anggaran')  ?>" class="nav-link"><i class="bi bi-calculator"></i> Estimasi Anggaran</a>
+                        <a href="<?= site_url('makanan-lebih')      ?>" class="nav-link"><i class="bi bi-trash3"></i> Makanan Lebih</a>
+                        <a href="<?= site_url('serah-terima-bahan')  ?>" class="nav-link"><i class="bi bi-truck"></i> Serah Terima</a>
+                        <a href="<?= site_url('thawing-air')        ?>" class="nav-link"><i class="bi bi-water"></i> Thawing (Air)</a>
+                        <a href="<?= site_url('thawing-chiller')    ?>" class="nav-link"><i class="bi bi-snow2"></i> Thawing (Chill)</a>
+                        <a href="<?= site_url('suhu-ruangan')       ?>" class="nav-link"><i class="bi bi-thermometer-half"></i> Suhu Ruangan</a>
+                        <a href="<?= site_url('suhu-chiller-freezer') ?>" class="nav-link"><i class="bi bi-thermometer-snow"></i> Suhu Chiller</a>
+                        <a href="<?= site_url('pencucian-bahan')     ?>" class="nav-link"><i class="bi bi-droplet-half"></i> Pencucian</a>
+                        <a href="<?= site_url('sanitasi-ruangan')    ?>" class="nav-link"><i class="bi bi-door-closed"></i> Sanitasi Ruangan</a>
+                        <a href="<?= site_url('pembersihan-harian')  ?>" class="nav-link"><i class="bi bi-clock-history"></i> Pembersihan Harian</a>
+                        <a href="<?= site_url('pembersihan-mingguan') ?>" class="nav-link"><i class="bi bi-calendar-check"></i> Pembersihan Mingguan</a>
+                        <a href="<?= site_url('pembuangan-sampah')   ?>" class="nav-link"><i class="bi bi-recycle"></i> Pembuangan Sampah</a>
+                        <a href="<?= site_url('pembersihan-bak-sampah') ?>" class="nav-link"><i class="bi bi-bucket"></i> Bak Sampah</a>
+                        <a href="<?= site_url('pembersihan-lantai')  ?>" class="nav-link"><i class="bi bi-layers"></i> Pembersihan Lantai</a>
+                        <a href="<?= site_url('pengeluaran-chemical') ?>" class="nav-link"><i class="bi bi-vial"></i> Pengeluaran Chem</a>
+                        <a href="<?= site_url('pembersihan-transportasi') ?>" class="nav-link"><i class="bi bi-truck-flatbed"></i> Pembersihan Trans</a>
+                        <a href="<?= site_url('pembersihan-trolly')   ?>" class="nav-link"><i class="bi bi-cart-check"></i> Pembersihan Trolly</a>
+                        <a href="<?= site_url('higiene-personil')    ?>" class="nav-link"><i class="bi bi-person-check"></i> Higiene Personil</a>
+                    </div>
+                </div>
+
+                <!-- Akuntan Dropdown -->
+                <div class="nav-dropdown">
+                    <button class="nav-link nav-dropdown-toggle" onclick="toggleDropdown(this)">
+                        <span><i class="bi bi-cash-coin"></i> Menu Akuntan</span>
+                        <i class="bi bi-chevron-down"></i>
+                    </button>
+                    <div class="nav-dropdown-menu">
+                        <a href="<?= site_url('buku-kas') ?>" class="nav-link"><i class="bi bi-journal-check"></i> Buku Kas</a>
+                        <a href="<?= site_url('petty-cash') ?>" class="nav-link"><i class="bi bi-wallet2"></i> Petty Cash</a>
+                    </div>
+                </div>
+
+                <div class="nav-label">Monitoring Operasional</div>
+                <?php
+                $opsMenus = [
+                    'sanitasi-ruangan'       => ['Sanitasi Ruangan', 'bi-door-closed'],
+                    'pembersihan-transportasi' => ['Pembersihan Transportasi', 'bi-truck-flatbed'],
+                    'higiene-personil'         => ['Higiene Personil', 'bi-person-check'],
+                ];
+                foreach ($opsMenus as $uri => $menu): ?>
+                <a href="<?= site_url($uri) ?>" class="nav-link <?= str_starts_with(uri_string(), $uri) ? 'active' : '' ?>">
+                    <i class="bi <?= $menu[1] ?>"></i> <?= $menu[0] ?><span class="badge bg-light text-muted ms-auto" style="font-size:0.6rem;">VIEW</span>
+                </a>
+                <?php endforeach; ?>
+
                 <div class="nav-label">Pengaturan Dapur</div>
                 <a href="<?= site_url('pic/settings') ?>" class="nav-link <?= uri_string() === 'pic/settings' ? 'active' : '' ?>">
                     <i class="bi bi-geo-alt-fill"></i> Alamat SPPG
@@ -795,6 +1000,12 @@
             sidebar.classList.remove('show');
             overlay.classList.remove('show');
         });
+
+        // Dropdown Toggle for Sidebar
+        function toggleDropdown(button) {
+            const dropdown = button.parentElement;
+            dropdown.classList.toggle('show');
+        }
 
         // Prevent double submission global fix
         document.addEventListener('submit', function(e) {

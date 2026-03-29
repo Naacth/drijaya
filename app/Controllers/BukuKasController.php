@@ -16,11 +16,12 @@ class BukuKasController extends BaseController
 
     public function index()
     {
+        $role = session()->get('role');
         $sppgId = session()->get('sppg_id');
         $builder = $this->bukuKasModel->orderBy('tanggal', 'DESC');
         
-        if ($sppgId) {
-            $builder->where('sppg_id', $sppgId);
+        if ($role == 'admin' || $role == 'pic') {
+            if ($sppgId) $builder->where('sppg_id', $sppgId);
         }
 
         $data = [
@@ -181,15 +182,8 @@ class BukuKasController extends BaseController
 
     public function delete($id)
     {
-        $sppgId = session()->get('sppg_id');
-        $entry = $this->bukuKasModel->find($id);
-        
-        if (!$entry) {
-            return redirect()->back()->with('error', 'Data tidak ditemukan.');
-        }
-        
-        if ($sppgId && $entry['sppg_id'] != $sppgId) {
-            return redirect()->back()->with('error', 'Anda tidak memiliki akses untuk menghapus data ini.');
+        if (session()->get('role') !== 'admin') {
+            return redirect()->back()->with('error', 'Hanya Admin yang dapat menghapus data.');
         }
         
         $this->bukuKasModel->delete($id);

@@ -24,10 +24,11 @@ class MakananLebihController extends BaseController
         $builder->join('users', 'users.id = makanan_lebih.created_by');
 
         $role = session()->get('role');
+        $sppgId = session()->get('sppg_id');
+
         if ($role == 'ahli_gizi') {
             $builder->where('makanan_lebih.created_by', session()->get('user_id'));
-        } elseif ($role == 'admin') {
-            $sppgId = session()->get('sppg_id');
+        } elseif ($role == 'admin' || $role == 'pic') {
             if ($sppgId) $builder->where('users.sppg_id', $sppgId);
         }
         $builder->orderBy('makanan_lebih.created_at', 'DESC');
@@ -158,5 +159,21 @@ class MakananLebihController extends BaseController
         $db->transComplete();
         if ($db->transStatus() === false) return redirect()->back()->with('error', 'Gagal memperbarui data.')->withInput();
         return redirect()->to('/makanan-lebih')->with('success', 'Data Makanan Lebih berhasil diperbarui.');
+    }
+
+    public function delete($id)
+    {
+        if (session()->get('role') !== 'admin') {
+            return redirect()->back()->with('error', 'Hanya Admin yang dapat menghapus data.');
+        }
+
+        $db = \Config\Database::connect();
+        $db->transStart();
+        $this->itemModel->where('makanan_lebih_id', $id)->delete();
+        $this->headerModel->delete($id);
+        $db->transComplete();
+
+        if ($db->transStatus() === false) return redirect()->back()->with('error', 'Gagal menghapus.');
+        return redirect()->to('/makanan-lebih')->with('success', 'Data berhasil dihapus.');
     }
 }

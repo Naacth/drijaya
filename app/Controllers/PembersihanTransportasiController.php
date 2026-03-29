@@ -17,8 +17,13 @@ class PembersihanTransportasiController extends BaseController
         $builder->select('pembersihan_transportasi.*, users.nama as user_nama');
         $builder->join('users', 'users.id = pembersihan_transportasi.created_by');
         $role = session()->get('role');
-        if ($role == 'ahli_gizi') $builder->where('pembersihan_transportasi.created_by', session()->get('user_id'));
-        elseif ($role == 'admin') { $s = session()->get('sppg_id'); if ($s) $builder->where('users.sppg_id', $s); }
+        $sppgId = session()->get('sppg_id');
+
+        if ($role == 'ahli_gizi') {
+            $builder->where('pembersihan_transportasi.created_by', session()->get('user_id'));
+        } elseif ($role == 'admin' || $role == 'pic') {
+            if ($sppgId) $builder->where('users.sppg_id', $sppgId);
+        }
         $builder->orderBy('pembersihan_transportasi.created_at', 'DESC');
         return view('pembersihan_transportasi/index', ['title' => 'Pembersihan Alat Transportasi', 'forms' => $builder->get()->getResultArray()]);
     }
@@ -88,5 +93,14 @@ class PembersihanTransportasiController extends BaseController
         fputcsv($o, ['No', 'Tanggal', 'Nama Personil', 'Jam', 'Keterangan']);
         foreach ($rekap as $i => $r) fputcsv($o, [$i+1, $r['tanggal'], $r['nama_personil'], $r['jam'], $r['keterangan']]);
         fclose($o); exit;
+    }
+
+    public function delete($id)
+    {
+        if (session()->get('role') !== 'admin') {
+            return redirect()->back()->with('error', 'Hanya Admin yang dapat menghapus data.');
+        }
+        $this->model->delete($id);
+        return redirect()->to('/pembersihan-transportasi')->with('success', 'Data berhasil dihapus.');
     }
 }

@@ -3,14 +3,57 @@
 <head>
     <title><?= $title ?></title>
     <style>
-        body { font-family: sans-serif; font-size: 11px; }
-        .header { text-align: center; border-bottom: 2px solid #000; padding: 10px; margin-bottom: 20px; }
-        .table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-        .table th, .table td { border: 1px solid #000; padding: 6px; }
-        .sig-table { width: 100%; border:none; margin-top: 30px; }
-        .sig-cell { text-align: center; border:none; }
-        .badge { font-weight: bold; }
-        @media print { .no-print { display: none; } }
+        /* PDF Print Optimizations */
+        @page {
+            size: A4;
+            margin: 1.5cm;
+        }
+        body { 
+            font-family: 'Times New Roman', Times, serif; 
+            font-size: 11px; 
+            line-height: 1.4;
+            color: #000; 
+            margin: 0;
+            padding: 0;
+            background: #fff;
+        }
+        .page-container { width: 100%; margin: 0 auto; }
+        
+        /* Header Styling */
+        .header-block { border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 15px; }
+        .header-table { width: 100%; border-collapse: collapse; }
+        .header-logo { width: 70px; }
+        .header-text { text-align: center; }
+        .header-text h2 { margin: 0; font-size: 16px; font-weight: bold; }
+        .header-text h3 { margin: 1px 0; font-size: 12px; font-weight: normal; }
+        .header-text p { margin: 0; font-size: 9px; color: #333; }
+        
+        .title-main { 
+            text-align: center; 
+            font-size: 14px; 
+            font-weight: bold; 
+            margin: 15px 0; 
+            text-transform: uppercase;
+            text-decoration: underline;
+        }
+        
+        /* Table Data Styling */
+        .data-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; table-layout: fixed; }
+        .data-table th, .data-table td { border: 1px solid #000; padding: 8px 5px; text-align: center; font-size: 11px; }
+        .data-table th { background-color: #f2f2f2; font-weight: bold; }
+        
+        /* Signatures */
+        .sig-section { width: 100%; margin-top: 30px; page-break-inside: avoid; }
+        .sig-table { width: 100%; border-collapse: collapse; }
+        .sig-box { text-align: center; width: 50%; padding: 0 5px; vertical-align: top; }
+        .sig-space { height: 60px; }
+        .sig-name { font-weight: bold; text-decoration: underline; }
+        
+        /* Print Utilities */
+        @media print { 
+            .no-print { display: none !important; } 
+            body { -webkit-print-color-adjust: exact; }
+        }
     </style>
 </head>
 <body onload="window.print()">
@@ -18,61 +61,78 @@
         <button onclick="window.print()" style="padding: 6px 16px; cursor: pointer; border-radius: 6px; border: 1px solid #6366f1; background: #6366f1; color: white; font-weight: 600;">Cetak PDF</button>
         <button onclick="window.close()" style="padding: 6px 16px; cursor: pointer; border-radius: 6px; border: 1px solid #cbd5e1; background: white; color: #64748b; font-weight: 600; margin-left: 8px;">Tutup</button>
     </div>
-    <div class="header-block" style="position: relative; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 20px;">
-        <img src="<?= base_url('bgn.png') ?>" style="position: absolute; left: 0; top: 0; height: 80px;">
-        <div style="text-align: center;">
-            <h2 style="margin: 0; font-size: 18px;">BADAN GIZI NASIONAL</h2>
-            <h3 style="margin: 5px 0; font-size: 16px;">SPPG MANAGEMENT SYSTEM</h3>
-            <p style="margin: 0; font-size: 13px;"><?= esc(session()->get('sppg_alamat') ?? 'Alamat belum diatur oleh PIC') ?></p>
+    <div class="page-container">
+        <div class="header-block">
+            <table class="header-table">
+                <tr>
+                    <td class="header-logo" style="text-align: left;">
+                        <img src="<?= base_url('bgn.png') ?>" alt="Logo BGN" style="width: 70px; height: auto;">
+                    </td>
+                    <td class="header-text">
+                        <h2>SPPG BUNAR SUKAMULYA</h2>
+                        <h3>YAYASAN BUMI PANGAN INDONESIA</h3>
+                        <p><?= esc(session()->get('sppg_alamat') ?? 'Kabupaten Tangerang, Banten') ?></p>
+                    </td>
+                    <td class="header-logo" style="text-align: right;">
+                        <img src="<?= base_url('yayasan.png') ?>" alt="Logo Yayasan" style="width: 65px; height: auto;">
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="title-main">CHECKLIST PEMBERSIHAN HARIAN (UNIT <?= strtoupper($header['unit_type']) ?>)</div>
+
+        <div style="margin-bottom: 15px;">
+            Tanggal Periksa: <strong><?= date('d/m/Y', strtotime($header['tanggal'])) ?></strong>
+        </div>
+
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th width="40">No</th>
+                    <th>Area / Komponen Kebersihan</th>
+                    <th width="150">Status Kebersihan</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php 
+                $no = 1;
+                foreach ($area as $k => $v): 
+                ?>
+                <tr>
+                    <td><?= $no++ ?></td>
+                    <td style="text-align: left; text-transform: capitalize; padding-left: 10px;"><?= str_replace('_', ' ', $k) ?></td>
+                    <td style="font-weight: bold; color: <?= $v == '1' ? '#065f46' : '#991b1b' ?>;">
+                        <?= $v == '1' ? 'BERSIH' : 'KOTOR / PERLU TINDAKAN' ?>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+
+        <div class="sig-section">
+            <table class="sig-table">
+                <tr>
+                    <td class="sig-box">
+                        <p>Petugas Pelaksana,</p>
+                        <div class="sig-space"></div>
+                        <p class="sig-name">( <?= esc($header['nama_petugas']) ?> )</p>
+                    </td>
+                    <td class="sig-box">
+                        <p>Ahli Gizi / Verifikator,</p>
+                        <div class="sig-space">
+                            <?php if ($signature && $signature['image_data']): ?>
+                                <img src="<?= $signature['image_data'] ?>" style="max-height: 55px;">
+                            <?php endif; ?>
+                        </div>
+                        <p class="sig-name">( <?= esc($header['nama_verifikator']) ?> )</p>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div style="margin-top: 30px; font-size: 9px; color: #666; text-align: center; border-top: 1px dotted #000; padding-top: 8px;">
+            Halaman 1 dari 1 | SIM-GIZI Sanitation Audit | Dicetak pada: <?= date('d/m/Y H:i') ?>
         </div>
     </div>
-
-    <table class="table" style="border:none;">
-        <tr style="border:none;">
-            <td style="border:none; width: 50%;">Tanggal: <?= date('d/m/Y', strtotime($header['tanggal'])) ?></td>
-            <td style="border:none; text-align: right;">Unit: <strong><?= strtoupper($header['unit_type']) ?></strong></td>
-        </tr>
-    </table>
-
-    <table class="table">
-        <thead>
-            <tr style="background:#f0f0f0;">
-                <th width="10%">No</th>
-                <th>Area / Komponen</th>
-                <th width="20%">Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php 
-            $no = 1;
-            foreach ($area as $k => $v): 
-            ?>
-            <tr>
-                <td style="text-align:center;"><?= $no++ ?></td>
-                <td style="text-transform: capitalize;"><?= str_replace('_', ' ', $k) ?></td>
-                <td style="text-align:center;"><?= $v == '1' ? 'BERSIH' : 'KOTOR' ?></td>
-            </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
-
-    <table class="sig-table">
-        <tr>
-            <td class="sig-cell" width="50%">
-                <p>Petugas Pelaksana,</p>
-                <div style="height:60px;"></div>
-                <p><strong>( <?= esc($header['nama_petugas']) ?> )</strong></p>
-            </td>
-            <td class="sig-cell">
-                <p>Ahli Gizi / Verifikator,</p>
-                <?php if ($signature && $signature['image_data']): ?>
-                    <img src="<?= $signature['image_data'] ?>" height="60">
-                <?php else: ?>
-                    <div style="height:60px;"></div>
-                <?php endif; ?>
-                <p><strong>( <?= esc($header['nama_verifikator']) ?> )</strong></p>
-            </td>
-        </tr>
-    </table>
 </body>
 </html>

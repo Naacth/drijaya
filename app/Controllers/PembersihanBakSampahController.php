@@ -16,8 +16,13 @@ class PembersihanBakSampahController extends BaseController
         $builder->select('pembersihan_bak_sampah.*, users.nama as user_nama');
         $builder->join('users', 'users.id = pembersihan_bak_sampah.created_by');
         $role = session()->get('role');
-        if ($role == 'ahli_gizi') $builder->where('pembersihan_bak_sampah.created_by', session()->get('user_id'));
-        elseif ($role == 'admin') { $s = session()->get('sppg_id'); if ($s) $builder->where('users.sppg_id', $s); }
+        $sppgId = session()->get('sppg_id');
+
+        if ($role == 'ahli_gizi') {
+            $builder->where('pembersihan_bak_sampah.created_by', session()->get('user_id'));
+        } elseif ($role == 'admin' || $role == 'pic') {
+            if ($sppgId) $builder->where('users.sppg_id', $sppgId);
+        }
         $builder->orderBy('pembersihan_bak_sampah.created_at', 'DESC');
         return view('pembersihan_bak_sampah/index', ['title' => 'Pembersihan Bak Sampah', 'forms' => $builder->get()->getResultArray()]);
     }
@@ -80,5 +85,14 @@ class PembersihanBakSampahController extends BaseController
         ];
         $this->model->update($id, $data);
         return redirect()->to('/pembersihan-bak-sampah')->with('success', 'Data berhasil diperbarui.');
+    }
+
+    public function delete($id)
+    {
+        if (session()->get('role') !== 'admin') {
+            return redirect()->back()->with('error', 'Hanya Admin yang dapat menghapus data.');
+        }
+        $this->model->delete($id);
+        return redirect()->to('/pembersihan-bak-sampah')->with('success', 'Data berhasil dihapus.');
     }
 }

@@ -156,6 +156,12 @@
                                                     <i class="bi bi-printer"></i>
                                                 </a>
                                             <?php endif; ?>
+
+                                            <?php if (session()->get('role') == 'admin'): ?>
+                                                <a href="<?= base_url('po/delete/' . $po['id']) ?>" class="btn btn-danger" title="Hapus" onclick="return confirm('Hapus Purchase Order ini?')">
+                                                    <i class="bi bi-trash"></i>
+                                                </a>
+                                            <?php endif; ?>
                                         </div>
                                     </td>
                                 </tr>

@@ -57,21 +57,25 @@
         $thn = date('Y', strtotime($header['periode_akhir']));
         ?>
 
-        <!-- TITLE & LOGOS -->
-        <table style="width: 100%; margin-bottom: 15px;">
-            <tr>
-                <td width="120" style="text-align: left; vertical-align: middle;">
-                    <img src="<?= base_url('bgn.png') ?>" alt="Logo BGN" style="height: 100px; width: auto;">
-                </td>
-                <td style="text-align: center;">
-                    <h3 style="font-size: 16px; font-weight: bold; margin: 0 0 3px;">LAPORAN BIAYA OPERASIONAL</h3>
-                    <p style="font-size: 12px; margin: 2px 0;">Periode: Tanggal <?= $tglAwal ?> <?= $blnAwal ?> s.d Tanggal <?= $tglAkhir ?> <?= $blnAkhir ?> <?= $thn ?></p>
-                </td>
-                <td width="120" style="text-align: right; vertical-align: middle;">
-                    <img src="<?= base_url('yayasan.png') ?>" alt="Logo Yayasan" style="height: 95px; width: auto;">
-                </td>
-            </tr>
-        </table>
+        <div class="header-block" style="margin-bottom: 20px;">
+            <table style="width: 100%; border-collapse: collapse;">
+                <tr>
+                    <td width="120" style="text-align: center; vertical-align: middle; border: none;">
+                        <img src="<?= base_url('bgn.png') ?>" alt="Logo BGN" style="width: 100px; height: auto;">
+                    </td>
+                    <td style="text-align: center; border: none;">
+                        <h2 style="font-size: 16px; font-weight: bold; margin: 0;">SPPG BUNAR SUKAMULYA</h2>
+                        <h3 style="font-size: 15px; font-weight: bold; margin: 0;">YAYASAN BUMI PANGAN INDONESIA</h3>
+                        <p style="font-size: 11px; margin: 2px 0;"><?= esc(session()->get('sppg_alamat') ?? 'Alamat belum diatur') ?></p>
+                        <p style="font-size: 11px; margin: 2px 0;">15610</p>
+                    </td>
+                    <td width="120" style="text-align: center; vertical-align: middle; border: none;">
+                        <img src="<?= base_url('yayasan.png') ?>" alt="Logo Yayasan" style="width: 95px; height: auto;">
+                    </td>
+                </tr>
+            </table>
+            <hr style="border: none; border-top: 3px double #000; margin: 8px 0;">
+        </div>
 
         <!-- INFO -->
         <table class="info-table">

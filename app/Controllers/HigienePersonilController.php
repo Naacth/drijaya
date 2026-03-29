@@ -17,8 +17,13 @@ class HigienePersonilController extends BaseController
         $builder->select('higiene_personil.*, users.nama as user_nama');
         $builder->join('users', 'users.id = higiene_personil.created_by');
         $role = session()->get('role');
-        if ($role == 'ahli_gizi') $builder->where('higiene_personil.created_by', session()->get('user_id'));
-        elseif ($role == 'admin') { $s = session()->get('sppg_id'); if ($s) $builder->where('users.sppg_id', $s); }
+        $sppgId = session()->get('sppg_id');
+
+        if ($role == 'ahli_gizi') {
+            $builder->where('higiene_personil.created_by', session()->get('user_id'));
+        } elseif ($role == 'admin' || $role == 'pic') {
+            if ($sppgId) $builder->where('users.sppg_id', $sppgId);
+        }
         $builder->orderBy('higiene_personil.created_at', 'DESC');
         return view('higiene_personil/index', ['title' => 'Pemeriksaan Higiene Personil', 'forms' => $builder->get()->getResultArray()]);
     }
@@ -86,5 +91,14 @@ class HigienePersonilController extends BaseController
         fputcsv($o, ['No', 'Tanggal', 'Nama Personil', 'Kuku', 'Rambut', 'Pakaian', 'APD', 'Keterangan']);
         foreach ($rekap as $i => $r) fputcsv($o, [$i+1, $r['tanggal'], $r['nama_personil'], $r['kuku'], $r['rambut'], $r['pakaian'], $r['apd'], $r['keterangan']]);
         fclose($o); exit;
+    }
+
+    public function delete($id)
+    {
+        if (session()->get('role') !== 'admin') {
+            return redirect()->back()->with('error', 'Hanya Admin yang dapat menghapus data.');
+        }
+        $this->model->delete($id);
+        return redirect()->to('/higiene-personil')->with('success', 'Data berhasil dihapus.');
     }
 }

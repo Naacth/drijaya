@@ -25,10 +25,11 @@ class UjiCitaRasaController extends BaseController
 
         $role   = session()->get('role');
         $userId = session()->get('user_id');
+        $sppgId = session()->get('sppg_id');
+
         if ($role == 'ahli_gizi') {
             $builder->where('uji_cita_rasa.created_by', $userId);
-        } elseif ($role == 'admin') {
-            $sppgId = session()->get('sppg_id');
+        } elseif ($role == 'admin' || $role == 'pic') {
             if ($sppgId) $builder->where('users.sppg_id', $sppgId);
         }
 
@@ -177,5 +178,25 @@ class UjiCitaRasaController extends BaseController
             return redirect()->back()->with('error', 'Gagal memperbarui data.')->withInput();
         }
         return redirect()->to('/uji-cita-rasa')->with('success', 'Data Uji Cita Rasa berhasil diperbarui.');
+    }
+    
+    public function delete($id)
+    {
+        if (session()->get('role') !== 'admin') {
+            return redirect()->back()->with('error', 'Hanya Admin yang dapat menghapus data.');
+        }
+
+        $db = \Config\Database::connect();
+        $db->transStart();
+        
+        $this->itemModel->where('uji_cita_rasa_id', $id)->delete();
+        $this->headerModel->delete($id);
+
+        $db->transComplete();
+        if ($db->transStatus() === false) {
+            return redirect()->back()->with('error', 'Gagal menghapus data.');
+        }
+
+        return redirect()->to('/uji-cita-rasa')->with('success', 'Data Uji Cita Rasa berhasil dihapus.');
     }
 }

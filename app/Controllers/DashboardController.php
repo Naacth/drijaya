@@ -36,7 +36,6 @@ class DashboardController extends BaseController
 
         $currentSppgId = session()->get('sppg_id');
 
-        // Base Query for Reports (join with users to get sppg_id)
         $reportBuilder = $reportModel->select('reports.*')
                                      ->join('users', 'users.id = reports.user_id');
         
@@ -47,16 +46,40 @@ class DashboardController extends BaseController
             $userBuilder->where('sppg_id', $currentSppgId);
         }
 
+        // Pending PIC Submissions
+        $db = \Config\Database::connect();
+        $pendingBarangRusak = [];
+        if ($db->tableExists('pengajuan_barang_rusak')) {
+            $builder = $db->table('pengajuan_barang_rusak')
+                ->select('pengajuan_barang_rusak.*, users.nama as user_nama')
+                ->join('users', 'users.id = pengajuan_barang_rusak.created_by')
+                ->where('pengajuan_barang_rusak.status', 'diajukan');
+            if ($currentSppgId) $builder->where('users.sppg_id', $currentSppgId);
+            $pendingBarangRusak = $builder->get()->getResultArray();
+        }
+
+        $pendingPengadaan = [];
+        if ($db->tableExists('pengadaan_barang')) {
+            $builder = $db->table('pengadaan_barang')
+                ->select('pengadaan_barang.*, users.nama as user_nama')
+                ->join('users', 'users.id = pengadaan_barang.created_by')
+                ->where('pengadaan_barang.status', 'diajukan');
+            if ($currentSppgId) $builder->where('users.sppg_id', $currentSppgId);
+            $pendingPengadaan = $builder->get()->getResultArray();
+        }
+
         $data = [
-            'title'          => 'Dashboard Admin',
-            'totalReports'   => (clone $reportBuilder)->countAllResults(),
-            'pendingReports' => (clone $reportBuilder)->where('reports.status', 'pending')->countAllResults(),
-            'acceptedReports'=> (clone $reportBuilder)->where('reports.status', 'diterima')->countAllResults(),
-            'rejectedReports'=> (clone $reportBuilder)->where('reports.status', 'ditolak')->countAllResults(),
-            'totalUsers'     => $userBuilder->countAllResults(),
-            'recentReports'  => $reportModel->getWithUser($currentSppgId)->limit(10)->findAll(),
-            'allSppg'        => $sppgModel->findAll(),
-            'currentSppgId'  => $currentSppgId
+            'title'              => 'Dashboard Admin',
+            'totalReports'       => (clone $reportBuilder)->countAllResults(),
+            'pendingReports'     => (clone $reportBuilder)->where('reports.status', 'pending')->countAllResults(),
+            'acceptedReports'    => (clone $reportBuilder)->where('reports.status', 'diterima')->countAllResults(),
+            'rejectedReports'    => (clone $reportBuilder)->where('reports.status', 'ditolak')->countAllResults(),
+            'totalUsers'         => $userBuilder->countAllResults(),
+            'recentReports'      => $reportModel->getWithUser($currentSppgId)->limit(10)->findAll(),
+            'pendingBarangRusak' => $pendingBarangRusak,
+            'pendingPengadaan'   => $pendingPengadaan,
+            'allSppg'            => $sppgModel->findAll(),
+            'currentSppgId'      => $currentSppgId
         ];
 
         return view('dashboard/admin', $data);
@@ -85,10 +108,50 @@ class DashboardController extends BaseController
     private function picDashboard()
     {
         $poModel = new PurchaseOrderModel();
+        $sppgId  = session()->get('sppg_id');
+
+        // Count PIC-specific modules
+        $db = \Config\Database::connect();
+        
+        $barangRusakCount = 0;
+        $pengadaanCount = 0;
+        if ($db->tableExists('pengajuan_barang_rusak')) {
+            $barangRusakCount = $db->table('pengajuan_barang_rusak')
+                ->join('users', 'users.id = pengajuan_barang_rusak.created_by')
+                ->where('users.sppg_id', $sppgId)
+                ->countAllResults();
+        }
+        if ($db->tableExists('pengadaan_barang')) {
+            $pengadaanCount = $db->table('pengadaan_barang')
+                ->join('users', 'users.id = pengadaan_barang.created_by')
+                ->where('users.sppg_id', $sppgId)
+                ->countAllResults();
+        }
+
+        $totalPO = $poModel->join('users', 'users.id = purchase_orders.user_id')
+                           ->where('users.sppg_id', $sppgId)
+                           ->countAllResults();
+
+        $menus = [
+            'Purchase Order'           => ['route' => 'po', 'icon' => 'bi-receipt-cutoff', 'color' => '#6366f1'],
+            'Pengajuan Barang Rusak'   => ['route' => 'pengajuan-barang-rusak', 'icon' => 'bi-tools', 'color' => '#ef4444'],
+            'Pengadaan Barang'         => ['route' => 'pengadaan-barang', 'icon' => 'bi-cart-plus', 'color' => '#10b981'],
+            'Uji Cita Rasa'            => ['route' => 'uji-cita-rasa', 'icon' => 'bi-palette', 'color' => '#f59e0b'],
+            'Pemeriksaan Sampel'       => ['route' => 'pemeriksaan-sampel', 'icon' => 'bi-search', 'color' => '#06b6d4'],
+            'Monitoring Suhu Masak'    => ['route' => 'monitoring-suhu-masak', 'icon' => 'bi-thermometer-high', 'color' => '#8b5cf6'],
+            'Sanitasi Ruangan'         => ['route' => 'sanitasi-ruangan', 'icon' => 'bi-door-closed', 'color' => '#14b8a6'],
+            'Pembersihan Transportasi' => ['route' => 'pembersihan-transportasi', 'icon' => 'bi-truck-flatbed', 'color' => '#0ea5e9'],
+            'Higiene Personil'         => ['route' => 'higiene-personil', 'icon' => 'bi-person-check', 'color' => '#f97316'],
+            'Alamat SPPG'              => ['route' => 'pic/settings', 'icon' => 'bi-geo-alt-fill', 'color' => '#64748b'],
+        ];
 
         $data = [
             'title'  => 'Dashboard PIC',
-            'orders' => $poModel->getWithUser()->findAll(),
+            'totalPO' => $totalPO,
+            'barangRusakCount' => $barangRusakCount,
+            'pengadaanCount' => $pengadaanCount,
+            'menus' => $menus,
+            'sppg_name' => session()->get('sppg_nama') ?? 'Dapur SPPG',
         ];
 
         return view('dashboard/pic', $data);
@@ -96,9 +159,9 @@ class DashboardController extends BaseController
 
     private function aslapDashboard()
     {
-        $tenantId = session()->get('sppg_id');
+        $userId = session()->get('user_id');
         
-        // Models
+        // Models - filter by created_by to show only user's own data
         $models = [
             'barang_datang'       => new \App\Models\BarangDatangModel(),
             'cek_bahan'           => new \App\Models\CekBahanBakuModel(),
@@ -112,7 +175,7 @@ class DashboardController extends BaseController
 
         $stats = [];
         foreach ($models as $key => $model) {
-            $stats[$key] = $model->countAllResults();
+            $stats[$key] = $model->where('created_by', $userId)->countAllResults();
         }
 
         // Quick Access Menu
@@ -146,10 +209,13 @@ class DashboardController extends BaseController
         $userId      = session()->get('user_id');
 
         $data = [
-            'title'     => 'Dashboard Akuntan',
-            'reports'   => $reportModel->getByUser($userId),
-            'orders'    => $poModel->where('user_id', $userId)->orderBy('created_at', 'DESC')->findAll(),
-            'totalPO'   => $poModel->where('user_id', $userId)->countAllResults(),
+            'title'          => 'Dashboard Akuntan',
+            'reports'        => $reportModel->getByUser($userId),
+            'totalReports'   => $reportModel->where('user_id', $userId)->countAllResults(),
+            'pendingReports' => $reportModel->where(['user_id' => $userId, 'status' => 'pending'])->countAllResults(),
+            'orders'         => $poModel->where('user_id', $userId)->orderBy('created_at', 'DESC')->findAll(),
+            'totalPO'        => $poModel->where('user_id', $userId)->countAllResults(),
+            'sppg_name'      => session()->get('sppg_nama') ?? 'Dapur SPPG',
         ];
 
         return view('dashboard/akuntan', $data);
@@ -161,8 +227,11 @@ class DashboardController extends BaseController
         $userId = session()->get('user_id');
 
         $data = [
-            'title'   => 'Dashboard Ahli Gizi',
-            'reports' => $reportModel->where(['user_id' => $userId, 'kategori' => 'menu_makanan'])->orderBy('created_at', 'DESC')->findAll(),
+            'title'          => 'Dashboard Ahli Gizi',
+            'reports'        => $reportModel->where(['user_id' => $userId, 'kategori' => 'menu_makanan'])->orderBy('created_at', 'DESC')->findAll(),
+            'totalMenu'      => $reportModel->where(['user_id' => $userId, 'kategori' => 'menu_makanan'])->countAllResults(),
+            'pendingMenu'    => $reportModel->where(['user_id' => $userId, 'kategori' => 'menu_makanan', 'status' => 'pending'])->countAllResults(),
+            'sppg_name'      => session()->get('sppg_nama') ?? 'Dapur SPPG',
         ];
 
         return view('dashboard/ahli_gizi', $data);

@@ -21,8 +21,13 @@ class ThawingChillerController extends BaseController
         $db = \Config\Database::connect(); $b = $db->table('monitoring_thawing_chiller');
         $b->select('monitoring_thawing_chiller.*, users.nama as user_nama')->join('users', 'users.id = monitoring_thawing_chiller.created_by');
         $role = session()->get('role');
-        if ($role == 'ahli_gizi') $b->where('monitoring_thawing_chiller.created_by', session()->get('user_id'));
-        elseif ($role == 'admin') { $s = session()->get('sppg_id'); if ($s) $b->where('users.sppg_id', $s); }
+        $sppgId = session()->get('sppg_id');
+
+        if ($role == 'ahli_gizi') {
+            $b->where('monitoring_thawing_chiller.created_by', session()->get('user_id'));
+        } elseif ($role == 'admin' || $role == 'pic') {
+            if ($sppgId) $b->where('users.sppg_id', $sppgId);
+        }
         $b->orderBy('monitoring_thawing_chiller.created_at', 'DESC');
         return view('thawing_chiller/index', ['title' => 'Monitoring Thawing Chiller', 'forms' => $b->get()->getResultArray()]);
     }
@@ -127,5 +132,21 @@ class ThawingChillerController extends BaseController
         $db->transComplete();
         if ($db->transStatus() === false) return redirect()->back()->with('error', 'Gagal memperbarui.')->withInput();
         return redirect()->to('/thawing-chiller')->with('success', 'Data berhasil diperbarui.');
+    }
+
+    public function delete($id)
+    {
+        if (session()->get('role') !== 'admin') {
+            return redirect()->back()->with('error', 'Hanya Admin yang dapat menghapus data.');
+        }
+
+        $db = \Config\Database::connect();
+        $db->transStart();
+        $this->itemModel->where('monitoring_thawing_chiller_id', $id)->delete();
+        $this->headerModel->delete($id);
+        $db->transComplete();
+
+        if ($db->transStatus() === false) return redirect()->back()->with('error', 'Gagal menghapus.');
+        return redirect()->to('/thawing-chiller')->with('success', 'Data berhasil dihapus.');
     }
 }

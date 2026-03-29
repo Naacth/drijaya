@@ -21,8 +21,13 @@ class ThawingAirController extends BaseController
         $db = \Config\Database::connect(); $b = $db->table('checklist_thawing_air');
         $b->select('checklist_thawing_air.*, users.nama as user_nama')->join('users', 'users.id = checklist_thawing_air.created_by');
         $role = session()->get('role');
-        if ($role == 'ahli_gizi') $b->where('checklist_thawing_air.created_by', session()->get('user_id'));
-        elseif ($role == 'admin') { $s = session()->get('sppg_id'); if ($s) $b->where('users.sppg_id', $s); }
+        $sppgId = session()->get('sppg_id');
+
+        if ($role == 'ahli_gizi') {
+            $b->where('checklist_thawing_air.created_by', session()->get('user_id'));
+        } elseif ($role == 'admin' || $role == 'pic') {
+            if ($sppgId) $b->where('users.sppg_id', $sppgId);
+        }
         $b->orderBy('checklist_thawing_air.created_at', 'DESC');
         return view('thawing_air/index', ['title' => 'Checklist Thawing (Air)', 'forms' => $b->get()->getResultArray()]);
     }
@@ -125,5 +130,21 @@ class ThawingAirController extends BaseController
         $db->transComplete();
         if ($db->transStatus() === false) return redirect()->back()->with('error', 'Gagal memperbarui.')->withInput();
         return redirect()->to('/thawing-air')->with('success', 'Data berhasil diperbarui.');
+    }
+
+    public function delete($id)
+    {
+        if (session()->get('role') !== 'admin') {
+            return redirect()->back()->with('error', 'Hanya Admin yang dapat menghapus data.');
+        }
+
+        $db = \Config\Database::connect();
+        $db->transStart();
+        $this->itemModel->where('checklist_thawing_air_id', $id)->delete();
+        $this->headerModel->delete($id);
+        $db->transComplete();
+
+        if ($db->transStatus() === false) return redirect()->back()->with('error', 'Gagal menghapus.');
+        return redirect()->to('/thawing-air')->with('success', 'Data berhasil dihapus.');
     }
 }

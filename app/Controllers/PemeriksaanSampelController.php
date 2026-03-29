@@ -21,10 +21,11 @@ class PemeriksaanSampelController extends BaseController
         $builder->join('users', 'users.id = pemeriksaan_sampel.created_by');
 
         $role = session()->get('role');
+        $sppgId = session()->get('sppg_id');
+
         if ($role == 'ahli_gizi') {
             $builder->where('pemeriksaan_sampel.created_by', session()->get('user_id'));
-        } elseif ($role == 'admin') {
-            $sppgId = session()->get('sppg_id');
+        } elseif ($role == 'admin' || $role == 'pic') {
             if ($sppgId) $builder->where('users.sppg_id', $sppgId);
         }
 
@@ -143,5 +144,14 @@ class PemeriksaanSampelController extends BaseController
         ]);
 
         return redirect()->to('/pemeriksaan-sampel')->with('success', 'Data Pemeriksaan & Sampel berhasil diperbarui.');
+    }
+
+    public function delete($id)
+    {
+        if (session()->get('role') !== 'admin') {
+            return redirect()->back()->with('error', 'Hanya Admin yang dapat menghapus data.');
+        }
+        $this->model->delete($id);
+        return redirect()->to('/pemeriksaan-sampel')->with('success', 'Data berhasil dihapus.');
     }
 }

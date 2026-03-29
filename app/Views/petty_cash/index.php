@@ -71,11 +71,13 @@
                                     <?= $e['pengeluaran'] > 0 ? 'Rp '.number_format($e['pengeluaran'], 0, ',', '.') : '-' ?>
                                 </td>
                                 <td class="text-center">
+                                    <?php if (session()->get('role') === 'admin'): ?>
                                     <a href="<?= site_url('petty-cash/delete/'.$e['id']) ?>" 
                                        class="btn btn-sm btn-light text-danger border" 
                                        onclick="return confirm('Hapus entri ini?')">
                                         <i class="bi bi-trash"></i>
                                     </a>
+                                    <?php endif; ?>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

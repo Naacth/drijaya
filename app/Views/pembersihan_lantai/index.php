@@ -37,10 +37,13 @@
                             </span>
                         </td>
                         <td class="text-center text-nowrap">
-                            <a href="<?= site_url('pembersihan-lantai/show/' . $f['id']) ?>" class="btn btn-sm btn-outline-primary rounded-pill px-3"><i class="bi bi-eye"></i> Detail</a>
-                            <?php if (session()->get('role') === 'ahli_gizi'): ?>
-                            <a href="<?= site_url('pembersihan-lantai/edit/' . $f['id']) ?>" class="btn btn-sm btn-outline-warning rounded-pill px-3"><i class="bi bi-pencil"></i> Edit</a>
-                            <?php endif; ?>
+                             <a href="<?= site_url('pembersihan-lantai/show/' . $f['id']) ?>" class="btn btn-sm btn-outline-primary rounded-pill px-3"><i class="bi bi-eye"></i> Detail</a>
+                             <?php if (session()->get('role') === 'ahli_gizi'): ?>
+                             <a href="<?= site_url('pembersihan-lantai/edit/' . $f['id']) ?>" class="btn btn-sm btn-outline-warning rounded-pill px-3"><i class="bi bi-pencil"></i> Edit</a>
+                             <?php endif; ?>
+                             <?php if (session()->get('role') === 'admin'): ?>
+                             <a href="<?= site_url('pembersihan-lantai/delete/' . $f['id']) ?>" class="btn btn-sm btn-outline-danger rounded-pill px-3" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')"><i class="bi bi-trash"></i> Hapus</a>
+                             <?php endif; ?>
                         </td>
                     </tr>
                     <?php endforeach; ?>

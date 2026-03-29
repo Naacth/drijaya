@@ -17,11 +17,12 @@ class SuhuChillerFreezerController extends BaseController
         $b->select('suhu_chiller_freezer.*, users.nama as user_nama');
         $b->join('users', 'users.id = suhu_chiller_freezer.created_by');
         $role = session()->get('role');
+        $sppgId = session()->get('sppg_id');
+
         if ($role == 'ahli_gizi') {
             $b->where('suhu_chiller_freezer.created_by', session()->get('user_id'));
-        } elseif ($role == 'admin') {
-            $s = session()->get('sppg_id');
-            if ($s) $b->where('users.sppg_id', $s);
+        } elseif ($role == 'admin' || $role == 'pic') {
+            if ($sppgId) $b->where('users.sppg_id', $sppgId);
         }
         $b->orderBy('suhu_chiller_freezer.created_at', 'DESC');
         return view('suhu_chiller_freezer/index', [
@@ -115,5 +116,14 @@ class SuhuChillerFreezerController extends BaseController
             'nama_petugas'   => $this->request->getPost('nama_petugas'),
         ]);
         return redirect()->to('/suhu-chiller-freezer')->with('success', 'Data berhasil diperbarui.');
+    }
+
+    public function delete($id)
+    {
+        if (session()->get('role') !== 'admin') {
+            return redirect()->back()->with('error', 'Hanya Admin yang dapat menghapus data.');
+        }
+        $this->model->delete($id);
+        return redirect()->to('/suhu-chiller-freezer')->with('success', 'Data berhasil dihapus.');
     }
 }

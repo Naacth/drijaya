@@ -103,6 +103,11 @@
                                             <a href="<?= base_url('penerima-manfaat/export-pdf/' . $item['id']) ?>" target="_blank" class="btn btn-light border" title="Export PDF">
                                                 <i class="bi bi-file-pdf text-danger"></i>
                                             </a>
+                                            <?php if (session()->get('role') === 'admin'): ?>
+                                            <a href="<?= base_url('penerima-manfaat/delete/' . $item['id']) ?>" class="btn btn-light border text-danger" title="Hapus" onclick="return confirm('Yakin hapus data ini?')">
+                                                <i class="bi bi-trash"></i>
+                                            </a>
+                                            <?php endif; ?>
                                         </div>
                                     </td>
                                 </tr>

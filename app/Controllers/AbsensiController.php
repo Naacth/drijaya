@@ -20,11 +20,12 @@ class AbsensiController extends BaseController
 
     public function index()
     {
+        $role = session()->get('role');
         $sppgId = session()->get('sppg_id');
         $builder = $this->absensiModel->orderBy('tanggal', 'DESC');
         
-        if ($sppgId) {
-            $builder->where('sppg_id', $sppgId);
+        if ($role == 'admin' || $role == 'pic') {
+            if ($sppgId) $builder->where('sppg_id', $sppgId);
         }
 
         $data = [
@@ -216,5 +217,21 @@ class AbsensiController extends BaseController
         ];
 
         return view('absensi/rekap_print', $data);
+    }
+
+    public function delete($id)
+    {
+        if (session()->get('role') !== 'admin') {
+            return redirect()->back()->with('error', 'Hanya Admin yang dapat menghapus data.');
+        }
+
+        $db = \Config\Database::connect();
+        $db->transStart();
+        $this->itemModel->where('absensi_id', $id)->delete();
+        $this->absensiModel->delete($id);
+        $db->transComplete();
+
+        if ($db->transStatus() === false) return redirect()->back()->with('error', 'Gagal menghapus data.');
+        return redirect()->to('/absensi')->with('success', 'Data berhasil dihapus.');
     }
 }

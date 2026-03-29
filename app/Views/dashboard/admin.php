@@ -239,6 +239,64 @@
     </div>
 </div>
 
+<!-- Persetujuan Perlu Tindakan (PIC Submissions) -->
+<?php if (!empty($pendingBarangRusak) || !empty($pendingPengadaan)): ?>
+<div class="data-card animate-in mb-4" style="border-left: 4px solid #f59e0b;">
+    <div class="card-header bg-light">
+        <h6 class="text-warning fw-bold mb-0"><i class="bi bi-exclamation-triangle-fill me-2"></i>Persetujuan Perlu Tindakan</h6>
+        <span class="badge bg-warning text-dark"><?= count($pendingBarangRusak) + count($pendingPengadaan) ?> Pengajuan Baru</span>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-premium table-hover">
+            <thead>
+                <tr>
+                    <th>PIC</th>
+                    <th>Tipe Pengajuan</th>
+                    <th>Nama Barang / Deskripsi</th>
+                    <th>Tanggal</th>
+                    <th class="text-center">Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($pendingBarangRusak as $p): ?>
+                <tr>
+                    <td><strong><?= esc($p['user_nama']) ?></strong></td>
+                    <td><span class="badge bg-danger-subtle text-danger">Barang Rusak</span></td>
+                    <td><?= esc($p['nama_barang']) ?></td>
+                    <td><?= date('d M Y', strtotime($p['tanggal'])) ?></td>
+                    <td class="text-center">
+                        <form action="<?= site_url('pengajuan-barang-rusak/approve/' . $p['id']) ?>" method="post" class="d-inline">
+                            <button type="submit" class="btn btn-sm btn-success rounded-pill px-3" onclick="return confirm('Setujui pengajuan ini?')"><i class="bi bi-check-lg"></i> Setujui</button>
+                        </form>
+                        <form action="<?= site_url('pengajuan-barang-rusak/reject/' . $p['id']) ?>" method="post" class="d-inline">
+                            <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-3" onclick="return confirm('Tolak pengajuan ini?')"><i class="bi bi-x-lg"></i> Tolak</button>
+                        </form>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+                
+                <?php foreach ($pendingPengadaan as $p): ?>
+                <tr>
+                    <td><strong><?= esc($p['user_nama']) ?></strong></td>
+                    <td><span class="badge bg-success-subtle text-success">Pengadaan Barang</span></td>
+                    <td><?= esc($p['nama_barang']) ?> (<?= $p['jumlah'] ?> <?= $p['satuan'] ?>)</td>
+                    <td><?= date('d M Y', strtotime($p['tanggal'])) ?></td>
+                    <td class="text-center">
+                        <form action="<?= site_url('pengadaan-barang/approve/' . $p['id']) ?>" method="post" class="d-inline">
+                            <button type="submit" class="btn btn-sm btn-success rounded-pill px-3" onclick="return confirm('Setujui pengadaan ini?')"><i class="bi bi-check-lg"></i> Setujui</button>
+                        </form>
+                        <form action="<?= site_url('pengadaan-barang/reject/' . $p['id']) ?>" method="post" class="d-inline">
+                            <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-3" onclick="return confirm('Tolak pengajuan ini?')"><i class="bi bi-x-lg"></i> Tolak</button>
+                        </form>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+</div>
+<?php endif; ?>
+
 <!-- Recent Reports -->
 <div class="data-card animate-in mt-4">
     <div class="card-header">

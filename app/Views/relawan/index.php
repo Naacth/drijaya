@@ -53,9 +53,11 @@
                                     <a href="<?= site_url('relawan/edit/'.$r['id']) ?>" class="btn btn-sm btn-outline-primary border-0" title="Edit">
                                         <i class="bi bi-pencil-square"></i>
                                     </a>
+                                    <?php if (session()->get('role') === 'admin'): ?>
                                     <a href="<?= site_url('relawan/delete/'.$r['id']) ?>" class="btn btn-sm btn-outline-danger border-0" onclick="return confirm('Hapus relawan ini?')" title="Hapus">
                                         <i class="bi bi-trash3"></i>
                                     </a>
+                                    <?php endif; ?>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

@@ -28,6 +28,9 @@
                         <?php if (session()->get('role') === 'ahli_gizi'): ?>
                         <a href="<?= site_url('thawing-chiller/edit/' . $form['id']) ?>" class="btn btn-sm btn-outline-warning rounded-pill px-3"><i class="bi bi-pencil"></i> Edit</a>
                         <?php endif; ?>
+                        <?php if (session()->get('role') === 'admin'): ?>
+                        <a href="<?= site_url('thawing-chiller/delete/' . $form['id']) ?>" class="btn btn-sm btn-outline-danger rounded-pill px-3" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')"><i class="bi bi-trash"></i> Hapus</a>
+                        <?php endif; ?>
                     </td>
                 </tr>
                 <?php endforeach; endif; ?>

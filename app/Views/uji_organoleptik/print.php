@@ -4,27 +4,19 @@
     <meta charset="UTF-8">
     <title><?= $title ?></title>
     <style>
+        /* PDF Print Optimizations */
+        @page {
+            size: A4;
+            margin: 1.5cm;
+        }
         body { 
             font-family: 'Times New Roman', Times, serif; 
-            font-size: 13px; 
+            font-size: 11px; 
+            line-height: 1.4;
             color: #000; 
+            margin: 0;
+            padding: 0;
             background: #fff;
-            margin: 0; padding: 20px;
-        }
-        
-        .page-container {
-            width: 750px;
-            margin: 0 auto;
-        }
-
-        @media print {
-            body { padding: 0; }
-            .page-container { width: 100%; }
-            .no-print { display: none !important; }
-            .dark-header th { 
-                background-color: #1a1a2e !important; 
-                color: #fff !important; 
-                -webkit-print-color-adjust: exact; 
                 print-color-adjust: exact; 
             }
         }
@@ -151,23 +143,21 @@
 
         <!-- HEADER -->
         <div class="header-block">
-            <table>
+            <table class="header-table">
                 <tr>
-                    <td width="120" style="text-align: center; vertical-align: middle;">
-                        <img src="<?= base_url('bgn.png') ?>" alt="Logo BGN" style="width: 100px; height: auto;">
+                    <td class="header-logo" style="text-align: left;">
+                        <img src="<?= base_url('bgn.png') ?>" alt="Logo BGN" style="width: 70px; height: auto;">
                     </td>
-                    <td style="text-align: center;">
+                    <td class="header-text">
                         <h2>SPPG BUNAR SUKAMULYA</h2>
                         <h3>YAYASAN BUMI PANGAN INDONESIA</h3>
-                        <p><?= esc(session()->get('sppg_alamat') ?? 'Alamat belum diatur') ?></p>
-                        <p>15610</p>
+                        <p><?= esc(session()->get('sppg_alamat') ?? 'Kabupaten Tangerang, Banten') ?></p>
                     </td>
-                    <td width="120" style="text-align: center; vertical-align: middle;">
-                        <img src="<?= base_url('yayasan.png') ?>" alt="Logo Yayasan" style="width: 95px; height: auto;">
+                    <td class="header-logo" style="text-align: right;">
+                        <img src="<?= base_url('yayasan.png') ?>" alt="Logo Yayasan" style="width: 65px; height: auto;">
                     </td>
                 </tr>
             </table>
-            <hr>
         </div>
 
         <div class="title-main">CHECKLIST UJI ORGANOLEPTIK</div>
@@ -268,46 +258,41 @@
         </div>
 
         <!-- SIGNATURE BLOCK -->
-        <?php 
-        $months = [1=>'Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
-        $tgl = date('d', strtotime($header['tanggal_pemeriksaan']));
-        $bln = $months[(int)date('m', strtotime($header['tanggal_pemeriksaan']))];
-        $thn = date('Y', strtotime($header['tanggal_pemeriksaan']));
-        ?>
-
-        <div style="text-align: right; margin-bottom: 5px;">
-            Tangerang, &nbsp;&nbsp; <?= $bln ?> <?= $thn ?>
+        <div class="sig-section">
+            <table class="sig-table">
+                <tr>
+                    <td class="sig-box">
+                        <p>Mengetahui,</p>
+                        <p style="font-weight:bold; margin-top:-5px;">Asisten Lapangan</p>
+                        <div class="sig-space">
+                            <?php if (!empty($signature['ttd_aslap'])): ?>
+                                <img src="<?= base_url('uploads/signatures/' . $signature['ttd_aslap']) ?>" style="max-height: 50px; max-width: 120px; object-fit: contain;">
+                            <?php endif; ?>
+                        </div>
+                        <p class="sig-name">( <?= esc($header['nama_aslap']) ?> )</p>
+                    </td>
+                    <td class="sig-box">
+                        <p>Pemeriksa,</p>
+                        <p style="font-weight:bold; margin-top:-5px;">PLOK / PIC Sekolah</p>
+                        <div class="sig-space"></div>
+                        <p class="sig-name">( <?= esc($header['nama_pemeriksa_plok'] ?: '........................') ?> )</p>
+                    </td>
+                    <td class="sig-box">
+                        <p>Menyetujui,</p>
+                        <p style="font-weight:bold; margin-top:-5px;">Kepala SPPG</p>
+                        <div class="sig-space">
+                            <?php if (!empty($signature['ttd_kepala_sppg'])): ?>
+                                <img src="<?= base_url('uploads/signatures/' . $signature['ttd_kepala_sppg']) ?>" style="max-height: 50px; max-width: 120px; object-fit: contain;">
+                            <?php endif; ?>
+                        </div>
+                        <p class="sig-name">( <?= esc($header['nama_kepala_sppg']) ?> )</p>
+                    </td>
+                </tr>
+            </table>
         </div>
 
-        <table class="sig-block">
-            <tr>
-                <td>
-                    <p>Mengetahui</p>
-                    <p class="sig-role">Asisten Lapangan</p>
-                    <div style="height: 70px; display: flex; align-items: end; justify-content: center;">
-                        <?php if (!empty($signature['ttd_aslap'])): ?>
-                            <img src="<?= base_url('uploads/signatures/' . $signature['ttd_aslap']) ?>" style="max-height: 60px; max-width: 150px; object-fit: contain;">
-                        <?php endif; ?>
-                    </div>
-                    <span class="sig-name">( <?= esc($header['nama_aslap']) ?> )</span>
-                </td>
-                <td>
-                    <p>Pemeriksa</p>
-                    <p class="sig-role">PLOK / PIC Sekolah</p>
-                    <div style="height: 70px;"></div>
-                    <span class="sig-name">( <?= esc($header['nama_pemeriksa_plok'] ?: '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;') ?> )</span>
-                </td>
-            </tr>
-        </table>
-
-        <div style="text-align: center; margin-top: 30px;">
-            <p class="sig-role">Kepala SPPG</p>
-            <div style="height: 70px; display: flex; align-items: end; justify-content: center;">
-                <?php if (!empty($signature['ttd_kepala_sppg'])): ?>
-                    <img src="<?= base_url('uploads/signatures/' . $signature['ttd_kepala_sppg']) ?>" style="max-height: 60px; max-width: 150px; object-fit: contain;">
-                <?php endif; ?>
-            </div>
-            <span class="sig-name">(<?= esc($header['nama_kepala_sppg']) ?>)</span>
+        <div style="margin-top: 30px; font-size: 9px; color: #666; text-align: center; border-top: 1px dotted #000; padding-top: 8px;">
+            Sistem Informasi Manajemen Gizi (SIM-GIZI) | Dicetak pada: <?= date('d/m/Y H:i') ?>
         </div>
 
     </div>

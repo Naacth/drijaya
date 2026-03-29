@@ -15,7 +15,10 @@ class PicController extends BaseController
         $status = $this->request->getGet('status');
         $search = $this->request->getGet('search');
 
-        $builder = $poModel->where('sppg_id', session()->get('sppg_id'));
+        $sppgId = session()->get('sppg_id');
+        $builder = $poModel->select('purchase_orders.*')
+                           ->join('users', 'users.id = purchase_orders.user_id')
+                           ->where('users.sppg_id', $sppgId);
 
         if ($status && $status !== 'Semua') {
             $builder->where('status', $status);

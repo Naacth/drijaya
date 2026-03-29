@@ -27,12 +27,24 @@
         <button onclick="window.close()" style="padding: 6px 16px; cursor: pointer; border-radius: 6px; border: 1px solid #6c757d; background: white; color: #6c757d; font-weight: 600; margin-left: 8px;">Tutup</button>
     </div>
 
-    <div class="header">
-        <img src="<?= base_url('bgn.png') ?>" class="logo">
-        <div class="title-container">
-            <h1 class="title">Checklist Pemeriksaan Higiene Personil</h1>
-            <p class="subtitle">PT. Drijaya - Manajemen Pemeliharaan & Higiene</p>
-        </div>
+    <div class="header-block">
+        <table>
+            <tr>
+                <td width="120" style="text-align: center; vertical-align: middle; border: none;">
+                    <img src="<?= base_url('bgn.png') ?>" alt="Logo BGN" style="width: 100px; height: auto;">
+                </td>
+                <td style="text-align: center; border: none;">
+                    <h2 style="font-size: 16px; font-weight: bold; margin: 0;">SPPG BUNAR SUKAMULYA</h2>
+                    <h3 style="font-size: 15px; font-weight: bold; margin: 0;">YAYASAN BUMI PANGAN INDONESIA</h3>
+                    <p style="font-size: 11px; margin: 2px 0;"><?= esc(session()->get('sppg_alamat') ?? 'Alamat belum diatur') ?></p>
+                    <p style="font-size: 11px; margin: 2px 0;">15610</p>
+                </td>
+                <td width="120" style="text-align: center; vertical-align: middle; border: none;">
+                    <img src="<?= base_url('yayasan.png') ?>" alt="Logo Yayasan" style="width: 95px; height: auto;">
+                </td>
+            </tr>
+        </table>
+        <hr style="border: none; border-top: 3px double #000; margin: 8px 0;">
     </div>
 
     <table class="info-table">

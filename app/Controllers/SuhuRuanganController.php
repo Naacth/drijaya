@@ -15,8 +15,13 @@ class SuhuRuanganController extends BaseController
         $db = \Config\Database::connect(); $b = $db->table('catatan_suhu_ruangan');
         $b->select('catatan_suhu_ruangan.*, users.nama as user_nama')->join('users', 'users.id = catatan_suhu_ruangan.created_by');
         $role = session()->get('role');
-        if ($role == 'ahli_gizi') $b->where('catatan_suhu_ruangan.created_by', session()->get('user_id'));
-        elseif ($role == 'admin') { $s = session()->get('sppg_id'); if ($s) $b->where('users.sppg_id', $s); }
+        $sppgId = session()->get('sppg_id');
+
+        if ($role == 'ahli_gizi') {
+            $b->where('catatan_suhu_ruangan.created_by', session()->get('user_id'));
+        } elseif ($role == 'admin' || $role == 'pic') {
+            if ($sppgId) $b->where('users.sppg_id', $sppgId);
+        }
         $b->orderBy('catatan_suhu_ruangan.created_at', 'DESC');
         return view('suhu_ruangan/index', ['title' => 'Catatan Suhu Ruangan', 'forms' => $b->get()->getResultArray()]);
     }
@@ -96,5 +101,14 @@ class SuhuRuanganController extends BaseController
             'nama_petugas'    => $this->request->getPost('nama_petugas'),
         ]);
         return redirect()->to('/suhu-ruangan')->with('success', 'Data berhasil diperbarui.');
+    }
+
+    public function delete($id)
+    {
+        if (session()->get('role') !== 'admin') {
+            return redirect()->back()->with('error', 'Hanya Admin yang dapat menghapus data.');
+        }
+        $this->model->delete($id);
+        return redirect()->to('/suhu-ruangan')->with('success', 'Data berhasil dihapus.');
     }
 }

@@ -66,6 +66,11 @@
                                     <a href="<?= site_url('absensi/export-pdf/'.$a['id']) ?>" target="_blank" class="btn btn-sm btn-outline-danger border" title="Export PDF">
                                         <i class="bi bi-file-earmark-pdf"></i>
                                     </a>
+                                    <?php if (session()->get('role') === 'admin'): ?>
+                                    <a href="<?= site_url('absensi/delete/'.$a['id']) ?>" class="btn btn-sm btn-outline-danger border" title="Hapus" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                    <?php endif; ?>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

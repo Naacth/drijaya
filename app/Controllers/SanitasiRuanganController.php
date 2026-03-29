@@ -18,8 +18,13 @@ class SanitasiRuanganController extends BaseController
         $builder->join('users', 'users.id = sanitasi_ruangan.created_by');
         
         $role = session()->get('role');
-        if ($role == 'ahli_gizi') $builder->where('sanitasi_ruangan.created_by', session()->get('user_id'));
-        elseif ($role == 'admin') { $s = session()->get('sppg_id'); if ($s) $builder->where('users.sppg_id', $s); }
+        $sppgId = session()->get('sppg_id');
+
+        if ($role == 'ahli_gizi') {
+            $builder->where('sanitasi_ruangan.created_by', session()->get('user_id'));
+        } elseif ($role == 'admin' || $role == 'pic') {
+            if ($sppgId) $builder->where('users.sppg_id', $sppgId);
+        }
         
         $builder->orderBy('sanitasi_ruangan.created_at', 'DESC');
         return view('sanitasi_ruangan/index', ['title' => 'Sanitasi Ruangan & Peralatan', 'forms' => $builder->get()->getResultArray()]);
@@ -101,5 +106,14 @@ class SanitasiRuanganController extends BaseController
             return redirect()->to('/sanitasi-ruangan')->with('success', 'Data berhasil diperbarui.');
         }
         return redirect()->back()->with('error', 'Gagal memperbarui data.')->withInput();
+    }
+
+    public function delete($id)
+    {
+        if (session()->get('role') !== 'admin') {
+            return redirect()->back()->with('error', 'Hanya Admin yang dapat menghapus data.');
+        }
+        $this->model->delete($id);
+        return redirect()->to('/sanitasi-ruangan')->with('success', 'Data berhasil dihapus.');
     }
 }

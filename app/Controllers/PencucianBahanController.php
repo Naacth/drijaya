@@ -23,11 +23,12 @@ class PencucianBahanController extends BaseController
         $b->select('pencucian_bahan.*, users.nama as user_nama');
         $b->join('users', 'users.id = pencucian_bahan.created_by');
         $role = session()->get('role');
+        $sppgId = session()->get('sppg_id');
+
         if ($role == 'ahli_gizi') {
             $b->where('pencucian_bahan.created_by', session()->get('user_id'));
-        } elseif ($role == 'admin') {
-            $s = session()->get('sppg_id');
-            if ($s) $b->where('users.sppg_id', $s);
+        } elseif ($role == 'admin' || $role == 'pic') {
+            if ($sppgId) $b->where('users.sppg_id', $sppgId);
         }
         $b->orderBy('pencucian_bahan.created_at', 'DESC');
         return view('pencucian_bahan/index', [
@@ -157,5 +158,21 @@ class PencucianBahanController extends BaseController
         $db->transComplete();
         if ($db->transStatus() === false) return redirect()->back()->with('error', 'Gagal memperbarui.')->withInput();
         return redirect()->to('/pencucian-bahan')->with('success', 'Data berhasil diperbarui.');
+    }
+
+    public function delete($id)
+    {
+        if (session()->get('role') !== 'admin') {
+            return redirect()->back()->with('error', 'Hanya Admin yang dapat menghapus data.');
+        }
+
+        $db = \Config\Database::connect();
+        $db->transStart();
+        $this->itemModel->where('pencucian_bahan_id', $id)->delete();
+        $this->headerModel->delete($id);
+        $db->transComplete();
+
+        if ($db->transStatus() === false) return redirect()->back()->with('error', 'Gagal menghapus.');
+        return redirect()->to('/pencucian-bahan')->with('success', 'Data berhasil dihapus.');
     }
 }

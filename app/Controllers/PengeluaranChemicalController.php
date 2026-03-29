@@ -16,8 +16,13 @@ class PengeluaranChemicalController extends BaseController
         $builder->select('pengeluaran_chemical.*, users.nama as user_nama');
         $builder->join('users', 'users.id = pengeluaran_chemical.created_by');
         $role = session()->get('role');
-        if ($role == 'ahli_gizi') $builder->where('pengeluaran_chemical.created_by', session()->get('user_id'));
-        elseif ($role == 'admin') { $s = session()->get('sppg_id'); if ($s) $builder->where('users.sppg_id', $s); }
+        $sppgId = session()->get('sppg_id');
+
+        if ($role == 'ahli_gizi') {
+            $builder->where('pengeluaran_chemical.created_by', session()->get('user_id'));
+        } elseif ($role == 'admin' || $role == 'pic') {
+            if ($sppgId) $builder->where('users.sppg_id', $sppgId);
+        }
         $builder->orderBy('pengeluaran_chemical.created_at', 'DESC');
         return view('pengeluaran_chemical/index', ['title' => 'Pengeluaran Bahan Kimia (Chemical)', 'forms' => $builder->get()->getResultArray()]);
     }
@@ -83,5 +88,14 @@ class PengeluaranChemicalController extends BaseController
         ];
         $this->model->update($id, $data);
         return redirect()->to('/pengeluaran-chemical')->with('success', 'Data berhasil diperbarui.');
+    }
+
+    public function delete($id)
+    {
+        if (session()->get('role') !== 'admin') {
+            return redirect()->back()->with('error', 'Hanya Admin yang dapat menghapus data.');
+        }
+        $this->model->delete($id);
+        return redirect()->to('/pengeluaran-chemical')->with('success', 'Data berhasil dihapus.');
     }
 }

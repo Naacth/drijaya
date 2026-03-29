@@ -87,6 +87,9 @@ class RelawanController extends BaseController
 
     public function delete($id)
     {
+        if (session()->get('role') !== 'admin') {
+            return redirect()->back()->with('error', 'Hanya Admin yang dapat menghapus data.');
+        }
         $sppgId = session()->get('sppg_id');
         $this->relawanModel->where(['id' => $id, 'sppg_id' => $sppgId])->delete();
         return redirect()->to('/relawan')->with('success', 'Relawan dihapus');

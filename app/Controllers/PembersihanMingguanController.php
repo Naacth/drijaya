@@ -16,8 +16,13 @@ class PembersihanMingguanController extends BaseController
         $builder->select('pembersihan_mingguan.*, users.nama as user_nama');
         $builder->join('users', 'users.id = pembersihan_mingguan.created_by');
         $role = session()->get('role');
-        if ($role == 'ahli_gizi') $builder->where('pembersihan_mingguan.created_by', session()->get('user_id'));
-        elseif ($role == 'admin') { $s = session()->get('sppg_id'); if ($s) $builder->where('users.sppg_id', $s); }
+        $sppgId = session()->get('sppg_id');
+
+        if ($role == 'ahli_gizi') {
+            $builder->where('pembersihan_mingguan.created_by', session()->get('user_id'));
+        } elseif ($role == 'admin' || $role == 'pic') {
+            if ($sppgId) $builder->where('users.sppg_id', $sppgId);
+        }
         $builder->orderBy('pembersihan_mingguan.created_at', 'DESC');
         return view('pembersihan_mingguan/index', ['title' => 'Pembersihan Freezer & Chiller (Mingguan)', 'forms' => $builder->get()->getResultArray()]);
     }
@@ -88,5 +93,14 @@ class PembersihanMingguanController extends BaseController
         ];
         $this->model->update($id, $data);
         return redirect()->to('/pembersihan-mingguan')->with('success', 'Data berhasil diperbarui.');
+    }
+
+    public function delete($id)
+    {
+        if (session()->get('role') !== 'admin') {
+            return redirect()->back()->with('error', 'Hanya Admin yang dapat menghapus data.');
+        }
+        $this->model->delete($id);
+        return redirect()->to('/pembersihan-mingguan')->with('success', 'Data berhasil dihapus.');
     }
 }

@@ -46,6 +46,11 @@
                             <a href="<?= site_url('cek-bahan-baku/show/' . $form['id']) ?>" class="btn btn-sm btn-outline-primary rounded-pill px-3">
                                 <i class="bi bi-eye"></i> Detail
                             </a>
+                            <?php if (session()->get('role') === 'admin'): ?>
+                            <a href="<?= site_url('cek-bahan-baku/delete/' . $form['id']) ?>" class="btn btn-sm btn-outline-danger rounded-pill px-3" onclick="return confirm('Yakin hapus data ini?')">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                            <?php endif; ?>
                         </td>
                     </tr>
                     <?php endforeach; ?>

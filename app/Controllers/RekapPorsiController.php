@@ -28,7 +28,7 @@ class RekapPorsiController extends BaseController
 
         if ($role == 'aslap') {
             $builder->where('rekap_porsi.created_by', $userId);
-        } elseif ($role == 'admin') {
+        } elseif ($role == 'admin' || $role == 'pic') {
             $currentSppgId = session()->get('sppg_id');
             if ($currentSppgId) {
                 $builder->where('users.sppg_id', $currentSppgId);
@@ -156,5 +156,20 @@ class RekapPorsiController extends BaseController
 
         fclose($output);
         exit;
+    }
+    public function delete($id)
+    {
+        if (session()->get('role') !== 'admin') {
+            return redirect()->back()->with('error', 'Hanya Admin yang dapat menghapus data.');
+        }
+
+        $db = \Config\Database::connect();
+        $db->transStart();
+        $this->itemModel->where('rekap_porsi_id', $id)->delete();
+        $this->headerModel->delete($id);
+        $db->transComplete();
+
+        if ($db->transStatus() === false) return redirect()->back()->with('error', 'Gagal menghapus data.');
+        return redirect()->to('/rekap-porsi')->with('success', 'Data berhasil dihapus.');
     }
 }

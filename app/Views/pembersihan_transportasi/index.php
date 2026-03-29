@@ -42,6 +42,11 @@
                                     Edit
                                 </a>
                                 <?php endif; ?>
+                                <?php if(session()->get('role') == 'admin'): ?>
+                                <a href="<?= site_url('pembersihan-transportasi/delete/' . $f['id']) ?>" class="btn btn-outline-danger btn-sm px-3 rounded-pill ms-1" onclick="return confirm('Hapus data ini?')">
+                                    Hapus
+                                </a>
+                                <?php endif; ?>
                             </td>
                         </tr>
                         <?php endforeach; ?>

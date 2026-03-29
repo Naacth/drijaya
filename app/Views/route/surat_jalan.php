@@ -4,173 +4,93 @@
     <meta charset="UTF-8">
     <title><?= $title ?></title>
     <style>
-        @media print {
-            body { padding: 0; margin: 0; font-family: 'Times New Roman', Times, serif; }
-            .page-break { page-break-after: always; }
-            .no-print { display: none !important; }
+        /* PDF Print Optimizations */
+        @page {
+            size: A4;
+            margin: 1cm;
         }
-        
         body { 
             font-family: 'Times New Roman', Times, serif; 
-            font-size: 13px; 
+            font-size: 11px; 
+            line-height: 1.3;
             color: #000; 
-            line-height: 1.3; 
-            background: #fdfdfd;
-        }
-        
-        .page-container {
-            width: 800px;
-            margin: 20px auto;
+            margin: 0;
+            padding: 0;
             background: #fff;
-            padding: 30px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .page-container { width: 100%; margin: 0 auto; }
+        
+        /* Header Styling */
+        .header-block { border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 15px; }
+        .header-table { width: 100%; border-collapse: collapse; }
+        .header-logo-box { 
+            width: 65px; 
+            height: 65px; 
+            border: 1.5px solid #000; 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            text-align: center;
+            font-size: 8px;
+            font-weight: bold;
+            line-height: 1;
+        }
+        .header-text { text-align: center; }
+        .header-text h2 { margin: 0; font-size: 14px; font-weight: bold; }
+        .header-text h3 { margin: 2px 0; font-size: 12px; font-weight: bold; }
+        
+        .title-main { 
+            text-align: center; 
+            font-size: 13px; 
+            font-weight: bold; 
+            margin: 10px 0; 
+            text-transform: uppercase;
         }
         
-        @media print {
-            .page-container {
-                width: 100%;
-                margin: 0;
-                padding: 10px 20px;
-                box-shadow: none;
-            }
-        }
+        /* Info Area */
+        .info-section { display: flex; justify-content: space-between; margin-bottom: 10px; }
+        .kepada-box { width: 45%; }
+        .detail-table { width: 50%; border-collapse: collapse; }
+        .detail-table td { border: 1px solid #000; padding: 3px 6px; font-size: 10px; }
+        .detail-table td:first-child { background: #f2f2f2; width: 100px; }
 
-        /* HEADER */
-        .header {
-            display: flex;
-            align-items: center;
-            border-bottom: 2px solid #000;
-            padding-bottom: 10px;
-            margin-bottom: 15px;
-        }
-        .header-logo {
-            width: 80px;
-            height: 80px;
-            background: #eee;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        /* Table Data Styling */
+        .main-table { width: 100%; border-collapse: collapse; margin-bottom: 15px; table-layout: fixed; }
+        .main-table th, .main-table td { 
+            border: 1px solid #000; 
+            padding: 6px 3px; 
+            word-wrap: break-word;
+            overflow-wrap: break-word;
             font-size: 10px;
             text-align: center;
-            border: 1px solid #000;
         }
-        .header-text {
-            flex: 1;
-            text-align: center;
+        .main-table th { background-color: #f2f2f2; font-weight: normal; }
+        .text-start { text-align: left !important; padding-left: 5px !important; }
+        
+        /* Signatures */
+        .sig-section { width: 100%; margin-top: 10px; page-break-inside: avoid; }
+        .sig-table { width: 100%; border-collapse: collapse; }
+        .sig-table th, .sig-table td { border: 1px solid #000; width: 25%; text-align: center; padding: 4px; }
+        .sig-table th { background: #f2f2f2; font-weight: normal; border-bottom: none; }
+        .sig-space { height: 55px; border-top: none; border-bottom: none; }
+        .sig-space img { max-height: 50px; max-width: 90%; }
+        .sig-name { font-weight: bold; border-top: none; padding-top: 2px !important; }
+        .sig-name span { border-bottom: 1px solid #000; display: inline-block; min-width: 80%; }
+        
+        /* Print Utilities */
+        @media print { 
+            .no-print { display: none !important; } 
+            body { -webkit-print-color-adjust: exact; }
+            .page-break { page-break-after: always; }
         }
-        .header-text h2 {
-            margin: 0;
-            font-size: 18px;
-            font-weight: bold;
-        }
-        .header-text h3 {
-            margin: 0;
-            font-size: 16px;
-            font-weight: normal;
-        }
-
-        .title-box {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .title-box h4 {
-            margin: 0;
-            font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        /* INFO SECTION */
-        .info-section {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 15px;
-        }
-        .kepada-box {
-            width: 50%;
-        }
-        .kepada-box p {
-            margin: 0;
-            font-size: 14px;
-        }
-        .detail-table {
-            border-collapse: collapse;
-            width: 40%;
-            font-size: 12px;
-        }
-        .detail-table td {
-            border: 1px solid #000;
-            padding: 4px 8px;
-        }
-        .detail-table td:first-child {
-            width: 120px;
-        }
-
-        /* MAIN TABLE */
-        .main-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 25px;
-            text-align: center;
-        }
-        .main-table th, .main-table td {
-            border: 1px solid #000;
-            padding: 6px;
-        }
-        .main-table th {
-            font-weight: normal;
-            vertical-align: middle;
-        }
-        .border-bottom-0 { border-bottom: 0 !important; }
-        .text-start { text-align: left; }
-
-        /* SIGNATURES */
-        .signatures {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: center;
-            margin-top: 20px;
-        }
-        .signatures th, .signatures td {
-            border: 1px solid #000;
-            padding: 5px;
-            width: 25%;
-            vertical-align: bottom;
-        }
-        .signatures th {
-            font-weight: normal;
-            border-bottom: none;
-        }
-        .sig-space {
-            height: 70px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .sig-space img {
-            max-height: 60px;
-            max-width: 120px;
-            object-fit: contain;
-        }
-        .sig-name {
-            border-top: none;
-            padding-top: 0 !important;
-        }
-        .sig-name span {
-            display: inline-block;
-            border-bottom: 1px solid #000;
-            min-width: 80%;
-            padding-bottom: 2px;
-        }
-
     </style>
 </head>
 <body onload="window.print()">
 
-    <div class="no-print" style="text-align: center; margin: 20px;">
-        <button onclick="window.print()" style="padding: 10px 20px; font-size: 16px; cursor: pointer;">Cetak Sekarang</button>
-        <button onclick="window.close()" style="padding: 10px 20px; font-size: 16px; cursor: pointer; margin-left: 10px;">Tutup</button>
+    <div class="no-print" style="position: fixed; top: 20px; right: 20px; z-index: 9999; background: rgba(255,255,255,0.9); padding: 15px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border: 1px solid #e2e8f0;">
+        <button onclick="window.print()" style="padding: 8px 20px; cursor: pointer; border-radius: 6px; border: 1px solid #6366f1; background: #6366f1; color: white; font-weight: 600;">Cetak PDF</button>
+        <button onclick="window.close()" style="padding: 8px 20px; cursor: pointer; border-radius: 6px; border: 1px solid #cbd5e1; background: white; color: #64748b; font-weight: 600; margin-left: 8px;">Tutup</button>
     </div>
 
     <?php 
@@ -183,19 +103,26 @@
     <div class="page-container <?= $index !== count($items) - 1 ? 'page-break' : '' ?>">
         
         <!-- HEADER -->
-        <div class="header">
-            <div class="header-logo">
-                <strong>BADAN GIZI<br>NASIONAL</strong>
-            </div>
-            <div class="header-text">
-                <h2>BADAN GIZI NASIONAL - SATUAN PELAYANAN PEMENUHAN GIZI</h2>
-                <h3>SPPG <?= strtoupper($header['sppg']) ?></h3>
-            </div>
+        <div class="header-block">
+            <table class="header-table">
+                <tr>
+                    <td width="70">
+                        <div class="header-logo-box">
+                            BADAN GIZI<br>NASIONAL
+                        </div>
+                    </td>
+                    <td class="header-text">
+                        <h2>BADAN GIZI NASIONAL - SATUAN PELAYANAN PEMENUHAN GIZI</h2>
+                        <h3>SPPG <?= strtoupper($header['sppg']) ?></h3>
+                    </td>
+                    <td width="70"></td>
+                </tr>
+            </table>
         </div>
 
-        <div class="title-box">
-            <h4>SURAT JALAN / DELIVERY ORDER</h4>
-            <h4>PROGRAM MAKAN BERGIZI GRATIS (MBG)</h4>
+        <div class="title-main">
+            SURAT JALAN / DELIVERY ORDER<br>
+            <span style="font-size: 11px; font-weight: normal;">PROGRAM MAKAN BERGIZI GRATIS (MBG)</span>
         </div>
 
         <!-- INFO -->
@@ -283,54 +210,60 @@
         </table>
 
         <!-- SIGNATURES -->
-        <table class="signatures">
-            <tr>
-                <th>Dibuat</th>
-                <th>Diperiksa</th>
-                <th>Diketahui</th>
-                <th>Penerima</th>
-            </tr>
-            <tr>
-                <td style="border-top: none; border-bottom: none;">
-                    <div class="sig-space">
-                        <?php if(!empty($signature['ttd_akuntan'])): ?>
-                            <img src="<?= base_url('uploads/signatures/' . $signature['ttd_akuntan']) ?>" alt="ttd">
-                        <?php endif; ?>
-                    </div>
-                </td>
-                <td style="border-top: none; border-bottom: none;">
-                    <div class="sig-space">
-                        <?php if(!empty($signature['ttd_ahli_gizi'])): ?>
-                            <img src="<?= base_url('uploads/signatures/' . $signature['ttd_ahli_gizi']) ?>" alt="ttd">
-                        <?php endif; ?>
-                    </div>
-                </td>
-                <td style="border-top: none; border-bottom: none;">
-                    <div class="sig-space">
-                        <?php if(!empty($signature['ttd_kepala_dapur'])): ?>
-                            <img src="<?= base_url('uploads/signatures/' . $signature['ttd_kepala_dapur']) ?>" alt="ttd">
-                        <?php endif; ?>
-                    </div>
-                </td>
-                <td style="border-top: none; border-bottom: none;">
-                    <div class="sig-space"></div>
-                </td>
-            </tr>
-            <tr>
-                <td class="sig-name">
-                    <span><?= esc($signature['nama_akuntan']) ?></span>
-                </td>
-                <td class="sig-name">
-                    <span><?= esc($signature['nama_ahli_gizi']) ?></span>
-                </td>
-                <td class="sig-name">
-                    <span><?= esc($signature['nama_kepala_dapur']) ?></span>
-                </td>
-                <td class="sig-name">
-                    <span></span>
-                </td>
-            </tr>
-        </table>
+        <div class="sig-section">
+            <table class="sig-table">
+                <thead>
+                    <tr>
+                        <th>Dibuat Oleh</th>
+                        <th>Diperiksa Oleh</th>
+                        <th>Diketahui Oleh</th>
+                        <th>Diterima Oleh</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="sig-space">
+                            <?php if(!empty($signature['ttd_akuntan'])): ?>
+                                <img src="<?= base_url('uploads/signatures/' . $signature['ttd_akuntan']) ?>" alt="ttd">
+                            <?php endif; ?>
+                        </td>
+                        <td class="sig-space">
+                            <?php if(!empty($signature['ttd_ahli_gizi'])): ?>
+                                <img src="<?= base_url('uploads/signatures/' . $signature['ttd_ahli_gizi']) ?>" alt="ttd">
+                            <?php endif; ?>
+                        </td>
+                        <td class="sig-space">
+                            <?php if(!empty($signature['ttd_kepala_dapur'])): ?>
+                                <img src="<?= base_url('uploads/signatures/' . $signature['ttd_kepala_dapur']) ?>" alt="ttd">
+                            <?php endif; ?>
+                        </td>
+                        <td class="sig-space"></td>
+                    </tr>
+                    <tr>
+                        <td class="sig-name">
+                            <span><?= esc($signature['nama_akuntan']) ?></span><br>
+                            <small>(Akuntan)</small>
+                        </td>
+                        <td class="sig-name">
+                            <span><?= esc($signature['nama_ahli_gizi']) ?></span><br>
+                            <small>(Ahli Gizi)</small>
+                        </td>
+                        <td class="sig-name">
+                            <span><?= esc($signature['nama_kepala_dapur']) ?></span><br>
+                            <small>(Kepala Dapur)</small>
+                        </td>
+                        <td class="sig-name">
+                            <span></span><br>
+                            <small>(Pihak Sekolah)</small>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div style="margin-top: 15px; font-size: 8px; color: #666; text-align: right;">
+            Cetak: <?= date('d/m/Y H:i') ?> | SPPG-MBG Delivery System
+        </div>
 
     </div>
     <?php endforeach; ?>

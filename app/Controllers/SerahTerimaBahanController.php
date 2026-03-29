@@ -23,8 +23,13 @@ class SerahTerimaBahanController extends BaseController
         $builder->select('serah_terima_bahan.*, users.nama as user_nama');
         $builder->join('users', 'users.id = serah_terima_bahan.created_by');
         $role = session()->get('role');
-        if ($role == 'ahli_gizi') $builder->where('serah_terima_bahan.created_by', session()->get('user_id'));
-        elseif ($role == 'admin') { $s = session()->get('sppg_id'); if ($s) $builder->where('users.sppg_id', $s); }
+        $sppgId = session()->get('sppg_id');
+
+        if ($role == 'ahli_gizi') {
+            $builder->where('serah_terima_bahan.created_by', session()->get('user_id'));
+        } elseif ($role == 'admin' || $role == 'pic') {
+            if ($sppgId) $builder->where('users.sppg_id', $sppgId);
+        }
         $builder->orderBy('serah_terima_bahan.created_at', 'DESC');
         $data['title'] = 'Serah Terima Bahan Baku';
         $data['forms'] = $builder->get()->getResultArray();
@@ -137,5 +142,21 @@ class SerahTerimaBahanController extends BaseController
         $db->transComplete();
         if ($db->transStatus() === false) return redirect()->back()->with('error', 'Gagal memperbarui.')->withInput();
         return redirect()->to('/serah-terima-bahan')->with('success', 'Data berhasil diperbarui.');
+    }
+
+    public function delete($id)
+    {
+        if (session()->get('role') !== 'admin') {
+            return redirect()->back()->with('error', 'Hanya Admin yang dapat menghapus data.');
+        }
+
+        $db = \Config\Database::connect();
+        $db->transStart();
+        $this->itemModel->where('serah_terima_bahan_id', $id)->delete();
+        $this->headerModel->delete($id);
+        $db->transComplete();
+
+        if ($db->transStatus() === false) return redirect()->back()->with('error', 'Gagal menghapus.');
+        return redirect()->to('/serah-terima-bahan')->with('success', 'Data berhasil dihapus.');
     }
 }

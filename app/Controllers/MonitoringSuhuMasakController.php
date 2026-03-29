@@ -21,8 +21,13 @@ class MonitoringSuhuMasakController extends BaseController
         $db = \Config\Database::connect(); $b = $db->table('monitoring_suhu_masak');
         $b->select('monitoring_suhu_masak.*, users.nama as user_nama')->join('users', 'users.id = monitoring_suhu_masak.created_by');
         $role = session()->get('role');
-        if ($role == 'ahli_gizi') $b->where('monitoring_suhu_masak.created_by', session()->get('user_id'));
-        elseif ($role == 'admin') { $s = session()->get('sppg_id'); if ($s) $b->where('users.sppg_id', $s); }
+        $sppgId = session()->get('sppg_id');
+
+        if ($role == 'ahli_gizi') {
+            $b->where('monitoring_suhu_masak.created_by', session()->get('user_id'));
+        } elseif ($role == 'admin' || $role == 'pic') {
+            if ($sppgId) $b->where('users.sppg_id', $sppgId);
+        }
         $b->orderBy('monitoring_suhu_masak.created_at', 'DESC');
         return view('monitoring_suhu_masak/index', ['title' => 'Monitoring Suhu Pemasakan', 'forms' => $b->get()->getResultArray()]);
     }
@@ -125,5 +130,25 @@ class MonitoringSuhuMasakController extends BaseController
         $db->transComplete();
         if ($db->transStatus() === false) return redirect()->back()->with('error', 'Gagal memperbarui.')->withInput();
         return redirect()->to('/monitoring-suhu-masak')->with('success', 'Data berhasil diperbarui.');
+    }
+
+    public function delete($id)
+    {
+        if (session()->get('role') !== 'admin') {
+            return redirect()->back()->with('error', 'Hanya Admin yang dapat menghapus data.');
+        }
+
+        $db = \Config\Database::connect();
+        $db->transStart();
+        
+        $this->itemModel->where('monitoring_suhu_masak_id', $id)->delete();
+        $this->headerModel->delete($id);
+
+        $db->transComplete();
+        if ($db->transStatus() === false) {
+            return redirect()->back()->with('error', 'Gagal menghapus data.');
+        }
+
+        return redirect()->to('/monitoring-suhu-masak')->with('success', 'Data berhasil dihapus.');
     }
 }

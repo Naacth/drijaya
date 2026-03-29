@@ -33,6 +33,9 @@ class PoController extends BaseController
 
         if ($role == 'ahli_gizi') {
             $query->where('purchase_orders.user_id', $userId);
+        } elseif ($role == 'admin' || $role == 'pic') {
+            $sppgId = session()->get('sppg_id');
+            if ($sppgId) $query->where('users.sppg_id', $sppgId);
         }
 
         if ($status) {
@@ -341,5 +344,21 @@ class PoController extends BaseController
         $data['title'] = 'Laporan Purchase Order';
 
         return view('po/export_pdf', $data);
+    }
+
+    public function delete($id)
+    {
+        if (session()->get('role') !== 'admin') {
+            return redirect()->back()->with('error', 'Hanya Admin yang dapat menghapus data.');
+        }
+
+        $db = \Config\Database::connect();
+        $db->transStart();
+        $this->approvalModel->where('po_id', $id)->delete();
+        $this->itemModel->where('po_id', $id)->delete();
+        $this->poModel->delete($id);
+        $db->transComplete();
+
+        return redirect()->to('/po')->with('success', 'Purchase Order berhasil dihapus.');
     }
 }
