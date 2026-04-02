@@ -175,7 +175,7 @@ class PoController extends BaseController
         $data['items'] = $this->itemModel->where('po_id', $id)->findAll();
         
         $akgModel = new \App\Models\AnalisisGiziModel();
-        $data['akgList'] = $akgModel->where('status', 'approved')->orderBy('tanggal', 'DESC')->findAll();
+        $data['akgList'] = $akgModel->orderBy('created_at', 'DESC')->limit(20)->findAll();
 
         return view('po/edit', $data);
     }
