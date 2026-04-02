@@ -77,6 +77,7 @@
             padding-top: 3px;
         }
     </style>
+<?= view('layout/print_signatures_style') ?>
 </head>
 <body onload="window.print()">
 
@@ -145,15 +146,15 @@
             <tr>
                 <td>
                     <div class="sig-space">
-                        <?php if (!empty($header['ttd_supir'])): ?>
-                            <img src="<?= base_url($header['ttd_supir']) ?>" style="max-height: 80px;" alt="TTD Supir">
+                        <?php if (($__sig = public_asset_data_uri($header['ttd_supir'] ?? null)) !== ''): ?>
+                            <img src="<?= $__sig ?>" style="max-height: 80px;" alt="TTD Supir">
                         <?php endif; ?>
                     </div>
                 </td>
                 <td>
                     <div class="sig-space">
-                        <?php if (!empty($header['ttd_pj_sekolah'])): ?>
-                            <img src="<?= base_url($header['ttd_pj_sekolah']) ?>" style="max-height: 80px;" alt="TTD PJ Sekolah">
+                        <?php if (($__sig = public_asset_data_uri($header['ttd_pj_sekolah'] ?? null)) !== ''): ?>
+                            <img src="<?= $__sig ?>" style="max-height: 80px;" alt="TTD PJ Sekolah">
                         <?php endif; ?>
                     </div>
                 </td>

@@ -19,6 +19,7 @@
         .status-fail { color: red; font-weight: bold; }
         @media print { .no-print { display: none; } }
     </style>
+<?= view('layout/print_signatures_style') ?>
 </head>
 <body onload="window.print()">
     <div class="no-print" style="text-align: center; margin-bottom: 20px; padding: 10px; background: #f8fafc; border-bottom: 1px solid #e2e8f0;">
@@ -73,11 +74,11 @@
             </td>
             <td class="signature-box">
                 <p>Mengetahui,</p>
-                <?php if ($signature && $signature['image_data']): ?>
-                    <img src="<?= $signature['image_data'] ?>" style="height:80px; width:auto;">
-                <?php else: ?>
-                    <div class="sig-space"></div>
-                <?php endif; ?>
+                <div class="sig-space">
+                    <?php if (($__sig = signature_data_uri($signature ?? [], 'ttd_ahli_gizi')) !== ''): ?>
+                        <img src="<?= $__sig ?>" alt="TTD Ahli Gizi">
+                    <?php endif; ?>
+                </div>
                 <p><strong>( <?= esc($header['nama_pemeriksa']) ?> )</strong></p>
                 <p><small>Ahli Gizi</small></p>
             </td>

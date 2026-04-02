@@ -46,7 +46,7 @@
         /* Signatures */
         .sig-section { width: 100%; margin-top: 30px; page-break-inside: avoid; }
         .sig-table { width: 100%; border-collapse: collapse; }
-        .sig-box { text-align: center; width: 50%; vertical-align: top; }
+        .sig-box { text-align: center; width: 50%; vertical-align: bottom; }
         .sig-space { height: 70px; }
         .sig-name { font-weight: bold; text-decoration: underline; }
         
@@ -56,6 +56,7 @@
             body { -webkit-print-color-adjust: exact; }
         }
     </style>
+<?= view('layout/print_signatures_style') ?>
 </head>
 <body onload="window.print()">
     <div class="no-print" style="text-align: center; margin-bottom: 20px;">
@@ -84,15 +85,23 @@
                 <tr>
                     <td class="sig-box">
                         <p>Pemeriksa / Ahli Gizi,</p>
-                        <div class="sig-space"></div>
+                        <div class="sig-space">
+                            <?php if (($__sig = signature_data_uri($signature ?? [], 'ttd_ahli_gizi')) !== ''): ?>
+                                <img src="<?= $__sig ?>" alt="TTD">
+                            <?php endif; ?>
+                        </div>
                         <p class="sig-name">( <?= esc($header['nama_pemeriksa']) ?> )</p>
-                        <p style="font-size: 9px; margin-top: -12px;">Reporter</p>
+                        <p style="font-size: 9px; margin-top: 4px;">Reporter</p>
                     </td>
                     <td class="sig-box">
                         <p>Mengetahui,</p>
-                        <div class="sig-space"></div>
+                        <div class="sig-space">
+                            <?php if (($__sig = signature_data_uri($signature ?? [], 'ttd_kepala_sppg')) !== ''): ?>
+                                <img src="<?= $__sig ?>" alt="TTD">
+                            <?php endif; ?>
+                        </div>
                         <p class="sig-name">( .................................. )</p>
-                        <p style="font-size: 9px; margin-top: -12px;">Kepala SPPG / Manager</p>
+                        <p style="font-size: 9px; margin-top: 4px;">Kepala SPPG / Manager</p>
                     </td>
                 </tr>
             </table>

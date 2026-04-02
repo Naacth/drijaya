@@ -85,6 +85,7 @@
             .page-break { page-break-after: always; }
         }
     </style>
+<?= view('layout/print_signatures_style') ?>
 </head>
 <body onload="window.print()">
 
@@ -208,18 +209,18 @@
                 <tbody>
                     <tr>
                         <td class="sig-space">
-                            <?php if(!empty($signature['ttd_akuntan'])): ?>
-                                <img src="<?= base_url('uploads/signatures/' . $signature['ttd_akuntan']) ?>" alt="ttd">
+                            <?php if (($__sig = signature_data_uri_with_aslap_fallback($signature ?? [], $user_signature ?? [], 'ttd_akuntan')) !== ''): ?>
+                                <img src="<?= $__sig ?>" alt="ttd">
                             <?php endif; ?>
                         </td>
                         <td class="sig-space">
-                            <?php if(!empty($signature['ttd_ahli_gizi'])): ?>
-                                <img src="<?= base_url('uploads/signatures/' . $signature['ttd_ahli_gizi']) ?>" alt="ttd">
+                            <?php if (($__sig = signature_data_uri_with_aslap_fallback($signature ?? [], $user_signature ?? [], 'ttd_ahli_gizi')) !== ''): ?>
+                                <img src="<?= $__sig ?>" alt="ttd">
                             <?php endif; ?>
                         </td>
                         <td class="sig-space">
-                            <?php if(!empty($signature['ttd_kepala_dapur'])): ?>
-                                <img src="<?= base_url('uploads/signatures/' . $signature['ttd_kepala_dapur']) ?>" alt="ttd">
+                            <?php if (($__sig = signature_data_uri_with_aslap_fallback($signature ?? [], $user_signature ?? [], 'ttd_kepala_dapur')) !== ''): ?>
+                                <img src="<?= $__sig ?>" alt="ttd">
                             <?php endif; ?>
                         </td>
                         <td class="sig-space"></td>

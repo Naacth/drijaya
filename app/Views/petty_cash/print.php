@@ -22,6 +22,7 @@
         .footer td { border: none; text-align: center; }
         .signature-space { height: 50px; }
     </style>
+<?= view('layout/print_signatures_style') ?>
 </head>
 <body>
     <div class="header"><?= $title ?></div>

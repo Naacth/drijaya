@@ -88,6 +88,81 @@ class AbsensiController extends BaseController
         return redirect()->to('/absensi')->with('success', 'Absensi berhasil disimpan');
     }
 
+    public function edit($id)
+    {
+        $sppgId  = session()->get('sppg_id');
+        $absensi = $this->absensiModel->where(['id' => $id, 'sppg_id' => $sppgId])->first();
+        if (!$absensi) {
+            return redirect()->to('/absensi')->with('error', 'Data tidak ditemukan');
+        }
+
+        if (session()->get('role') === 'aslap') {
+            if ((int) ($absensi['created_by'] ?? 0) !== (int) session()->get('user_id')) {
+                return redirect()->to('/absensi')->with('error', 'Anda hanya dapat mengubah absensi yang Anda buat sendiri.');
+            }
+        }
+
+        $relawan = $this->relawanModel->where('sppg_id', $sppgId)->orderBy('divisi', 'ASC')->findAll();
+        $grouped = [];
+        foreach ($relawan as $r) {
+            $grouped[$r['divisi']][] = $r;
+        }
+
+        $rows  = $this->itemModel->where('absensi_id', $id)->findAll();
+        $byRel = [];
+        foreach ($rows as $row) {
+            $byRel[$row['relawan_id']] = $row['status'];
+        }
+
+        $data = [
+            'title'           => 'Ubah Absensi Relawan',
+            'grouped'         => $grouped,
+            'absensi'         => $absensi,
+            'statusByRelawan' => $byRel,
+        ];
+
+        return view('absensi/edit', $data);
+    }
+
+    public function update($id)
+    {
+        $sppgId    = session()->get('sppg_id');
+        $createdBy = session()->get('user_id');
+        $absensi   = $this->absensiModel->where(['id' => $id, 'sppg_id' => $sppgId])->first();
+        if (!$absensi) {
+            return redirect()->to('/absensi')->with('error', 'Data tidak ditemukan');
+        }
+
+        if (session()->get('role') === 'aslap') {
+            if ((int) ($absensi['created_by'] ?? 0) !== (int) $createdBy) {
+                return redirect()->to('/absensi')->with('error', 'Anda hanya dapat mengubah absensi yang Anda buat sendiri.');
+            }
+        }
+
+        $tanggal = $this->request->getPost('tanggal');
+        $dup     = $this->absensiModel->where(['tanggal' => $tanggal, 'sppg_id' => $sppgId])->where('id !=', $id)->first();
+        if ($dup) {
+            return redirect()->back()->withInput()->with('error', 'Absensi untuk tanggal ini sudah ada.');
+        }
+
+        $this->absensiModel->update($id, ['tanggal' => $tanggal]);
+
+        $this->itemModel->where('absensi_id', $id)->delete();
+
+        $statuses = $this->request->getPost('status');
+        if ($statuses) {
+            foreach ($statuses as $relawanId => $status) {
+                $this->itemModel->insert([
+                    'absensi_id' => $id,
+                    'relawan_id' => $relawanId,
+                    'status'     => $status,
+                ]);
+            }
+        }
+
+        return redirect()->to('/absensi/show/' . $id)->with('success', 'Absensi berhasil diperbarui.');
+    }
+
     public function show($id)
     {
         $sppgId = session()->get('sppg_id');

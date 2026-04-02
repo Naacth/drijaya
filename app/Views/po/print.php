@@ -28,29 +28,30 @@
         .total-row { display: flex; justify-content: space-between; padding: 8px 0; }
         .total-row.grand-total { border-top: 2px double #333; margin-top: 5px; font-weight: bold; font-size: 14pt; }
         
-        .signature-section { display: flex; justify-content: space-between; page-break-inside: avoid; }
-        .signature-box { width: 30%; text-align: center; }
-        .signature-box .title { margin-bottom: 80px; font-weight: bold; }
-        .signature-box .name { text-decoration: underline; font-weight: bold; }
-        .signature-box .role { font-size: 9pt; color: #666; }
+        .signature-section { display: flex; justify-content: space-between; gap: 8px; page-break-inside: avoid; flex-wrap: wrap; }
+        .signature-box { width: 23%; min-width: 140px; text-align: center; flex: 1; }
+        .signature-box .sig-title { font-weight: bold; font-size: 8.5pt; margin-bottom: 6px; line-height: 1.2; min-height: 2.4em; }
+        .signature-box .sig-space { min-height: 52px; display: flex; align-items: flex-end; justify-content: center; margin-bottom: 8px; }
+        .signature-box .sig-space img { max-height: 48px; max-width: 130px; object-fit: contain; }
+        .signature-box .name { text-decoration: underline; font-weight: bold; font-size: 9pt; }
+        .signature-box .role { font-size: 8pt; color: #666; margin-top: 4px; }
 
         @media print {
-            .no-print { display: none; }
+            .no-print { display: none !important; }
             body { padding: 0; }
         }
     </style>
+<?= view('layout/print_signatures_style') ?>
 </head>
 <body onload="window.print()">
-    <div class="header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #000; padding-bottom: 10px; margin-bottom: 20px;">
-        <div style="width: 120px; text-align: left;">
-            <img src="<?= base_url('bgn.png') ?>" alt="Logo BGN" style="width: 100px; height: auto;">
+    <?php $__bgnPo = public_asset_data_uri('bgn.png'); ?>
+    <div class="header" style="display: flex; justify-content: flex-start; align-items: center; gap: 20px; border-bottom: 3px solid #000; padding-bottom: 10px; margin-bottom: 20px;">
+        <div style="flex-shrink: 0;">
+            <img src="<?= $__bgnPo !== '' ? $__bgnPo : base_url('bgn.png') ?>" alt="Logo BGN" style="width: 100px; height: auto;">
         </div>
         <div style="text-align: center; flex: 1;">
             <h2 style="margin: 0; color: #000; font-size: 20pt; letter-spacing: 1px;">FORM PURCHASE ORDER</h2>
             <p style="margin: 5px 0 0; font-weight: bold;"><?= session()->get('sppg_nama') ?? 'Dapur SPPG Bunar' ?></p>
-        </div>
-        <div style="width: 120px; text-align: right;">
-            <img src="<?= base_url('yayasan.png') ?>" alt="Logo Yayasan" style="width: 95px; height: auto;">
         </div>
     </div>
 
@@ -113,32 +114,57 @@
         Demikian surat permintaan penawaran harga bahan baku ini kami sampaikan, atas perhatian dan kerjasamanya kami ucapkan terimakasih.
     </p>
 
-    <div class="signature-section" style="display: flex; justify-content: space-between; font-size: 9pt; text-align: center;">
-        <div style="width: 24%;">
-            <div style="font-weight: bold; margin-bottom: 60px;">Akuntan Satuan Pelayanan</div>
-            <div style="text-decoration: underline; font-weight: bold;">( Yusta Anjaya, S.AK )</div>
-            <div>Dibuat Oleh</div>
+    <?php
+    /*
+     * Sesuai Pengaturan: tiap kolom pakai slot user_signatures yang cocok dulu,
+     * baru fallback ke TTD aslap / peran lain (supaya sama dengan pratinjau di /signatures).
+     */
+    $__sigPo = $signature ?? [];
+    $__poCols = [
+        signature_data_uri_first($__sigPo, 'ttd_akuntan', 'ttd_aslap', 'ttd_ahli_gizi', 'ttd_kepala_sppg'),
+        signature_data_uri_first($__sigPo, 'ttd_ahli_gizi', 'ttd_aslap', 'ttd_akuntan', 'ttd_kepala_sppg'),
+        signature_data_uri_first($__sigPo, 'ttd_kepala_koki', 'ttd_aslap', 'ttd_ahli_gizi', 'ttd_kepala_sppg', 'ttd_akuntan'),
+        signature_data_uri_first($__sigPo, 'ttd_kepala_sppg', 'ttd_aslap', 'ttd_ahli_gizi', 'ttd_akuntan'),
+    ];
+    ?>
+    <div class="signature-section">
+        <div class="signature-box">
+            <div class="sig-title">Akuntan Satuan Pelayanan</div>
+            <div class="sig-space">
+                <?php if ($__poCols[0] !== ''): ?><img src="<?= $__poCols[0] ?>" alt="TTD"><?php endif; ?>
+            </div>
+            <div class="name">( Yusta Anjaya, S.AK )</div>
+            <div class="role">Dibuat Oleh</div>
         </div>
-        <div style="width: 24%;">
-            <div style="font-weight: bold; margin-bottom: 60px;">Ahli Gizi Satuan Pelayanan</div>
-            <div style="text-decoration: underline; font-weight: bold;">( Desy Junesty, AMD.GZ )</div>
-            <div>Diketahui</div>
+        <div class="signature-box">
+            <div class="sig-title">Ahli Gizi Satuan Pelayanan</div>
+            <div class="sig-space">
+                <?php if ($__poCols[1] !== ''): ?><img src="<?= $__poCols[1] ?>" alt="TTD"><?php endif; ?>
+            </div>
+            <div class="name">( Desy Junesty, AMD.GZ )</div>
+            <div class="role">Diketahui</div>
         </div>
-        <div style="width: 24%;">
-            <div style="font-weight: bold; margin-bottom: 60px;">Kepala Koki Satuan Pelayanan</div>
-            <div style="text-decoration: underline; font-weight: bold;">( Dera )</div>
-            <div>Diketahui</div>
+        <div class="signature-box">
+            <div class="sig-title">Kepala Koki Satuan Pelayanan</div>
+            <div class="sig-space">
+                <?php if ($__poCols[2] !== ''): ?><img src="<?= $__poCols[2] ?>" alt="TTD"><?php endif; ?>
+            </div>
+            <div class="name">( Dera )</div>
+            <div class="role">Diketahui</div>
         </div>
-        <div style="width: 24%;">
-            <div style="font-weight: bold; margin-bottom: 43px;">Kepala satuan Pelayanan Pemenuhan Gizi</div>
-            <div style="text-decoration: underline; font-weight: bold;">( M.Rizki Waluya, S.P.W.K. )</div>
-            <div>Disetujui Oleh</div>
+        <div class="signature-box">
+            <div class="sig-title">Kepala satuan Pelayanan Pemenuhan Gizi</div>
+            <div class="sig-space">
+                <?php if ($__poCols[3] !== ''): ?><img src="<?= $__poCols[3] ?>" alt="TTD"><?php endif; ?>
+            </div>
+            <div class="name">( M.Rizki Waluya, S.P.W.K. )</div>
+            <div class="role">Disetujui Oleh</div>
         </div>
     </div>
 
     <div class="no-print" style="position: fixed; bottom: 20px; left: 0; right: 0; text-align: center;">
-        <button onclick="window.print()" style="padding: 10px 20px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 4px;">Print Document</button>
-        <button onclick="window.close()" style="padding: 10px 20px; cursor: pointer; background: #6c757d; color: white; border: none; border-radius: 4px; margin-left: 10px;">Close</button>
+        <button type="button" class="no-print" onclick="window.print()" style="padding: 10px 20px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 4px;">Print Document</button>
+        <button type="button" class="no-print" onclick="window.close()" style="padding: 10px 20px; cursor: pointer; background: #6c757d; color: white; border: none; border-radius: 4px; margin-left: 10px;">Close</button>
     </div>
 </body>
 </html>

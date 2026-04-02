@@ -2,10 +2,13 @@
 
 namespace App\Controllers;
 
+use App\Traits\ChecksAhliGiziOwnership;
 use App\Models\PengeluaranChemicalModel;
 
 class PengeluaranChemicalController extends BaseController
 {
+    use ChecksAhliGiziOwnership;
+
     protected $model;
     public function __construct() { $this->model = new PengeluaranChemicalModel(); }
 
@@ -47,6 +50,10 @@ class PengeluaranChemicalController extends BaseController
     public function show($id)
     {
         $form = $this->model->find($id);
+        if (!$form) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($form, '/pengeluaran-chemical')) {
+            return $r;
+        }
         return view('pengeluaran_chemical/show', ['title' => 'Detail Pengeluaran Chemical', 'header' => $form]);
     }
 
@@ -55,7 +62,7 @@ class PengeluaranChemicalController extends BaseController
         $form = $this->model->find($id);
         return view('pengeluaran_chemical/print', [
             'header' => $form, 'title' => 'Cetak Pengeluaran Chemical',
-            'signature' => (new \App\Models\UserSignatureModel())->where('user_id', $form['created_by'])->first()
+            'signature' => signature_row_for_pdf(isset($form['created_by']) ? (int) $form['created_by'] : null)
         ]);
     }
 
@@ -73,11 +80,22 @@ class PengeluaranChemicalController extends BaseController
     {
         $form = $this->model->find($id);
         if (!$form) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($form, '/pengeluaran-chemical')) {
+            return $r;
+        }
         return view('pengeluaran_chemical/edit', ['title' => 'Edit Pengeluaran Chemical', 'header' => $form]);
     }
 
     public function update($id)
     {
+        $form = $this->model->find($id);
+        if (!$form) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($form, '/pengeluaran-chemical')) {
+            return $r;
+        }
+
         $data = [
             'tanggal' => $this->request->getPost('tanggal'),
             'nama_chemical' => $this->request->getPost('nama_chemical'),

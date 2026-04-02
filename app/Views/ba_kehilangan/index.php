@@ -48,6 +48,11 @@
                             <a href="<?= site_url('ba-kehilangan/show/' . $form['id']) ?>" class="btn btn-sm btn-outline-primary rounded-pill px-3">
                                 <i class="bi bi-eye"></i> Detail
                             </a>
+                            <?php if (session()->get('role') === 'admin' || session()->get('role') === 'aslap'): ?>
+                            <a href="<?= site_url('ba-kehilangan/edit/' . $form['id']) ?>" class="btn btn-sm btn-outline-secondary rounded-pill px-3" title="Ubah">
+                                <i class="bi bi-pencil-square"></i>
+                            </a>
+                            <?php endif; ?>
                             <?php if (session()->get('role') === 'admin'): ?>
                             <a href="<?= site_url('ba-kehilangan/delete/' . $form['id']) ?>" class="btn btn-sm btn-outline-danger rounded-pill px-3" onclick="return confirm('Yakin hapus data ini?')">
                                 <i class="bi bi-trash"></i>

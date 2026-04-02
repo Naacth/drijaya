@@ -2,10 +2,13 @@
 
 namespace App\Controllers;
 
+use App\Traits\ChecksAhliGiziOwnership;
 use App\Models\SanitasiRuanganModel;
 
 class SanitasiRuanganController extends BaseController
 {
+    use ChecksAhliGiziOwnership;
+
     protected $model;
 
     public function __construct() { $this->model = new SanitasiRuanganModel(); }
@@ -52,6 +55,9 @@ class SanitasiRuanganController extends BaseController
     {
         $form = $this->model->find($id);
         if (!$form) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($form, '/sanitasi-ruangan')) {
+            return $r;
+        }
         return view('sanitasi_ruangan/show', ['title' => 'Detail Sanitasi', 'header' => $form, 'fasilitas' => json_decode($form['fasilitas_data'], true)]);
     }
 
@@ -63,7 +69,7 @@ class SanitasiRuanganController extends BaseController
             'header' => $form,
             'fasilitas' => json_decode($form['fasilitas_data'], true),
             'title' => 'Cetak Sanitasi',
-            'signature' => (new \App\Models\UserSignatureModel())->where('user_id', $form['created_by'])->first()
+            'signature' => signature_row_for_pdf(isset($form['created_by']) ? (int) $form['created_by'] : null)
         ];
         return view('sanitasi_ruangan/print', $data);
     }
@@ -86,6 +92,9 @@ class SanitasiRuanganController extends BaseController
     {
         $form = $this->model->find($id);
         if (!$form) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($form, '/sanitasi-ruangan')) {
+            return $r;
+        }
         return view('sanitasi_ruangan/edit', [
             'title' => 'Edit Sanitasi', 
             'header' => $form, 
@@ -95,6 +104,14 @@ class SanitasiRuanganController extends BaseController
 
     public function update($id)
     {
+        $form = $this->model->find($id);
+        if (!$form) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($form, '/sanitasi-ruangan')) {
+            return $r;
+        }
+
         $fasilitas = $this->request->getPost('fasilitas');
         $data = [
             'tanggal' => $this->request->getPost('tanggal'),

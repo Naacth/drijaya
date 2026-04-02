@@ -2,10 +2,13 @@
 
 namespace App\Controllers;
 
+use App\Traits\ChecksAhliGiziOwnership;
 use App\Models\SuhuChillerFreezerModel;
 
 class SuhuChillerFreezerController extends BaseController
 {
+    use ChecksAhliGiziOwnership;
+
     protected $model;
 
     public function __construct() { $this->model = new SuhuChillerFreezerModel(); }
@@ -63,6 +66,9 @@ class SuhuChillerFreezerController extends BaseController
         $b->where('suhu_chiller_freezer.id', $id);
         $header = $b->get()->getRowArray();
         if (!$header) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($header, '/suhu-chiller-freezer')) {
+            return $r;
+        }
         return view('suhu_chiller_freezer/show', ['header' => $header, 'title' => 'Detail Suhu Chiller & Freezer']);
     }
 
@@ -70,7 +76,7 @@ class SuhuChillerFreezerController extends BaseController
     {
         $header = $this->model->find($id);
         if (!$header) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
-        $sig = (new \App\Models\UserSignatureModel())->where('user_id', $header['created_by'])->first();
+        $sig = signature_row_for_pdf(isset($header['created_by']) ? (int) $header['created_by'] : null);
         return view('suhu_chiller_freezer/print', ['header' => $header, 'title' => 'Cetak Suhu Chiller & Freezer', 'signature' => $sig]);
     }
 
@@ -98,11 +104,22 @@ class SuhuChillerFreezerController extends BaseController
     {
         $header = $this->model->find($id);
         if (!$header) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($header, '/suhu-chiller-freezer')) {
+            return $r;
+        }
         return view('suhu_chiller_freezer/edit', ['header' => $header, 'title' => 'Edit Suhu Chiller & Freezer']);
     }
 
     public function update($id)
     {
+        $header = $this->model->find($id);
+        if (!$header) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($header, '/suhu-chiller-freezer')) {
+            return $r;
+        }
+
         $this->model->update($id, [
             'tanggal'        => $this->request->getPost('tanggal'),
             'chiller_pagi'   => $this->request->getPost('chiller_pagi'),

@@ -2,11 +2,14 @@
 
 namespace App\Controllers;
 
+use App\Traits\ChecksAhliGiziOwnership;
 use App\Models\ThawingChillerModel;
 use App\Models\ThawingChillerItemModel;
 
 class ThawingChillerController extends BaseController
 {
+    use ChecksAhliGiziOwnership;
+
     protected $headerModel;
     protected $itemModel;
 
@@ -66,6 +69,9 @@ class ThawingChillerController extends BaseController
         $b->select('monitoring_thawing_chiller.*, users.nama as user_nama')->join('users', 'users.id = monitoring_thawing_chiller.created_by')->where('monitoring_thawing_chiller.id', $id);
         $header = $b->get()->getRowArray();
         if (!$header) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($header, '/thawing-chiller')) {
+            return $r;
+        }
         return view('thawing_chiller/show', ['header' => $header, 'items' => $this->itemModel->where('monitoring_thawing_chiller_id', $id)->findAll(), 'title' => 'Detail Thawing Chiller']);
     }
 
@@ -73,7 +79,7 @@ class ThawingChillerController extends BaseController
     {
         $header = $this->headerModel->find($id);
         if (!$header) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
-        return view('thawing_chiller/print', ['header' => $header, 'items' => $this->itemModel->where('monitoring_thawing_chiller_id', $id)->findAll(), 'title' => 'Cetak Thawing Chiller', 'signature' => (new \App\Models\UserSignatureModel())->where('user_id', $header['created_by'])->first()]);
+        return view('thawing_chiller/print', ['header' => $header, 'items' => $this->itemModel->where('monitoring_thawing_chiller_id', $id)->findAll(), 'title' => 'Cetak Thawing Chiller', 'signature' => signature_row_for_pdf(isset($header['created_by']) ? (int) $header['created_by'] : null)]);
     }
 
     public function exportExcel($id)
@@ -94,7 +100,10 @@ class ThawingChillerController extends BaseController
     {
         $header = $this->headerModel->find($id);
         if (!$header) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
-        
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($header, '/thawing-chiller')) {
+            return $r;
+        }
+
         $data = [
             'header' => $header,
             'items'  => $this->itemModel->where('monitoring_thawing_chiller_id', $id)->findAll(),
@@ -105,6 +114,14 @@ class ThawingChillerController extends BaseController
 
     public function update($id)
     {
+        $header = $this->headerModel->find($id);
+        if (!$header) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($header, '/thawing-chiller')) {
+            return $r;
+        }
+
         $items = $this->request->getPost('items');
         if (empty($items)) return redirect()->back()->with('error', 'Minimal 1 baris.')->withInput();
 

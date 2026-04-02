@@ -10,7 +10,7 @@ class UjiOrganoleptikItemModel extends Model
     protected $primaryKey    = 'id';
     protected $useTimestamps = false;
     protected $allowedFields = [
-        'uji_organoleptik_id', 'nama_makan',
+        'uji_organoleptik_id', 'nama_makan', 'waktu_uji',
         'skor_rasa', 'skor_warna', 'skor_aroma', 'skor_tekstur',
         'keterangan',
     ];

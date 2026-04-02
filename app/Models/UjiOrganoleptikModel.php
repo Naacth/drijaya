@@ -11,7 +11,7 @@ class UjiOrganoleptikModel extends Model
     protected $useTimestamps = true;
     protected $allowedFields = [
         'nama_pemeriksa', 'tempat_pemeriksaan', 'nama_tempat',
-        'tanggal_pemeriksaan', 'waktu_pemeriksaan', 'waktu_uji',
+        'tanggal_pemeriksaan', 'waktu_pemeriksaan',
         'nama_aslap', 'nama_pemeriksa_plok', 'nama_kepala_sppg',
         'created_by',
     ];

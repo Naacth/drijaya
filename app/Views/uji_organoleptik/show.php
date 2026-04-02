@@ -9,7 +9,12 @@
         <h4 class="mb-1" style="font-weight: 700;">Detail Uji Organoleptik</h4>
         <p class="text-muted small mb-0">Laporan #<?= str_pad($header['id'], 5, '0', STR_PAD_LEFT) ?></p>
     </div>
-    <div class="d-flex gap-2">
+    <div class="d-flex gap-2 flex-wrap">
+        <?php if (session()->get('role') === 'admin' || session()->get('role') === 'aslap'): ?>
+        <a href="<?= site_url('uji-organoleptik/edit/'.$header['id']) ?>" class="btn btn-primary">
+            <i class="bi bi-pencil-square me-1"></i> Ubah
+        </a>
+        <?php endif; ?>
         <a href="<?= site_url('uji-organoleptik/export-pdf/'.$header['id']) ?>" target="_blank" class="btn btn-outline-danger">
             <i class="bi bi-file-pdf me-1"></i> Cetak PDF
         </a>
@@ -32,7 +37,6 @@
                     <tr><td class="text-muted">Nama Tempat</td><td class="fw-bold"><?= esc($header['nama_tempat']) ?></td></tr>
                     <tr><td class="text-muted">Tanggal</td><td><?= date('d F Y', strtotime($header['tanggal_pemeriksaan'])) ?></td></tr>
                     <tr><td class="text-muted">Waktu</td><td><?= esc($header['waktu_pemeriksaan']) ?></td></tr>
-                    <tr><td class="text-muted">Waktu Uji</td><td><span class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-2 py-1"><?= esc($header['waktu_uji']) ?></span></td></tr>
                     <tr><td colspan="2"><hr></td></tr>
                     <tr><td class="text-muted">Aslap</td><td><?= esc($header['nama_aslap']) ?></td></tr>
                     <tr><td class="text-muted">PLOK/PIC</td><td><?= esc($header['nama_pemeriksa_plok'] ?: '-') ?></td></tr>
@@ -79,6 +83,7 @@
                         <tr>
                             <td><?= $i + 1 ?></td>
                             <td class="fw-medium text-dark"><?= esc($item['nama_makan']) ?></td>
+                            <td><span class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-2 py-1 small"><?= esc($item['waktu_uji'] ?? 'Sebelum Pengantaran') ?></span></td>
                             <td class="text-center"><?= $skorLabel($item['skor_rasa']) ?></td>
                             <td class="text-center"><?= $skorLabel($item['skor_warna']) ?></td>
                             <td class="text-center"><?= $skorLabel($item['skor_aroma']) ?></td>

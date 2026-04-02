@@ -97,6 +97,11 @@
                                             <a href="<?= base_url('penerima-manfaat/show/' . $item['id']) ?>" class="btn btn-light border" title="Detail">
                                                 <i class="bi bi-eye"></i>
                                             </a>
+                                            <?php if (session()->get('role') === 'aslap'): ?>
+                                            <a href="<?= base_url('penerima-manfaat/edit/' . $item['id']) ?>" class="btn btn-light border" title="Ubah">
+                                                <i class="bi bi-pencil-square text-primary"></i>
+                                            </a>
+                                            <?php endif; ?>
                                             <a href="<?= base_url('penerima-manfaat/export-excel/' . $item['id']) ?>" class="btn btn-light border" title="Export Excel">
                                                 <i class="bi bi-file-earmark-excel text-success"></i>
                                             </a>

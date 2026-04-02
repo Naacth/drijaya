@@ -9,6 +9,9 @@
         <p class="text-muted small mb-0">Informasi lengkap checklist pembersihan kendaraan</p>
     </div>
     <div class="d-flex gap-2">
+        <?php if (session()->get('role') === 'ahli_gizi'): ?>
+        <a href="<?= site_url('pembersihan-transportasi/edit/' . $header['id']) ?>" class="btn btn-warning btn-sm px-3 rounded-pill shadow-sm"><i class="fas fa-pencil-alt me-1"></i> Edit</a>
+        <?php endif; ?>
         <a href="<?= site_url('pembersihan-transportasi/export-pdf/' . $header['id']) ?>" target="_blank" class="btn btn-outline-danger btn-sm px-3 rounded-pill shadow-sm">
             <i class="fas fa-file-pdf me-1"></i> Cetak PDF
         </a>

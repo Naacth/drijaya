@@ -68,6 +68,7 @@
         .sig-space { height: 60px; }
         .sig-role { font-weight: bold; font-size: 11px; }
     </style>
+<?= view('layout/print_signatures_style') ?>
 </head>
 <body onload="window.print()">
 
@@ -90,17 +91,14 @@
         <div class="header-block" style="margin-bottom: 20px;">
             <table style="width: 100%; border-collapse: collapse;">
                 <tr>
-                    <td width="120" style="text-align: center; vertical-align: middle; border: none;">
-                        <img src="<?= base_url('bgn.png') ?>" alt="Logo BGN" style="width: 100px; height: auto;">
+                    <td width="110" style="text-align: left; vertical-align: middle; border: none;">
+                        <?php $__logo = public_asset_data_uri('bgn.png'); ?>
+                        <img src="<?= $__logo !== '' ? $__logo : base_url('bgn.png') ?>" alt="Logo BGN" style="width: 100px; height: auto;">
                     </td>
                     <td style="text-align: center; border: none;">
                         <h2 style="font-size: 16px; font-weight: bold; margin: 0; color: #fff;">SPPG BUNAR SUKAMULYA</h2>
-                        <h3 style="font-size: 15px; font-weight: bold; margin: 0; color: #fff;">YAYASAN BUMI PANGAN INDONESIA</h3>
-                        <p style="font-size: 11px; margin: 2px 0; color: #fff;"><?= esc(session()->get('sppg_alamat') ?? 'Alamat belum diatur') ?></p>
+                        <p style="font-size: 11px; margin: 8px 2px 0; color: #fff;"><?= esc(session()->get('sppg_alamat') ?? 'Alamat belum diatur') ?></p>
                         <p style="font-size: 11px; margin: 2px 0; color: #fff;">15610</p>
-                    </td>
-                    <td width="120" style="text-align: center; vertical-align: middle; border: none;">
-                        <img src="<?= base_url('yayasan.png') ?>" alt="Logo Yayasan" style="width: 95px; height: auto;">
                     </td>
                 </tr>
             </table>
@@ -146,24 +144,24 @@
                     <td>
                         <p class="sig-role">Pengawas produksi &amp; kualitas</p>
                         <div class="sig-space" style="display: flex; align-items: end; justify-content: center;">
-                            <?php if (!empty($signature['ttd_ahli_gizi'])): ?>
-                                <img src="<?= base_url('uploads/signatures/' . $signature['ttd_ahli_gizi']) ?>" style="max-height: 55px; max-width: 100%; object-fit: contain;">
+                            <?php if (($__sig = signature_data_uri($signature ?? [], 'ttd_ahli_gizi')) !== ''): ?>
+                                <img src="<?= $__sig ?>" alt="TTD" style="max-height: 55px; max-width: 100%; object-fit: contain;">
                             <?php endif; ?>
                         </div>
                     </td>
                     <td>
                         <p class="sig-role">Pengawas pengadaan bahan pangan</p>
                         <div class="sig-space" style="display: flex; align-items: end; justify-content: center;">
-                            <?php if (!empty($signature['ttd_akuntan'])): ?>
-                                <img src="<?= base_url('uploads/signatures/' . $signature['ttd_akuntan']) ?>" style="max-height: 55px; max-width: 100%; object-fit: contain;">
+                            <?php if (($__sig = signature_data_uri($signature ?? [], 'ttd_akuntan')) !== ''): ?>
+                                <img src="<?= $__sig ?>" alt="TTD" style="max-height: 55px; max-width: 100%; object-fit: contain;">
                             <?php endif; ?>
                         </div>
                     </td>
                     <td>
                         <p class="sig-role">Kepala satuan pelayanan</p>
                         <div class="sig-space" style="display: flex; align-items: end; justify-content: center;">
-                            <?php if (!empty($signature['ttd_kepala_sppg'])): ?>
-                                <img src="<?= base_url('uploads/signatures/' . $signature['ttd_kepala_sppg']) ?>" style="max-height: 55px; max-width: 100%; object-fit: contain;">
+                            <?php if (($__sig = signature_data_uri($signature ?? [], 'ttd_kepala_sppg')) !== ''): ?>
+                                <img src="<?= $__sig ?>" alt="TTD" style="max-height: 55px; max-width: 100%; object-fit: contain;">
                             <?php endif; ?>
                         </div>
                     </td>

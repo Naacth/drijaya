@@ -2,10 +2,13 @@
 
 namespace App\Controllers;
 
+use App\Traits\ChecksAhliGiziOwnership;
 use App\Models\PembersihanBakSampahModel;
 
 class PembersihanBakSampahController extends BaseController
 {
+    use ChecksAhliGiziOwnership;
+
     protected $model;
     public function __construct() { $this->model = new PembersihanBakSampahModel(); }
 
@@ -45,6 +48,10 @@ class PembersihanBakSampahController extends BaseController
     public function show($id)
     {
         $form = $this->model->find($id);
+        if (!$form) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($form, '/pembersihan-bak-sampah')) {
+            return $r;
+        }
         return view('pembersihan_bak_sampah/show', ['title' => 'Detail Pembersihan Bak Sampah', 'header' => $form]);
     }
 
@@ -53,7 +60,7 @@ class PembersihanBakSampahController extends BaseController
         $form = $this->model->find($id);
         $data = [
             'header' => $form, 'title' => 'Cetak Bak Sampah',
-            'signature' => (new \App\Models\UserSignatureModel())->where('user_id', $form['created_by'])->first()
+            'signature' => signature_row_for_pdf(isset($form['created_by']) ? (int) $form['created_by'] : null)
         ];
         return view('pembersihan_bak_sampah/print', $data);
     }
@@ -72,11 +79,22 @@ class PembersihanBakSampahController extends BaseController
     {
         $form = $this->model->find($id);
         if (!$form) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($form, '/pembersihan-bak-sampah')) {
+            return $r;
+        }
         return view('pembersihan_bak_sampah/edit', ['title' => 'Edit Pembersihan Bak Sampah', 'header' => $form]);
     }
 
     public function update($id)
     {
+        $form = $this->model->find($id);
+        if (!$form) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($form, '/pembersihan-bak-sampah')) {
+            return $r;
+        }
+
         $data = [
             'tanggal' => $this->request->getPost('tanggal'),
             'nama_personil' => $this->request->getPost('nama_personil'),

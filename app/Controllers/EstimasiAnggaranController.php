@@ -2,11 +2,14 @@
 
 namespace App\Controllers;
 
+use App\Traits\ChecksAhliGiziOwnership;
 use App\Models\EstimasiAnggaranModel;
 use App\Models\EstimasiAnggaranItemModel;
 
 class EstimasiAnggaranController extends BaseController
 {
+    use ChecksAhliGiziOwnership;
+
     protected $headerModel;
     protected $itemModel;
 
@@ -88,6 +91,9 @@ class EstimasiAnggaranController extends BaseController
         $builder->where('estimasi_anggaran.id', $id);
         $header = $builder->get()->getRowArray();
         if (!$header) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($header, '/estimasi-anggaran')) {
+            return $r;
+        }
 
         $data['header'] = $header;
         $data['items']  = $this->itemModel->where('estimasi_anggaran_id', $id)->findAll();
@@ -99,7 +105,10 @@ class EstimasiAnggaranController extends BaseController
     {
         $header = $this->headerModel->find($id);
         if (!$header) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
-        
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($header, '/estimasi-anggaran')) {
+            return $r;
+        }
+
         $data = [
             'header' => $header,
             'items'  => $this->itemModel->where('estimasi_anggaran_id', $id)->findAll(),
@@ -110,6 +119,14 @@ class EstimasiAnggaranController extends BaseController
 
     public function update($id)
     {
+        $header = $this->headerModel->find($id);
+        if (!$header) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($header, '/estimasi-anggaran')) {
+            return $r;
+        }
+
         $items = $this->request->getPost('items');
         if (empty($items)) {
             return redirect()->back()->with('error', 'Minimal harus mengisi 1 baris.')->withInput();

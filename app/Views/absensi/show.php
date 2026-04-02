@@ -10,9 +10,16 @@
             <h4 class="fw-bold mb-0">Detail Absensi Relawan</h4>
             <p class="text-muted small mb-0">Laporan tanggal: <strong><?= date('d F Y', strtotime($absensi['tanggal'])) ?></strong></p>
         </div>
-        <a href="<?= site_url('absensi/export-pdf/'.$absensi['id']) ?>" target="_blank" class="btn btn-danger px-4 shadow-sm">
-            <i class="bi bi-file-earmark-pdf me-2"></i>Cetak PDF
-        </a>
+        <div class="d-flex gap-2 flex-wrap">
+            <?php if (session()->get('role') === 'aslap' && (int)($absensi['created_by'] ?? 0) === (int)session()->get('user_id')): ?>
+            <a href="<?= site_url('absensi/edit/'.$absensi['id']) ?>" class="btn btn-primary px-4 shadow-sm">
+                <i class="bi bi-pencil-square me-2"></i>Ubah
+            </a>
+            <?php endif; ?>
+            <a href="<?= site_url('absensi/export-pdf/'.$absensi['id']) ?>" target="_blank" class="btn btn-danger px-4 shadow-sm">
+                <i class="bi bi-file-earmark-pdf me-2"></i>Cetak PDF
+            </a>
+        </div>
     </div>
 </div>
 

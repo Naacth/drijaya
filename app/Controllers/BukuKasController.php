@@ -25,9 +25,10 @@ class BukuKasController extends BaseController
         }
 
         $data = [
-            'title'   => 'Buku Kas Operasional',
-            'entries' => $builder->findAll(100),
-            'summary' => $this->bukuKasModel->getSummary($sppgId, date('Y-m-01'), date('Y-m-t'))
+            'title'         => 'Buku Kas Operasional',
+            'entries'       => $builder->findAll(100),
+            'summary'       => $this->bukuKasModel->getSummary($sppgId, date('Y-m-01'), date('Y-m-t')),
+            'user_sppg_id'  => $this->resolveUserSppgId(),
         ];
 
         return view('buku_kas/index', $data);
@@ -75,6 +76,53 @@ class BukuKasController extends BaseController
         }
 
         return redirect()->to('/buku-kas')->with('success', 'Entri operasional berhasil disimpan');
+    }
+
+    public function edit($id)
+    {
+        $row = $this->bukuKasModel->find($id);
+        if (!$row) {
+            return redirect()->to('/buku-kas')->with('error', 'Data tidak ditemukan.');
+        }
+        if (!$this->userCanEditBukuKas($row)) {
+            return redirect()->to('/buku-kas')->with('error', 'Anda tidak memiliki akses mengubah entri ini.');
+        }
+
+        $data = [
+            'title' => 'Ubah Entri Buku Kas',
+            'entry' => $row,
+        ];
+
+        return view('buku_kas/edit', $data);
+    }
+
+    public function update($id)
+    {
+        $row = $this->bukuKasModel->find($id);
+        if (!$row) {
+            return redirect()->to('/buku-kas')->with('error', 'Data tidak ditemukan.');
+        }
+        if (!$this->userCanEditBukuKas($row)) {
+            return redirect()->to('/buku-kas')->with('error', 'Anda tidak memiliki akses mengubah entri ini.');
+        }
+
+        $tanggal    = $this->request->getPost('tanggal');
+        $keterangan = $this->request->getPost('keterangan');
+        $debet      = (float) $this->request->getPost('debet');
+        $kredit     = (float) $this->request->getPost('kredit');
+
+        if (empty($keterangan)) {
+            return redirect()->back()->withInput()->with('error', 'Keterangan wajib diisi.');
+        }
+
+        $this->bukuKasModel->update($id, [
+            'tanggal'    => $tanggal,
+            'keterangan' => $keterangan,
+            'debet'      => $debet,
+            'kredit'     => $kredit,
+        ]);
+
+        return redirect()->to('/buku-kas')->with('success', 'Entri berhasil diperbarui.');
     }
 
     public function report()
@@ -188,5 +236,37 @@ class BukuKasController extends BaseController
         
         $this->bukuKasModel->delete($id);
         return redirect()->back()->with('success', 'Data berhasil dihapus.');
+    }
+
+    private function resolveUserSppgId(): ?int
+    {
+        $sppgId = session()->get('sppg_id');
+        $userId = session()->get('user_id');
+        if (!$sppgId && $userId) {
+            $user = (new \App\Models\UserModel())->find($userId);
+            $sppgId = $user['sppg_id'] ?? null;
+            if ($sppgId) {
+                session()->set('sppg_id', $sppgId);
+            }
+        }
+
+        return $sppgId !== null && $sppgId !== '' ? (int) $sppgId : null;
+    }
+
+    private function userCanEditBukuKas(array $row): bool
+    {
+        $role = session()->get('role');
+        if ($role === 'admin') {
+            return true;
+        }
+        if ($role !== 'akuntan') {
+            return false;
+        }
+        $userSppg = $this->resolveUserSppgId();
+        if ($userSppg === null) {
+            return false;
+        }
+
+        return (int) ($row['sppg_id'] ?? 0) === $userSppg;
     }
 }

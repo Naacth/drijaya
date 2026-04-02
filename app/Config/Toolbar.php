@@ -9,7 +9,6 @@ use CodeIgniter\Debug\Toolbar\Collectors\Files;
 use CodeIgniter\Debug\Toolbar\Collectors\Logs;
 use CodeIgniter\Debug\Toolbar\Collectors\Routes;
 use CodeIgniter\Debug\Toolbar\Collectors\Timers;
-use CodeIgniter\Debug\Toolbar\Collectors\Views;
 
 /**
  * --------------------------------------------------------------------------
@@ -37,7 +36,8 @@ class Toolbar extends BaseConfig
         Timers::class,
         Database::class,
         Logs::class,
-        Views::class,
+        // Views: menonaktifkan agar HTML tidak disisipi komentar DEBUG-VIEW (path file) pada cetak/PDF.
+        // Views::class,
         // \CodeIgniter\Debug\Toolbar\Collectors\Cache::class,
         Files::class,
         Routes::class,

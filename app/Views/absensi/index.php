@@ -63,6 +63,11 @@
                                     <a href="<?= site_url('absensi/show/'.$a['id']) ?>" class="btn btn-sm btn-light border" title="Lihat">
                                         <i class="bi bi-eye"></i> Detail
                                     </a>
+                                    <?php if (session()->get('role') === 'aslap' && (int)($a['created_by'] ?? 0) === (int)session()->get('user_id')): ?>
+                                    <a href="<?= site_url('absensi/edit/'.$a['id']) ?>" class="btn btn-sm btn-outline-primary border" title="Ubah">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                    <?php endif; ?>
                                     <a href="<?= site_url('absensi/export-pdf/'.$a['id']) ?>" target="_blank" class="btn btn-sm btn-outline-danger border" title="Export PDF">
                                         <i class="bi bi-file-earmark-pdf"></i>
                                     </a>

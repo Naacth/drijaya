@@ -30,6 +30,8 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
         $routes->get('/', 'AbsensiController::index');
         $routes->get('create', 'AbsensiController::create');
         $routes->post('store', 'AbsensiController::store');
+        $routes->get('edit/(:num)', 'AbsensiController::edit/$1');
+        $routes->post('update/(:num)', 'AbsensiController::update/$1');
         $routes->get('show/(:num)', 'AbsensiController::show/$1');
         $routes->get('export-pdf/(:num)', 'AbsensiController::exportPdf/$1');
         $routes->get('rekap', 'AbsensiController::rekap');
@@ -97,6 +99,8 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
         $routes->get('', 'BeneficiaryController::index');
         $routes->get('create', 'BeneficiaryController::create');
         $routes->post('store', 'BeneficiaryController::store');
+        $routes->get('edit/(:num)', 'BeneficiaryController::edit/$1', ['filter' => 'role:aslap']);
+        $routes->post('update/(:num)', 'BeneficiaryController::update/$1', ['filter' => 'role:aslap']);
         $routes->get('show/(:num)', 'BeneficiaryController::show/$1');
         $routes->post('approve/(:num)', 'BeneficiaryController::approve/$1');
         $routes->post('reject/(:num)', 'BeneficiaryController::reject/$1');
@@ -125,6 +129,8 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
         $routes->get('', 'BarangDatangController::index');
         $routes->get('create', 'BarangDatangController::create', ['filter' => 'role:aslap,admin']);
         $routes->post('store', 'BarangDatangController::store', ['filter' => 'role:aslap,admin']);
+        $routes->get('edit/(:num)', 'BarangDatangController::edit/$1', ['filter' => 'role:aslap,admin']);
+        $routes->post('update/(:num)', 'BarangDatangController::update/$1', ['filter' => 'role:aslap,admin']);
         $routes->get('show/(:num)', 'BarangDatangController::show/$1');
         $routes->get('export-pdf/(:num)', 'BarangDatangController::exportPdf/$1');
         $routes->get('export-excel/(:num)', 'BarangDatangController::exportExcel/$1');
@@ -136,6 +142,8 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
         $routes->get('', 'CekBahanBakuController::index');
         $routes->get('create', 'CekBahanBakuController::create', ['filter' => 'role:aslap,admin']);
         $routes->post('store', 'CekBahanBakuController::store', ['filter' => 'role:aslap,admin']);
+        $routes->get('edit/(:num)', 'CekBahanBakuController::edit/$1', ['filter' => 'role:aslap,admin']);
+        $routes->post('update/(:num)', 'CekBahanBakuController::update/$1', ['filter' => 'role:aslap,admin']);
         $routes->get('show/(:num)', 'CekBahanBakuController::show/$1');
         $routes->get('export-pdf/(:num)', 'CekBahanBakuController::exportPdf/$1');
         $routes->get('export-excel/(:num)', 'CekBahanBakuController::exportExcel/$1');
@@ -147,6 +155,8 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
         $routes->get('', 'UjiOrganoleptikController::index');
         $routes->get('create', 'UjiOrganoleptikController::create', ['filter' => 'role:aslap,admin']);
         $routes->post('store', 'UjiOrganoleptikController::store', ['filter' => 'role:aslap,admin']);
+        $routes->get('edit/(:num)', 'UjiOrganoleptikController::edit/$1', ['filter' => 'role:aslap,admin']);
+        $routes->post('update/(:num)', 'UjiOrganoleptikController::update/$1', ['filter' => 'role:aslap,admin']);
         $routes->get('show/(:num)', 'UjiOrganoleptikController::show/$1');
         $routes->get('export-pdf/(:num)', 'UjiOrganoleptikController::exportPdf/$1');
         $routes->get('export-excel/(:num)', 'UjiOrganoleptikController::exportExcel/$1');
@@ -158,6 +168,8 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
         $routes->get('', 'BaKehilanganController::index');
         $routes->get('create', 'BaKehilanganController::create', ['filter' => 'role:aslap']);
         $routes->post('store', 'BaKehilanganController::store', ['filter' => 'role:aslap']);
+        $routes->get('edit/(:num)', 'BaKehilanganController::edit/$1', ['filter' => 'role:aslap,admin']);
+        $routes->post('update/(:num)', 'BaKehilanganController::update/$1', ['filter' => 'role:aslap,admin']);
         $routes->get('show/(:num)', 'BaKehilanganController::show/$1');
         $routes->get('export-pdf/(:num)', 'BaKehilanganController::exportPdf/$1');
         $routes->post('delete/(:num)', 'BaKehilanganController::delete/$1', ['filter' => 'role:admin']);
@@ -168,6 +180,8 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
         $routes->get('', 'PemberitahuanKerjaController::index');
         $routes->get('create', 'PemberitahuanKerjaController::create', ['filter' => 'role:aslap']);
         $routes->post('store', 'PemberitahuanKerjaController::store', ['filter' => 'role:aslap']);
+        $routes->get('edit/(:num)', 'PemberitahuanKerjaController::edit/$1', ['filter' => 'role:aslap,admin']);
+        $routes->post('update/(:num)', 'PemberitahuanKerjaController::update/$1', ['filter' => 'role:aslap,admin']);
         $routes->get('show/(:num)', 'PemberitahuanKerjaController::show/$1');
         $routes->get('export-pdf/(:num)', 'PemberitahuanKerjaController::exportPdf/$1');
         $routes->post('delete/(:num)', 'PemberitahuanKerjaController::delete/$1', ['filter' => 'role:admin']);
@@ -178,6 +192,8 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
         $routes->get('', 'StokGudangController::index');
         $routes->get('create', 'StokGudangController::create', ['filter' => 'role:aslap']);
         $routes->post('store', 'StokGudangController::store', ['filter' => 'role:aslap']);
+        $routes->get('edit/(:num)', 'StokGudangController::edit/$1', ['filter' => 'role:aslap,admin']);
+        $routes->post('update/(:num)', 'StokGudangController::update/$1', ['filter' => 'role:aslap,admin']);
         $routes->get('show/(:num)', 'StokGudangController::show/$1');
         $routes->get('export-pdf/(:num)', 'StokGudangController::exportPdf/$1');
         $routes->get('export-excel/(:num)', 'StokGudangController::exportExcel/$1');
@@ -189,6 +205,8 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
         $routes->get('', 'StokOpnameController::index');
         $routes->get('create', 'StokOpnameController::create', ['filter' => 'role:aslap']);
         $routes->post('store', 'StokOpnameController::store', ['filter' => 'role:aslap']);
+        $routes->get('edit/(:num)', 'StokOpnameController::edit/$1', ['filter' => 'role:aslap,admin']);
+        $routes->post('update/(:num)', 'StokOpnameController::update/$1', ['filter' => 'role:aslap,admin']);
         $routes->get('show/(:num)', 'StokOpnameController::show/$1');
         $routes->get('export-pdf/(:num)', 'StokOpnameController::exportPdf/$1');
         $routes->get('export-excel/(:num)', 'StokOpnameController::exportExcel/$1');
@@ -200,6 +218,8 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
         $routes->get('', 'RekapPorsiController::index');
         $routes->get('create', 'RekapPorsiController::create', ['filter' => 'role:aslap']);
         $routes->post('store', 'RekapPorsiController::store', ['filter' => 'role:aslap']);
+        $routes->get('edit/(:num)', 'RekapPorsiController::edit/$1', ['filter' => 'role:aslap,admin']);
+        $routes->post('update/(:num)', 'RekapPorsiController::update/$1', ['filter' => 'role:aslap,admin']);
         $routes->get('show/(:num)', 'RekapPorsiController::show/$1');
         $routes->get('export-pdf/(:num)', 'RekapPorsiController::exportPdf/$1');
         $routes->get('export-excel/(:num)', 'RekapPorsiController::exportExcel/$1');
@@ -223,6 +243,8 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
         $routes->get('/', 'BukuKasController::index');
         $routes->get('create', 'BukuKasController::create', ['filter' => 'role:akuntan,admin']);
         $routes->post('store', 'BukuKasController::store', ['filter' => 'role:akuntan,admin']);
+        $routes->get('edit/(:num)', 'BukuKasController::edit/$1', ['filter' => 'role:akuntan,admin']);
+        $routes->post('update/(:num)', 'BukuKasController::update/$1', ['filter' => 'role:akuntan,admin']);
         $routes->post('delete/(:num)', 'BukuKasController::delete/$1', ['filter' => 'role:admin']);
         $routes->get('report', 'BukuKasController::report');
         $routes->get('export-pdf', 'BukuKasController::exportPdf');
@@ -234,6 +256,8 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
         $routes->get('/', 'PettyCashController::index');
         $routes->get('create', 'PettyCashController::create', ['filter' => 'role:akuntan,admin']);
         $routes->post('store', 'PettyCashController::store', ['filter' => 'role:akuntan,admin']);
+        $routes->get('edit/(:num)', 'PettyCashController::edit/$1', ['filter' => 'role:akuntan,admin']);
+        $routes->post('update/(:num)', 'PettyCashController::update/$1', ['filter' => 'role:akuntan,admin']);
         $routes->post('delete/(:num)', 'PettyCashController::delete/$1', ['filter' => 'role:admin']);
         $routes->get('report', 'PettyCashController::report');
         $routes->get('export-pdf', 'PettyCashController::exportPdf');

@@ -66,9 +66,23 @@
                             </div>
                         </div>
 
+                        <!-- TTD Kepala Koki -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">4. Tanda Tangan Kepala Koki Satuan Pelayanan</label>
+                            <input type="file" name="ttd_kepala_koki" class="form-control mb-2" accept="image/*" onchange="previewImage(this, 'preview-koki')">
+                            <div class="p-3 border rounded text-center bg-light mt-2" style="min-height: 120px; display: flex; align-items: center; justify-content: center;">
+                                <?php if (!empty($signature['ttd_kepala_koki'])): ?>
+                                    <img src="<?= base_url('uploads/signatures/' . $signature['ttd_kepala_koki']) ?>" id="preview-koki" style="max-height: 100px; max-width: 100%; object-fit: contain;">
+                                <?php else: ?>
+                                    <img src="" id="preview-koki" style="max-height: 100px; max-width: 100%; object-fit: contain; display: none;">
+                                    <span class="text-muted small" id="text-koki">Belum ada tanda tangan</span>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+
                         <!-- TTD Akuntan -->
                         <div class="col-md-6">
-                            <label class="form-label fw-bold">4. Tanda Tangan Akuntan</label>
+                            <label class="form-label fw-bold">5. Tanda Tangan Akuntan</label>
                             <input type="file" name="ttd_akuntan" class="form-control mb-2" accept="image/*" onchange="previewImage(this, 'preview-akuntan')">
                             <div class="p-3 border rounded text-center bg-light mt-2" style="min-height: 120px; display: flex; align-items: center; justify-content: center;">
                                 <?php if (!empty($signature['ttd_akuntan'])): ?>

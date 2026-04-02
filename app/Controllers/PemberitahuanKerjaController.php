@@ -3,9 +3,12 @@
 namespace App\Controllers;
 
 use App\Models\PemberitahuanKerjaModel;
+use App\Traits\ChecksAslapOwnsRecord;
 
 class PemberitahuanKerjaController extends BaseController
 {
+    use ChecksAslapOwnsRecord;
+
     protected $model;
 
     public function __construct()
@@ -103,10 +106,84 @@ class PemberitahuanKerjaController extends BaseController
 
         if (!$header) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
 
+        if ($r = $this->redirectIfAslapCannotAccessRecord($header, '/pemberitahuan-kerja')) {
+            return $r;
+        }
+
         $data['header'] = $header;
         $data['title']  = 'Detail Form Pemberitahuan';
 
         return view('pemberitahuan_kerja/show', $data);
+    }
+
+    public function edit($id)
+    {
+        $db      = \Config\Database::connect();
+        $builder = $db->table('pemberitahuan_kerja');
+        $builder->select('pemberitahuan_kerja.*, users.nama as user_nama');
+        $builder->join('users', 'users.id = pemberitahuan_kerja.created_by');
+        $builder->where('pemberitahuan_kerja.id', $id);
+        $header = $builder->get()->getRowArray();
+
+        if (!$header) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+
+        if ($r = $this->redirectIfAslapCannotAccessRecord($header, '/pemberitahuan-kerja')) {
+            return $r;
+        }
+
+        $data['header'] = $header;
+        $data['title']  = 'Ubah Form Pemberitahuan';
+
+        return view('pemberitahuan_kerja/edit', $data);
+    }
+
+    public function update($id)
+    {
+        $row = $this->model->find($id);
+        if (!$row) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+
+        if ($r = $this->redirectIfAslapCannotAccessRecord($row, '/pemberitahuan-kerja')) {
+            return $r;
+        }
+
+        $updateData = [
+            'no_surat'               => $this->request->getPost('no_surat'),
+            'tanggal'                => $this->request->getPost('tanggal'),
+            'divisi'                 => $this->request->getPost('divisi'),
+            'nama_pic'               => $this->request->getPost('nama_pic'),
+            'jam_mulai'              => $this->request->getPost('jam_mulai'),
+            'jam_selesai'            => $this->request->getPost('jam_selesai'),
+            'keterangan_jumlah_item' => $this->request->getPost('keterangan_jumlah_item'),
+            'keterangan_dikerjakan'  => $this->request->getPost('keterangan_dikerjakan'),
+            'nama_anggota'           => $this->request->getPost('nama_anggota'),
+            'nama_pj'                => $this->request->getPost('nama_pj'),
+        ];
+
+        $base = rtrim(FCPATH, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+
+        $ttdAnggota = $this->request->getFile('ttd_anggota');
+        if ($ttdAnggota && $ttdAnggota->isValid() && !$ttdAnggota->hasMoved()) {
+            if (!empty($row['ttd_anggota']) && is_file($base . str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $row['ttd_anggota']))) {
+                @unlink($base . str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $row['ttd_anggota']));
+            }
+            $newName = 'ttd_anggota_' . time() . '.' . $ttdAnggota->getExtension();
+            $ttdAnggota->move('uploads/pemberitahuan_kerja', $newName);
+            $updateData['ttd_anggota'] = 'uploads/pemberitahuan_kerja/' . $newName;
+        }
+
+        $ttdPj = $this->request->getFile('ttd_pj');
+        if ($ttdPj && $ttdPj->isValid() && !$ttdPj->hasMoved()) {
+            if (!empty($row['ttd_pj']) && is_file($base . str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $row['ttd_pj']))) {
+                @unlink($base . str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $row['ttd_pj']));
+            }
+            $newName = 'ttd_pj_' . time() . '_pj.' . $ttdPj->getExtension();
+            $ttdPj->move('uploads/pemberitahuan_kerja', $newName);
+            $updateData['ttd_pj'] = 'uploads/pemberitahuan_kerja/' . $newName;
+        }
+
+        $this->model->update($id, $updateData);
+
+        return redirect()->to('/pemberitahuan-kerja/show/' . $id)->with('success', 'Form Pemberitahuan berhasil diperbarui.');
     }
 
     public function exportPdf($id)

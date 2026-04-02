@@ -4,9 +4,12 @@ namespace App\Controllers;
 
 use App\Models\RekapPorsiModel;
 use App\Models\RekapPorsiItemModel;
+use App\Traits\ChecksAslapOwnsRecord;
 
 class RekapPorsiController extends BaseController
 {
+    use ChecksAslapOwnsRecord;
+
     protected $headerModel;
     protected $itemModel;
 
@@ -99,11 +102,84 @@ class RekapPorsiController extends BaseController
 
         if (!$header) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
 
+        if ($r = $this->redirectIfAslapCannotAccessRecord($header, '/rekap-porsi')) {
+            return $r;
+        }
+
         $data['header'] = $header;
         $data['items']  = $this->itemModel->where('rekap_porsi_id', $id)->findAll();
         $data['title']  = 'Detail Rekap Porsi';
 
         return view('rekap_porsi/show', $data);
+    }
+
+    public function edit($id)
+    {
+        $db = \Config\Database::connect();
+        $builder = $db->table('rekap_porsi');
+        $builder->select('rekap_porsi.*, users.nama as user_nama');
+        $builder->join('users', 'users.id = rekap_porsi.created_by');
+        $builder->where('rekap_porsi.id', $id);
+        $header = $builder->get()->getRowArray();
+
+        if (!$header) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+
+        if ($r = $this->redirectIfAslapCannotAccessRecord($header, '/rekap-porsi')) {
+            return $r;
+        }
+
+        $data['header'] = $header;
+        $data['items']  = $this->itemModel->where('rekap_porsi_id', $id)->findAll();
+        $data['title']  = 'Ubah Rekap Porsi';
+
+        return view('rekap_porsi/edit', $data);
+    }
+
+    public function update($id)
+    {
+        $header = $this->headerModel->find($id);
+        if (!$header) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+
+        if ($r = $this->redirectIfAslapCannotAccessRecord($header, '/rekap-porsi')) {
+            return $r;
+        }
+
+        $items = $this->request->getPost('items');
+        if (empty($items)) {
+            return redirect()->back()->with('error', 'Minimal harus mengisi 1 baris.')->withInput();
+        }
+
+        $db = \Config\Database::connect();
+        $db->transStart();
+
+        $this->headerModel->update($id, ['tanggal' => $this->request->getPost('tanggal')]);
+
+        $this->itemModel->where('rekap_porsi_id', $id)->delete();
+
+        foreach ($items as $item) {
+            if (empty($item['sekolah'])) {
+                continue;
+            }
+
+            $this->itemModel->insert([
+                'rekap_porsi_id'             => $id,
+                'tingkatan'                  => $item['tingkatan'] ?? '',
+                'sekolah'                    => $item['sekolah'],
+                'jumlah_pm'                  => (int) ($item['jumlah_pm'] ?? 0),
+                'jumlah_terdistribusi'       => (int) ($item['jumlah_terdistribusi'] ?? 0),
+                'jumlah_tidak_terdistribusi' => (int) ($item['jumlah_tidak_terdistribusi'] ?? 0),
+                'keterangan'                 => $item['keterangan'] ?? '',
+                'pengalihan'                 => $item['pengalihan'] ?? '',
+            ]);
+        }
+
+        $db->transComplete();
+
+        if ($db->transStatus() === false) {
+            return redirect()->back()->with('error', 'Gagal memperbarui.')->withInput();
+        }
+
+        return redirect()->to('/rekap-porsi/show/' . $id)->with('success', 'Rekap porsi berhasil diperbarui.');
     }
 
     public function exportPdf($id)

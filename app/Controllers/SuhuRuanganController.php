@@ -2,10 +2,13 @@
 
 namespace App\Controllers;
 
+use App\Traits\ChecksAhliGiziOwnership;
 use App\Models\SuhuRuanganModel;
 
 class SuhuRuanganController extends BaseController
 {
+    use ChecksAhliGiziOwnership;
+
     protected $model;
 
     public function __construct() { $this->model = new SuhuRuanganModel(); }
@@ -50,6 +53,9 @@ class SuhuRuanganController extends BaseController
         $b->select('catatan_suhu_ruangan.*, users.nama as user_nama')->join('users', 'users.id = catatan_suhu_ruangan.created_by')->where('catatan_suhu_ruangan.id', $id);
         $header = $b->get()->getRowArray();
         if (!$header) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($header, '/suhu-ruangan')) {
+            return $r;
+        }
         return view('suhu_ruangan/show', ['header' => $header, 'title' => 'Detail Suhu Ruangan']);
     }
 
@@ -57,7 +63,7 @@ class SuhuRuanganController extends BaseController
     {
         $header = $this->model->find($id);
         if (!$header) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
-        return view('suhu_ruangan/print', ['header' => $header, 'title' => 'Cetak Suhu Ruangan', 'signature' => (new \App\Models\UserSignatureModel())->where('user_id', $header['created_by'])->first()]);
+        return view('suhu_ruangan/print', ['header' => $header, 'title' => 'Cetak Suhu Ruangan', 'signature' => signature_row_for_pdf(isset($header['created_by']) ? (int) $header['created_by'] : null)]);
     }
 
     public function exportExcel($id)
@@ -79,11 +85,22 @@ class SuhuRuanganController extends BaseController
     {
         $header = $this->model->find($id);
         if (!$header) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($header, '/suhu-ruangan')) {
+            return $r;
+        }
         return view('suhu_ruangan/edit', ['header' => $header, 'title' => 'Edit Suhu Ruangan']);
     }
 
     public function update($id)
     {
+        $header = $this->model->find($id);
+        if (!$header) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($header, '/suhu-ruangan')) {
+            return $r;
+        }
+
         $this->model->update($id, [
             'tanggal'         => $this->request->getPost('tanggal'),
             'pagi_jam'        => $this->request->getPost('pagi_jam'), 

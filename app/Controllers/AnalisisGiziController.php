@@ -2,11 +2,14 @@
 
 namespace App\Controllers;
 
+use App\Traits\ChecksAhliGiziOwnership;
 use App\Models\AnalisisGiziModel;
 use App\Models\AnalisisGiziItemModel;
 
 class AnalisisGiziController extends BaseController
 {
+    use ChecksAhliGiziOwnership;
+
     protected $headerModel;
     protected $itemModel;
 
@@ -91,6 +94,9 @@ class AnalisisGiziController extends BaseController
         $builder->where('analisis_gizi.id', $id);
         $header = $builder->get()->getRowArray();
         if (!$header) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($header, '/analisis-gizi')) {
+            return $r;
+        }
 
         $data['header'] = $header;
         $data['items']  = $this->itemModel->where('analisis_gizi_id', $id)->findAll();
@@ -102,7 +108,10 @@ class AnalisisGiziController extends BaseController
     {
         $header = $this->headerModel->find($id);
         if (!$header) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
-        
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($header, '/analisis-gizi')) {
+            return $r;
+        }
+
         $data = [
             'header' => $header,
             'items'  => $this->itemModel->where('analisis_gizi_id', $id)->findAll(),
@@ -113,6 +122,14 @@ class AnalisisGiziController extends BaseController
 
     public function update($id)
     {
+        $header = $this->headerModel->find($id);
+        if (!$header) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($header, '/analisis-gizi')) {
+            return $r;
+        }
+
         $items = $this->request->getPost('items');
         if (empty($items)) {
             return redirect()->back()->with('error', 'Minimal harus mengisi 1 baris.')->withInput();

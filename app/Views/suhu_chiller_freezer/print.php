@@ -65,6 +65,7 @@
             body { -webkit-print-color-adjust: exact; }
         }
     </style>
+<?= view('layout/print_signatures_style') ?>
 </head>
 <body onload="window.print()">
     <div class="no-print" style="text-align: center; margin-bottom: 20px;">

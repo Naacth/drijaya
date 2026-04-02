@@ -72,6 +72,7 @@
             .data-table tr { page-break-inside: avoid; }
         }
     </style>
+<?= view('layout/print_signatures_style') ?>
 </head>
 <body onload="window.print()">
 

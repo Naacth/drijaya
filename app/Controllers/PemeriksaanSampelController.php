@@ -2,10 +2,13 @@
 
 namespace App\Controllers;
 
+use App\Traits\ChecksAhliGiziOwnership;
 use App\Models\PemeriksaanSampelModel;
 
 class PemeriksaanSampelController extends BaseController
 {
+    use ChecksAhliGiziOwnership;
+
     protected $model;
 
     public function __construct()
@@ -71,6 +74,9 @@ class PemeriksaanSampelController extends BaseController
         $builder->where('pemeriksaan_sampel.id', $id);
         $header = $builder->get()->getRowArray();
         if (!$header) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($header, '/pemeriksaan-sampel')) {
+            return $r;
+        }
 
         $data['header'] = $header;
         $data['title']  = 'Detail Pemeriksaan & Sampel';
@@ -83,7 +89,7 @@ class PemeriksaanSampelController extends BaseController
         if (!$header) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
         $data['header']    = $header;
         $data['title']     = 'Cetak Pemeriksaan & Sampel';
-        $data['signature'] = (new \App\Models\UserSignatureModel())->where('user_id', $header['created_by'])->first();
+        $data['signature'] = signature_row_for_pdf(isset($header['created_by']) ? (int) $header['created_by'] : null);
         return view('pemeriksaan_sampel/print', $data);
     }
 
@@ -118,7 +124,10 @@ class PemeriksaanSampelController extends BaseController
     {
         $header = $this->model->find($id);
         if (!$header) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
-        
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($header, '/pemeriksaan-sampel')) {
+            return $r;
+        }
+
         $data = [
             'header' => $header,
             'title'  => 'Edit Pemeriksaan & Sampel'
@@ -128,6 +137,14 @@ class PemeriksaanSampelController extends BaseController
 
     public function update($id)
     {
+        $header = $this->model->find($id);
+        if (!$header) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($header, '/pemeriksaan-sampel')) {
+            return $r;
+        }
+
         $this->model->update($id, [
             'tanggal'             => $this->request->getPost('tanggal'),
             'jam_matang'          => $this->request->getPost('jam_matang'),

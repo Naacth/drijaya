@@ -30,7 +30,7 @@ class SignatureController extends BaseController
             mkdir($uploadPath, 0777, true);
         }
 
-        $fields = ['ttd_aslap', 'ttd_kepala_sppg', 'ttd_ahli_gizi', 'ttd_akuntan'];
+        $fields = ['ttd_aslap', 'ttd_kepala_sppg', 'ttd_ahli_gizi', 'ttd_kepala_koki', 'ttd_akuntan'];
 
         foreach ($fields as $field) {
             $file = $this->request->getFile($field);

@@ -2,11 +2,12 @@
 
 namespace App\Controllers;
 
+use App\Traits\ChecksAhliGiziOwnership;
 use App\Models\HigienePersonilModel;
-use App\Models\UserSignatureModel;
-
 class HigienePersonilController extends BaseController
 {
+    use ChecksAhliGiziOwnership;
+
     protected $model;
     public function __construct() { $this->model = new HigienePersonilModel(); }
 
@@ -48,6 +49,9 @@ class HigienePersonilController extends BaseController
     {
         $form = $this->model->find($id);
         if (!$form) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($form, '/higiene-personil')) {
+            return $r;
+        }
         return view('higiene_personil/show', ['title' => 'Detail Higiene Personil', 'header' => $form, 'rekap' => json_decode($form['rekap_data'], true)]);
     }
 
@@ -55,11 +59,22 @@ class HigienePersonilController extends BaseController
     {
         $form = $this->model->find($id);
         if (!$form) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($form, '/higiene-personil')) {
+            return $r;
+        }
         return view('higiene_personil/edit', ['title' => 'Edit Higiene Personil', 'header' => $form, 'rekap' => json_decode($form['rekap_data'], true)]);
     }
 
     public function update($id)
     {
+        $form = $this->model->find($id);
+        if (!$form) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($form, '/higiene-personil')) {
+            return $r;
+        }
+
         $data = [
             'bulan' => $this->request->getPost('bulan'),
             'tahun' => $this->request->getPost('tahun'),
@@ -77,7 +92,7 @@ class HigienePersonilController extends BaseController
         if (!$form) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
         return view('higiene_personil/print', [
             'header' => $form, 'rekap' => json_decode($form['rekap_data'], true), 'title' => 'Cetak Higiene Personil',
-            'signature' => (new UserSignatureModel())->where('user_id', $form['created_by'])->first()
+            'signature' => signature_row_for_pdf(isset($form['created_by']) ? (int) $form['created_by'] : null)
         ]);
     }
 

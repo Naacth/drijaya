@@ -2,11 +2,14 @@
 
 namespace App\Controllers;
 
+use App\Traits\ChecksAhliGiziOwnership;
 use App\Models\SerahTerimaBahanModel;
 use App\Models\SerahTerimaBahanItemModel;
 
 class SerahTerimaBahanController extends BaseController
 {
+    use ChecksAhliGiziOwnership;
+
     protected $headerModel;
     protected $itemModel;
 
@@ -79,7 +82,7 @@ class SerahTerimaBahanController extends BaseController
     {
         $header = $this->headerModel->find($id);
         if (!$header) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
-        return view('serah_terima_bahan/print', ['header' => $header, 'items' => $this->itemModel->where('serah_terima_bahan_id', $id)->findAll(), 'title' => 'Cetak Serah Terima Bahan', 'signature' => (new \App\Models\UserSignatureModel())->where('user_id', $header['created_by'])->first()]);
+        return view('serah_terima_bahan/print', ['header' => $header, 'items' => $this->itemModel->where('serah_terima_bahan_id', $id)->findAll(), 'title' => 'Cetak Serah Terima Bahan', 'signature' => signature_row_for_pdf(isset($header['created_by']) ? (int) $header['created_by'] : null)]);
     }
 
     public function exportExcel($id)
@@ -101,7 +104,10 @@ class SerahTerimaBahanController extends BaseController
     {
         $header = $this->headerModel->find($id);
         if (!$header) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
-        
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($header, '/serah-terima-bahan')) {
+            return $r;
+        }
+
         $data = [
             'header' => $header,
             'items'  => $this->itemModel->where('serah_terima_bahan_id', $id)->findAll(),
@@ -112,6 +118,14 @@ class SerahTerimaBahanController extends BaseController
 
     public function update($id)
     {
+        $header = $this->headerModel->find($id);
+        if (!$header) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($header, '/serah-terima-bahan')) {
+            return $r;
+        }
+
         $items = $this->request->getPost('items');
         if (empty($items)) return redirect()->back()->with('error', 'Minimal 1 baris.')->withInput();
 

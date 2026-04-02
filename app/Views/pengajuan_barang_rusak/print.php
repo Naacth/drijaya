@@ -23,6 +23,7 @@
         .sig-table td { width: 50%; text-align: center; padding: 10px; }
         .sig-space { height: 80px; }
     </style>
+<?= view('layout/print_signatures_style') ?>
 </head>
 <body onload="window.print()">
     <div class="no-print" style="text-align: center; margin-bottom: 20px;">

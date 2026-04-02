@@ -23,6 +23,7 @@
         .footer td { text-align: center; border: none; }
         .signature-space { height: 60px; }
     </style>
+<?= view('layout/print_signatures_style') ?>
 </head>
 <body>
     <table class="header-info">

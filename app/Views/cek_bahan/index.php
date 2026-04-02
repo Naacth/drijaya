@@ -6,7 +6,7 @@
         <h4 class="mb-1" style="font-weight: 700;">Form Pengecekan Bahan Baku</h4>
         <p class="text-muted small mb-0">Riwayat pemeriksaan kondisi dan kesesuaian bahan makanan.</p>
     </div>
-    <?php if (session()->get('role') === 'aslap'): ?>
+    <?php if (session()->get('role') === 'aslap' || session()->get('role') === 'admin'): ?>
     <a href="<?= site_url('cek-bahan-baku/create') ?>" class="btn btn-primary">
         <i class="bi bi-plus-lg me-1"></i> Buat Pemeriksaan Baru
     </a>
@@ -46,6 +46,11 @@
                             <a href="<?= site_url('cek-bahan-baku/show/' . $form['id']) ?>" class="btn btn-sm btn-outline-primary rounded-pill px-3">
                                 <i class="bi bi-eye"></i> Detail
                             </a>
+                            <?php if (session()->get('role') === 'admin' || session()->get('role') === 'aslap'): ?>
+                            <a href="<?= site_url('cek-bahan-baku/edit/' . $form['id']) ?>" class="btn btn-sm btn-outline-secondary rounded-pill px-3" title="Ubah">
+                                <i class="bi bi-pencil-square"></i>
+                            </a>
+                            <?php endif; ?>
                             <?php if (session()->get('role') === 'admin'): ?>
                             <a href="<?= site_url('cek-bahan-baku/delete/' . $form['id']) ?>" class="btn btn-sm btn-outline-danger rounded-pill px-3" onclick="return confirm('Yakin hapus data ini?')">
                                 <i class="bi bi-trash"></i>

@@ -2,11 +2,12 @@
 
 namespace App\Controllers;
 
+use App\Traits\ChecksAhliGiziOwnership;
 use App\Models\PembersihanTrollyModel;
-use App\Models\UserSignatureModel;
-
 class PembersihanTrollyController extends BaseController
 {
+    use ChecksAhliGiziOwnership;
+
     protected $model;
     public function __construct() { $this->model = new PembersihanTrollyModel(); }
 
@@ -48,6 +49,9 @@ class PembersihanTrollyController extends BaseController
     {
         $form = $this->model->find($id);
         if (!$form) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($form, '/pembersihan-trolly')) {
+            return $r;
+        }
         return view('pembersihan_trolly/show', ['title' => 'Detail Pembersihan Trolly', 'header' => $form, 'rekap' => json_decode($form['rekap_data'], true)]);
     }
 
@@ -55,11 +59,22 @@ class PembersihanTrollyController extends BaseController
     {
         $form = $this->model->find($id);
         if (!$form) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($form, '/pembersihan-trolly')) {
+            return $r;
+        }
         return view('pembersihan_trolly/edit', ['title' => 'Edit Pembersihan Trolly', 'header' => $form, 'rekap' => json_decode($form['rekap_data'], true)]);
     }
 
     public function update($id)
     {
+        $form = $this->model->find($id);
+        if (!$form) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($form, '/pembersihan-trolly')) {
+            return $r;
+        }
+
         $data = [
             'bulan' => $this->request->getPost('bulan'),
             'tahun' => $this->request->getPost('tahun'),
@@ -77,7 +92,7 @@ class PembersihanTrollyController extends BaseController
         if (!$form) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
         return view('pembersihan_trolly/print', [
             'header' => $form, 'rekap' => json_decode($form['rekap_data'], true), 'title' => 'Cetak Pembersihan Trolly',
-            'signature' => (new UserSignatureModel())->where('user_id', $form['created_by'])->first()
+            'signature' => signature_row_for_pdf(isset($form['created_by']) ? (int) $form['created_by'] : null)
         ]);
     }
 

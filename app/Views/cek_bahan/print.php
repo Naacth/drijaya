@@ -4,12 +4,14 @@
     <meta charset="UTF-8">
     <title><?= $title ?></title>
     <style>
+        @page { size: A4; margin: 12mm; }
         body { 
             font-family: Arial, sans-serif; 
             font-size: 13px; 
             color: #000; 
             background: #fff;
             margin: 0; padding: 20px;
+            box-sizing: border-box;
         }
         
         .page-container {
@@ -18,8 +20,8 @@
         }
 
         @media print {
-            body { padding: 0; }
-            .page-container { width: 100%; }
+            body { padding: 0; margin: 0; }
+            .page-container { width: 100%; max-width: none; }
             .no-print { display: none !important; }
             .print-dark-header th { 
                 background-color: #333 !important; 
@@ -112,6 +114,7 @@
             margin-left: 10%;
         }
     </style>
+<?= view('layout/print_signatures_style') ?>
 </head>
 <body onload="window.print()">
 
@@ -177,17 +180,23 @@
         <table class="footer-sig">
             <tr>
                 <td>
-                    <div class="sig-box" style="border: none;">
+                    <div class="sig-box">
                         <?php 
                         $months = [1=>'Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
                         $tgl = date('d', strtotime($header['tanggal_laporan']));
                         $bln = $months[(int)date('m', strtotime($header['tanggal_laporan']))];
                         $thn = date('Y', strtotime($header['tanggal_laporan']));
+                        $__ttd = signature_data_uri($signature ?? [], 'ttd_kepala_sppg');
                         ?>
-                        <p style="margin-bottom: 5px;">Tangerang, <?= $tgl . ' ' . $bln . ' ' . $thn ?></p>
-                        <p>Kepala SPPG</p>
-                        <span class="sig-line"></span>
-                        <p><?= esc($header['nama_kepala_sppg']) ?></p>
+                        <p style="margin-bottom: 8px;">Tangerang, <?= $tgl . ' ' . $bln . ' ' . $thn ?></p>
+                        <p style="margin: 0 0 6px;">Kepala SPPG</p>
+                        <?php if ($__ttd !== ''): ?>
+                            <img class="sig-img" src="<?= $__ttd ?>" alt="">
+                            <span class="sig-line"></span>
+                        <?php else: ?>
+                            <span class="sig-line spacer"></span>
+                        <?php endif; ?>
+                        <p style="margin-top: 8px;"><?= esc($header['nama_kepala_sppg']) ?></p>
                     </div>
                 </td>
             </tr>

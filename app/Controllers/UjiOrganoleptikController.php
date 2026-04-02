@@ -4,9 +4,12 @@ namespace App\Controllers;
 
 use App\Models\UjiOrganoleptikModel;
 use App\Models\UjiOrganoleptikItemModel;
+use App\Traits\ChecksAslapOwnsRecord;
 
 class UjiOrganoleptikController extends BaseController
 {
+    use ChecksAslapOwnsRecord;
+
     protected $headerModel;
     protected $itemModel;
 
@@ -65,7 +68,6 @@ class UjiOrganoleptikController extends BaseController
             'nama_tempat'         => $this->request->getPost('nama_tempat'),
             'tanggal_pemeriksaan' => $this->request->getPost('tanggal_pemeriksaan'),
             'waktu_pemeriksaan'   => $this->request->getPost('waktu_pemeriksaan'),
-            'waktu_uji'           => $this->request->getPost('waktu_uji'),
             'nama_aslap'          => $this->request->getPost('nama_aslap'),
             'nama_pemeriksa_plok' => $this->request->getPost('nama_pemeriksa_plok'),
             'nama_kepala_sppg'    => $this->request->getPost('nama_kepala_sppg'),
@@ -78,6 +80,7 @@ class UjiOrganoleptikController extends BaseController
             $this->itemModel->insert([
                 'uji_organoleptik_id' => $headerId,
                 'nama_makan'          => $item['nama_makan'],
+                'waktu_uji'           => $item['waktu_uji'] ?? 'Sebelum Pengantaran',
                 'skor_rasa'           => $item['skor_rasa'],
                 'skor_warna'          => $item['skor_warna'],
                 'skor_aroma'          => $item['skor_aroma'],
@@ -106,11 +109,89 @@ class UjiOrganoleptikController extends BaseController
 
         if (!$header) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
 
+        if ($r = $this->redirectIfAslapCannotAccessRecord($header, '/uji-organoleptik')) {
+            return $r;
+        }
+
         $data['header'] = $header;
         $data['items']  = $this->itemModel->where('uji_organoleptik_id', $id)->findAll();
         $data['title']  = 'Detail Uji Organoleptik';
 
         return view('uji_organoleptik/show', $data);
+    }
+
+    public function edit($id)
+    {
+        $db      = \Config\Database::connect();
+        $builder = $db->table('uji_organoleptik');
+        $builder->select('uji_organoleptik.*, users.nama as user_nama');
+        $builder->join('users', 'users.id = uji_organoleptik.created_by');
+        $builder->where('uji_organoleptik.id', $id);
+        $header = $builder->get()->getRowArray();
+
+        if (!$header) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+
+        if ($r = $this->redirectIfAslapCannotAccessRecord($header, '/uji-organoleptik')) {
+            return $r;
+        }
+
+        $data['header'] = $header;
+        $data['items']  = $this->itemModel->where('uji_organoleptik_id', $id)->findAll();
+        $data['title']  = 'Ubah Checklist Uji Organoleptik';
+
+        return view('uji_organoleptik/edit', $data);
+    }
+
+    public function update($id)
+    {
+        $header = $this->headerModel->find($id);
+        if (!$header) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+
+        if ($r = $this->redirectIfAslapCannotAccessRecord($header, '/uji-organoleptik')) {
+            return $r;
+        }
+
+        $items = $this->request->getPost('items');
+        if (empty($items)) {
+            return redirect()->back()->with('error', 'Minimal harus mengisi 1 baris nama makan.')->withInput();
+        }
+
+        $db = \Config\Database::connect();
+        $db->transStart();
+
+        $this->headerModel->update($id, [
+            'nama_pemeriksa'      => $this->request->getPost('nama_pemeriksa'),
+            'tempat_pemeriksaan'  => $this->request->getPost('tempat_pemeriksaan'),
+            'nama_tempat'         => $this->request->getPost('nama_tempat'),
+            'tanggal_pemeriksaan' => $this->request->getPost('tanggal_pemeriksaan'),
+            'waktu_pemeriksaan'   => $this->request->getPost('waktu_pemeriksaan'),
+            'nama_aslap'          => $this->request->getPost('nama_aslap'),
+            'nama_pemeriksa_plok' => $this->request->getPost('nama_pemeriksa_plok'),
+            'nama_kepala_sppg'    => $this->request->getPost('nama_kepala_sppg'),
+        ]);
+
+        $this->itemModel->where('uji_organoleptik_id', $id)->delete();
+
+        foreach ($items as $item) {
+            $this->itemModel->insert([
+                'uji_organoleptik_id' => $id,
+                'nama_makan'          => $item['nama_makan'],
+                'waktu_uji'           => $item['waktu_uji'] ?? 'Sebelum Pengantaran',
+                'skor_rasa'           => $item['skor_rasa'],
+                'skor_warna'          => $item['skor_warna'],
+                'skor_aroma'          => $item['skor_aroma'],
+                'skor_tekstur'        => $item['skor_tekstur'],
+                'keterangan'          => $item['keterangan'] ?? '',
+            ]);
+        }
+
+        $db->transComplete();
+
+        if ($db->transStatus() === false) {
+            return redirect()->back()->with('error', 'Gagal memperbarui data.')->withInput();
+        }
+
+        return redirect()->to('/uji-organoleptik/show/' . $id)->with('success', 'Checklist berhasil diperbarui.');
     }
 
     public function exportPdf($id)
@@ -121,7 +202,7 @@ class UjiOrganoleptikController extends BaseController
         $data['header'] = $header;
         $data['items']  = $this->itemModel->where('uji_organoleptik_id', $id)->findAll();
         $data['title']  = 'Cetak Uji Organoleptik';
-        $data['signature'] = (new \App\Models\UserSignatureModel())->where('user_id', $header['created_by'])->first();
+        $data['signature'] = signature_row_for_pdf(isset($header['created_by']) ? (int) $header['created_by'] : null);
 
         return view('uji_organoleptik/print', $data);
     }
@@ -148,12 +229,13 @@ class UjiOrganoleptikController extends BaseController
         fputcsv($output, ['Waktu', $header['waktu_pemeriksaan']]);
         fputcsv($output, []);
 
-        fputcsv($output, ['No', 'Nama Makan', 'Rasa (1-5)', 'Warna (1-5)', 'Aroma (1-5)', 'Tekstur (1-5)', 'Keterangan']);
+        fputcsv($output, ['No', 'Nama Makan', 'Waktu Uji', 'Rasa (1-5)', 'Warna (1-5)', 'Aroma (1-5)', 'Tekstur (1-5)', 'Keterangan']);
 
         foreach ($items as $index => $item) {
             fputcsv($output, [
                 $index + 1,
                 $item['nama_makan'],
+                $item['waktu_uji'] ?? '',
                 $item['skor_rasa'],
                 $item['skor_warna'],
                 $item['skor_aroma'],

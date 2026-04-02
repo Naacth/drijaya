@@ -2,10 +2,13 @@
 
 namespace App\Controllers;
 
+use App\Traits\ChecksAhliGiziOwnership;
 use App\Models\PembersihanHarianModel;
 
 class PembersihanHarianController extends BaseController
 {
+    use ChecksAhliGiziOwnership;
+
     protected $model;
     public function __construct() { $this->model = new PembersihanHarianModel(); }
 
@@ -47,6 +50,9 @@ class PembersihanHarianController extends BaseController
     {
         $form = $this->model->find($id);
         if (!$form) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($form, '/pembersihan-harian')) {
+            return $r;
+        }
         return view('pembersihan_harian/show', ['title' => 'Detail Pembersihan Harian', 'header' => $form, 'area' => json_decode($form['area_data'], true)]);
     }
 
@@ -59,7 +65,7 @@ class PembersihanHarianController extends BaseController
             'header' => $form, 
             'area' => json_decode($form['area_data'], true), 
             'title' => 'Cetak Pembersihan Harian',
-            'signature' => (new \App\Models\UserSignatureModel())->where('user_id', $form['created_by'])->first()
+            'signature' => signature_row_for_pdf(isset($form['created_by']) ? (int) $form['created_by'] : null)
         ];
         
         // This view should have window.print() triggered via JS for now as simple download proxy
@@ -89,6 +95,9 @@ class PembersihanHarianController extends BaseController
     {
         $form = $this->model->find($id);
         if (!$form) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($form, '/pembersihan-harian')) {
+            return $r;
+        }
         return view('pembersihan_harian/edit', [
             'title' => 'Edit Pembersihan Harian', 
             'header' => $form, 
@@ -98,6 +107,14 @@ class PembersihanHarianController extends BaseController
 
     public function update($id)
     {
+        $form = $this->model->find($id);
+        if (!$form) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($form, '/pembersihan-harian')) {
+            return $r;
+        }
+
         $data = [
             'tanggal' => $this->request->getPost('tanggal'),
             'unit_type' => $this->request->getPost('unit_type'),

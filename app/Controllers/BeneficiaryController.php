@@ -4,9 +4,12 @@ namespace App\Controllers;
 
 use App\Models\BeneficiaryModel;
 use App\Models\BeneficiaryItemModel;
+use App\Traits\ChecksAslapOwnsRecord;
 
 class BeneficiaryController extends BaseController
 {
+    use ChecksAslapOwnsRecord;
+
     protected $beneficiaryModel;
     protected $itemModel;
 
@@ -127,6 +130,84 @@ class BeneficiaryController extends BaseController
         }
 
         return redirect()->to('/penerima-manfaat')->with('success', 'Data berhasil disimpan.');
+    }
+
+    public function edit($id)
+    {
+        if (session()->get('role') != 'aslap') {
+            return redirect()->to('/penerima-manfaat')->with('error', 'Tidak diizinkan.');
+        }
+
+        $header = $this->beneficiaryModel->getWithCreator()->find($id);
+        if (!$header) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+
+        if ($r = $this->redirectIfAslapCannotAccessRecord($header, '/penerima-manfaat')) {
+            return $r;
+        }
+
+        $data['header'] = $header;
+        $data['items']  = $this->itemModel->where('beneficiary_id', $id)->findAll();
+        $data['title']  = 'Ubah Data Penerima Manfaat';
+
+        return view('beneficiary/edit', $data);
+    }
+
+    public function update($id)
+    {
+        if (session()->get('role') != 'aslap') {
+            return redirect()->to('/penerima-manfaat')->with('error', 'Tidak diizinkan.');
+        }
+
+        $header = $this->beneficiaryModel->find($id);
+        if (!$header) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+
+        if ($r = $this->redirectIfAslapCannotAccessRecord($header, '/penerima-manfaat')) {
+            return $r;
+        }
+
+        $items = $this->request->getPost('items');
+        if (empty($items)) {
+            return redirect()->back()->with('error', 'Minimal harus ada 1 sekolah.')->withInput();
+        }
+
+        $db = \Config\Database::connect();
+        $db->transStart();
+
+        $this->beneficiaryModel->update($id, [
+            'tanggal'    => $this->request->getPost('tanggal'),
+            'sppg'       => $this->request->getPost('sppg'),
+            'kecamatan'  => $this->request->getPost('kecamatan'),
+            'status'     => ($this->request->getPost('action') == 'submit') ? 'submitted' : 'draft',
+        ]);
+
+        $this->itemModel->where('beneficiary_id', $id)->delete();
+
+        foreach ($items as $item) {
+            $porsiKecilVal   = (int) $item['porsi_kecil'];
+            $porsiBesarVal   = (int) $item['porsi_besar'];
+            $pendidikVal     = (int) $item['pendidik'];
+            $nonPendidikVal  = (int) $item['non_pendidik'];
+            $totalPorsi      = $porsiKecilVal + $porsiBesarVal + $pendidikVal + $nonPendidikVal;
+
+            $this->itemModel->insert([
+                'beneficiary_id' => $id,
+                'nama_sekolah'   => $item['nama_sekolah'],
+                'jumlah_siswa'   => $item['jumlah_siswa'],
+                'porsi_kecil'    => $porsiKecilVal,
+                'porsi_besar'    => $porsiBesarVal,
+                'pendidik'       => $pendidikVal,
+                'non_pendidik'   => $nonPendidikVal,
+                'total_porsi'    => $totalPorsi,
+            ]);
+        }
+
+        $db->transComplete();
+
+        if ($db->transStatus() === false) {
+            return redirect()->back()->with('error', 'Gagal memperbarui data.')->withInput();
+        }
+
+        return redirect()->to('/penerima-manfaat/show/' . $id)->with('success', 'Data berhasil diperbarui.');
     }
 
     public function show($id)

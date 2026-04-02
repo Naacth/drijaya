@@ -54,6 +54,7 @@
             text-align: left;
         }
     </style>
+<?= view('layout/print_signatures_style') ?>
 </head>
 <body onload="window.print()">
 
@@ -158,15 +159,15 @@
             <tr>
                 <td>
                     <div class="sig-space">
-                        <?php if (!empty($header['ttd_anggota'])): ?>
-                            <img src="<?= base_url($header['ttd_anggota']) ?>" style="max-height: 80px;" alt="TTD">
+                        <?php if (($__sig = public_asset_data_uri($header['ttd_anggota'] ?? null)) !== ''): ?>
+                            <img src="<?= $__sig ?>" style="max-height: 80px;" alt="TTD">
                         <?php endif; ?>
                     </div>
                 </td>
                 <td>
                     <div class="sig-space">
-                        <?php if (!empty($header['ttd_pj'])): ?>
-                            <img src="<?= base_url($header['ttd_pj']) ?>" style="max-height: 80px;" alt="TTD">
+                        <?php if (($__sig = public_asset_data_uri($header['ttd_pj'] ?? null)) !== ''): ?>
+                            <img src="<?= $__sig ?>" style="max-height: 80px;" alt="TTD">
                         <?php endif; ?>
                     </div>
                 </td>

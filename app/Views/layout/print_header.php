@@ -1,41 +1,56 @@
 <?php
 /**
- * Standardized Print Header for SPPG Management System
- * Displays official logos (BGN & Yayasan) and SPPG details.
+ * Header cetak: logo BGN + teks SPPG.
+ *
+ * @var bool $compact_print_header Mode ringkas untuk PDF (font/ margin lebih kecil, garis pemisah satu).
  */
 $sppg_nama   = session()->get('sppg_nama') ?? 'BUNAR SUKAMULYA';
 $sppg_alamat = session()->get('sppg_alamat') ?? 'Alamat Dapur SPPG';
 
-// Ensure we don't have "SPPG" prefix twice
 $display_nama = str_ireplace('SPPG ', '', $sppg_nama);
+$__bgn        = public_asset_data_uri('bgn.png');
+$compact      = isset($compact_print_header) && $compact_print_header;
+
+if ($compact) {
+    $logoW       = 62;
+    $titleFs     = '15px';
+    $addrFs      = '9px';
+    $addrMargin  = '4px 0 0';
+    $wrapMb      = '10px';
+    $ruleMarginT = '8px';
+    $ruleMb      = '10px';
+    $ruleThick   = '2px';
+} else {
+    $logoW       = 90;
+    $titleFs     = '18px';
+    $addrFs      = '10px';
+    $addrMargin  = '6px 0 2px';
+    $wrapMb      = '20px';
+    $ruleMarginT = '15px';
+    $ruleMb      = '2px';
+    $ruleThick   = '3px';
+}
 ?>
-<div class="header-block" style="margin-bottom: 20px;">
-    <table style="width: 100%; border-collapse: collapse;">
+<div class="print-header-wrap" style="margin-bottom: <?= $wrapMb ?>;">
+    <table style="width: 100%; border-collapse: collapse; table-layout: fixed;">
         <tr>
-            <!-- Left Logo: BGN -->
-            <td width="110" style="text-align: left; vertical-align: middle;">
-                <img src="<?= base_url('bgn.png') ?>" alt="Logo BGN" style="width: 90px; height: auto;">
+            <td style="width: <?= $logoW + 18 ?>px; vertical-align: middle; text-align: left; padding: 0;">
+                <img src="<?= $__bgn !== '' ? $__bgn : base_url('bgn.png') ?>" alt="Logo BGN" style="width: <?= $logoW ?>px; height: auto; display: block;">
             </td>
-            
-            <!-- Center Text: SPPG Details -->
-            <td style="text-align: center; vertical-align: middle;">
-                <h2 style="font-size: 18px; font-weight: 800; margin: 0; color: #000; letter-spacing: 0.5px; text-transform: uppercase;">
+            <td style="vertical-align: middle; text-align: center; padding: 0 8px 0 12px;">
+                <div style="font-size: <?= $titleFs ?>; font-weight: 800; margin: 0; color: #000; letter-spacing: 0.4px; text-transform: uppercase; line-height: 1.2;">
                     SPPG <?= esc($display_nama) ?>
-                </h2>
-                <h3 style="font-size: 14px; font-weight: 700; margin: 3px 0; color: #000; letter-spacing: 0.2px;">
-                    YAYASAN BUMI PANGAN INDONESIA
-                </h3>
-                <p style="font-size: 10px; margin: 2px 0; color: #444; line-height: 1.2; font-style: italic;">
+                </div>
+                <p style="font-size: <?= $addrFs ?>; margin: <?= $addrMargin ?>; color: #333; line-height: 1.35; font-style: italic;">
                     <?= esc($sppg_alamat) ?>
                 </p>
             </td>
-            
-            <!-- Right Logo: Yayasan -->
-            <td width="110" style="text-align: right; vertical-align: middle;">
-                <img src="<?= base_url('yayasan.png') ?>" alt="Logo Yayasan" style="width: 85px; height: auto;">
-            </td>
         </tr>
     </table>
-    <div style="border-top: 3px solid #000; margin-top: 15px; margin-bottom: 2px;"></div>
+    <?php if ($compact): ?>
+    <div style="border-top: <?= $ruleThick ?> solid #000; margin-top: <?= $ruleMarginT ?>; margin-bottom: 0;"></div>
+    <?php else: ?>
+    <div style="border-top: <?= $ruleThick ?> solid #000; margin-top: <?= $ruleMarginT ?>; margin-bottom: <?= $ruleMb ?>;"></div>
     <div style="border-top: 1px solid #000; margin-bottom: 20px;"></div>
+    <?php endif; ?>
 </div>

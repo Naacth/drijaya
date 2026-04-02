@@ -36,14 +36,6 @@
                     <label class="form-label">Waktu Pemeriksaan</label>
                     <input type="time" name="waktu_pemeriksaan" class="form-control" required value="<?= date('H:i') ?>">
                 </div>
-                <div class="col-md-6">
-                    <label class="form-label">Waktu Uji</label>
-                    <select name="waktu_uji" class="form-select" required>
-                        <option value="Sebelum Pengantaran">Sebelum Pengantaran</option>
-                        <option value="Saat Tiba di Lokasi">Saat Tiba di Lokasi</option>
-                        <option value="Sebelum Dikonsumsi">Sebelum Dikonsumsi</option>
-                    </select>
-                </div>
             </div>
         </div>
     </div>
@@ -93,6 +85,7 @@
                 <thead>
                     <tr>
                         <th>Nama Makan</th>
+                        <th width="160">Waktu Uji</th>
                         <th width="100" class="text-center">Rasa</th>
                         <th width="100" class="text-center">Warna</th>
                         <th width="100" class="text-center">Aroma</th>
@@ -104,6 +97,13 @@
                 <tbody>
                     <tr>
                         <td><input type="text" name="items[0][nama_makan]" class="form-control form-control-sm" placeholder="Nama Menu Makanan" required></td>
+                        <td>
+                            <select name="items[0][waktu_uji]" class="form-select form-select-sm" required>
+                                <option value="Sebelum Pengantaran">Sebelum Pengantaran</option>
+                                <option value="Saat Tiba di Lokasi">Saat Tiba di Lokasi</option>
+                                <option value="Sebelum Dikonsumsi">Sebelum Dikonsumsi</option>
+                            </select>
+                        </td>
                         <td>
                             <select name="items[0][skor_rasa]" class="form-select form-select-sm" required>
                                 <option value="5">5</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option>
@@ -143,11 +143,13 @@
         let index = 1;
 
         const skorOptions = '<option value="5">5</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option>';
+        const waktuUjiOptions = '<option value="Sebelum Pengantaran">Sebelum Pengantaran</option><option value="Saat Tiba di Lokasi">Saat Tiba di Lokasi</option><option value="Sebelum Dikonsumsi">Sebelum Dikonsumsi</option>';
 
         btnAdd.addEventListener('click', function() {
             const tr = document.createElement('tr');
             tr.innerHTML = `
                 <td><input type="text" name="items[${index}][nama_makan]" class="form-control form-control-sm" placeholder="Nama Menu Makanan" required></td>
+                <td><select name="items[${index}][waktu_uji]" class="form-select form-select-sm" required>${waktuUjiOptions}</select></td>
                 <td><select name="items[${index}][skor_rasa]" class="form-select form-select-sm" required>${skorOptions}</select></td>
                 <td><select name="items[${index}][skor_warna]" class="form-select form-select-sm" required>${skorOptions}</select></td>
                 <td><select name="items[${index}][skor_aroma]" class="form-select form-select-sm" required>${skorOptions}</select></td>

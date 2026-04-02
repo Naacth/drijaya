@@ -6,6 +6,9 @@
         <h4 class="mb-1" style="font-weight: 700;">Detail Analisis Kandungan Gizi (AKG)</h4>
     </div>
     <div class="d-flex gap-2">
+        <?php if (session()->get('role') === 'ahli_gizi'): ?>
+        <a href="<?= site_url('analisis-gizi/edit/' . $header['id']) ?>" class="btn btn-warning px-3 rounded-pill"><i class="bi bi-pencil me-1"></i> Edit</a>
+        <?php endif; ?>
         <a href="<?= site_url('analisis-gizi/export-pdf/' . $header['id']) ?>" target="_blank" class="btn btn-outline-danger px-3 rounded-pill"><i class="bi bi-file-pdf me-1"></i> Cetak PDF</a>
         <a href="<?= site_url('analisis-gizi/export-excel/' . $header['id']) ?>" class="btn btn-outline-success px-3 rounded-pill"><i class="bi bi-file-excel me-1"></i> Export Excel</a>
     </div>

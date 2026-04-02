@@ -2,11 +2,14 @@
 
 namespace App\Controllers;
 
+use App\Traits\ChecksAhliGiziOwnership;
 use App\Models\ChecklistMasakanModel;
 use App\Models\ChecklistMasakanItemModel;
 
 class ChecklistMasakanController extends BaseController
 {
+    use ChecksAhliGiziOwnership;
+
     protected $headerModel;
     protected $itemModel;
 
@@ -90,6 +93,9 @@ class ChecklistMasakanController extends BaseController
         $builder->where('checklist_masakan.id', $id);
         $header = $builder->get()->getRowArray();
         if (!$header) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($header, '/checklist-masakan')) {
+            return $r;
+        }
 
         $data['header'] = $header;
         $data['items']  = $this->itemModel->where('checklist_masakan_id', $id)->findAll();
@@ -101,7 +107,10 @@ class ChecklistMasakanController extends BaseController
     {
         $header = $this->headerModel->find($id);
         if (!$header) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
-        
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($header, '/checklist-masakan')) {
+            return $r;
+        }
+
         $data = [
             'header' => $header,
             'items'  => $this->itemModel->where('checklist_masakan_id', $id)->findAll(),
@@ -112,6 +121,14 @@ class ChecklistMasakanController extends BaseController
 
     public function update($id)
     {
+        $header = $this->headerModel->find($id);
+        if (!$header) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($header, '/checklist-masakan')) {
+            return $r;
+        }
+
         $items = $this->request->getPost('items');
         if (empty($items)) {
             return redirect()->back()->with('error', 'Minimal harus mengisi 1 baris.')->withInput();

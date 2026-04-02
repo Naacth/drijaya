@@ -433,7 +433,9 @@ class PoController extends BaseController
         $data['approvals'] = $this->approvalModel->select('purchase_order_approvals.*, users.nama')
             ->join('users', 'users.id = purchase_order_approvals.user_id')
             ->where('po_id', $id)->findAll();
-        
+
+        $data['signature'] = signature_row_for_pdf(isset($data['po']['user_id']) ? (int) $data['po']['user_id'] : null);
+
         return view('po/print', $data);
     }
 

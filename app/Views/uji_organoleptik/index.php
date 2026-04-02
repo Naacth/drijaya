@@ -6,7 +6,7 @@
         <h4 class="mb-1" style="font-weight: 700;">Checklist Uji Organoleptik</h4>
         <p class="text-muted small mb-0">Riwayat hasil pemeriksaan sensorik makanan.</p>
     </div>
-    <?php if (session()->get('role') === 'aslap'): ?>
+    <?php if (session()->get('role') === 'aslap' || session()->get('role') === 'admin'): ?>
     <a href="<?= site_url('uji-organoleptik/create') ?>" class="btn btn-primary">
         <i class="bi bi-plus-lg me-1"></i> Buat Checklist Baru
     </a>
@@ -48,6 +48,11 @@
                             <a href="<?= site_url('uji-organoleptik/show/' . $form['id']) ?>" class="btn btn-sm btn-outline-primary rounded-pill px-3">
                                 <i class="bi bi-eye"></i> Detail
                             </a>
+                            <?php if (session()->get('role') === 'admin' || session()->get('role') === 'aslap'): ?>
+                            <a href="<?= site_url('uji-organoleptik/edit/' . $form['id']) ?>" class="btn btn-sm btn-outline-secondary rounded-pill px-3" title="Ubah">
+                                <i class="bi bi-pencil-square"></i>
+                            </a>
+                            <?php endif; ?>
                             <?php if (session()->get('role') === 'admin'): ?>
                             <a href="<?= site_url('uji-organoleptik/delete/' . $form['id']) ?>" class="btn btn-sm btn-outline-danger rounded-pill px-3" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
                                 <i class="bi bi-trash"></i> Hapus

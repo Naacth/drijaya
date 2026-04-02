@@ -2,11 +2,14 @@
 
 namespace App\Controllers;
 
+use App\Traits\ChecksAhliGiziOwnership;
 use App\Models\ThawingAirModel;
 use App\Models\ThawingAirItemModel;
 
 class ThawingAirController extends BaseController
 {
+    use ChecksAhliGiziOwnership;
+
     protected $headerModel;
     protected $itemModel;
 
@@ -65,6 +68,9 @@ class ThawingAirController extends BaseController
         $b->select('checklist_thawing_air.*, users.nama as user_nama')->join('users', 'users.id = checklist_thawing_air.created_by')->where('checklist_thawing_air.id', $id);
         $header = $b->get()->getRowArray();
         if (!$header) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($header, '/thawing-air')) {
+            return $r;
+        }
         return view('thawing_air/show', ['header' => $header, 'items' => $this->itemModel->where('checklist_thawing_air_id', $id)->findAll(), 'title' => 'Detail Thawing Air']);
     }
 
@@ -72,7 +78,7 @@ class ThawingAirController extends BaseController
     {
         $header = $this->headerModel->find($id);
         if (!$header) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
-        return view('thawing_air/print', ['header' => $header, 'items' => $this->itemModel->where('checklist_thawing_air_id', $id)->findAll(), 'title' => 'Cetak Thawing Air', 'signature' => (new \App\Models\UserSignatureModel())->where('user_id', $header['created_by'])->first()]);
+        return view('thawing_air/print', ['header' => $header, 'items' => $this->itemModel->where('checklist_thawing_air_id', $id)->findAll(), 'title' => 'Cetak Thawing Air', 'signature' => signature_row_for_pdf(isset($header['created_by']) ? (int) $header['created_by'] : null)]);
     }
 
     public function exportExcel($id)
@@ -93,7 +99,10 @@ class ThawingAirController extends BaseController
     {
         $header = $this->headerModel->find($id);
         if (!$header) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
-        
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($header, '/thawing-air')) {
+            return $r;
+        }
+
         $data = [
             'header' => $header,
             'items'  => $this->itemModel->where('checklist_thawing_air_id', $id)->findAll(),
@@ -104,6 +113,14 @@ class ThawingAirController extends BaseController
 
     public function update($id)
     {
+        $header = $this->headerModel->find($id);
+        if (!$header) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($header, '/thawing-air')) {
+            return $r;
+        }
+
         $items = $this->request->getPost('items');
         if (empty($items)) return redirect()->back()->with('error', 'Minimal 1 baris.')->withInput();
 

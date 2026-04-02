@@ -89,6 +89,7 @@
             margin-top: 70px;
         }
     </style>
+<?= view('layout/print_signatures_style') ?>
 </head>
 <body onload="window.print()">
 

@@ -269,10 +269,11 @@ class RouteController extends BaseController
         }
 
         $data = [
-            'title'     => 'SURAT JALAN / DELIVERY ORDER',
-            'header'    => $header,
-            'items'     => $items,
-            'signature' => $signature,
+            'title'           => 'SURAT JALAN / DELIVERY ORDER',
+            'header'          => $header,
+            'items'           => $items,
+            'signature'       => $signature,
+            'user_signature'  => signature_row_for_pdf(isset($header['created_by']) ? (int) $header['created_by'] : null),
         ];
 
         return view('route/surat_jalan', $data);

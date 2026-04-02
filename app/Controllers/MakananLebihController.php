@@ -2,11 +2,14 @@
 
 namespace App\Controllers;
 
+use App\Traits\ChecksAhliGiziOwnership;
 use App\Models\MakananLebihModel;
 use App\Models\MakananLebihItemModel;
 
 class MakananLebihController extends BaseController
 {
+    use ChecksAhliGiziOwnership;
+
     protected $headerModel;
     protected $itemModel;
 
@@ -79,6 +82,9 @@ class MakananLebihController extends BaseController
         $builder->where('makanan_lebih.id', $id);
         $header = $builder->get()->getRowArray();
         if (!$header) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($header, '/makanan-lebih')) {
+            return $r;
+        }
         $data['header'] = $header;
         $data['items']  = $this->itemModel->where('makanan_lebih_id', $id)->findAll();
         $data['title']  = 'Detail Makanan Lebih';
@@ -92,7 +98,7 @@ class MakananLebihController extends BaseController
         $data['header']    = $header;
         $data['items']     = $this->itemModel->where('makanan_lebih_id', $id)->findAll();
         $data['title']     = 'Cetak Makanan Lebih';
-        $data['signature'] = (new \App\Models\UserSignatureModel())->where('user_id', $header['created_by'])->first();
+        $data['signature'] = signature_row_for_pdf(isset($header['created_by']) ? (int) $header['created_by'] : null);
         return view('makanan_lebih/print', $data);
     }
 
@@ -121,7 +127,10 @@ class MakananLebihController extends BaseController
     {
         $header = $this->headerModel->find($id);
         if (!$header) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
-        
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($header, '/makanan-lebih')) {
+            return $r;
+        }
+
         $data = [
             'header' => $header,
             'items'  => $this->itemModel->where('makanan_lebih_id', $id)->findAll(),
@@ -132,6 +141,14 @@ class MakananLebihController extends BaseController
 
     public function update($id)
     {
+        $header = $this->headerModel->find($id);
+        if (!$header) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($header, '/makanan-lebih')) {
+            return $r;
+        }
+
         $items = $this->request->getPost('items');
         if (empty($items)) return redirect()->back()->with('error', 'Minimal harus mengisi 1 baris.')->withInput();
 

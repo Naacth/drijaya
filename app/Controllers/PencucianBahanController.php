@@ -2,11 +2,14 @@
 
 namespace App\Controllers;
 
+use App\Traits\ChecksAhliGiziOwnership;
 use App\Models\PencucianBahanModel;
 use App\Models\PencucianBahanItemModel;
 
 class PencucianBahanController extends BaseController
 {
+    use ChecksAhliGiziOwnership;
+
     protected $headerModel;
     protected $itemModel;
 
@@ -77,6 +80,9 @@ class PencucianBahanController extends BaseController
         $b->where('pencucian_bahan.id', $id);
         $header = $b->get()->getRowArray();
         if (!$header) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($header, '/pencucian-bahan')) {
+            return $r;
+        }
         return view('pencucian_bahan/show', [
             'header' => $header,
             'items'  => $this->itemModel->where('pencucian_bahan_id', $id)->findAll(),
@@ -88,7 +94,7 @@ class PencucianBahanController extends BaseController
     {
         $header = $this->headerModel->find($id);
         if (!$header) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
-        $sig = (new \App\Models\UserSignatureModel())->where('user_id', $header['created_by'])->first();
+        $sig = signature_row_for_pdf(isset($header['created_by']) ? (int) $header['created_by'] : null);
         return view('pencucian_bahan/print', [
             'header'    => $header,
             'items'     => $this->itemModel->where('pencucian_bahan_id', $id)->findAll(),
@@ -121,7 +127,10 @@ class PencucianBahanController extends BaseController
     {
         $header = $this->headerModel->find($id);
         if (!$header) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
-        
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($header, '/pencucian-bahan')) {
+            return $r;
+        }
+
         $data = [
             'header' => $header,
             'items'  => $this->itemModel->where('pencucian_bahan_id', $id)->findAll(),
@@ -132,6 +141,14 @@ class PencucianBahanController extends BaseController
 
     public function update($id)
     {
+        $header = $this->headerModel->find($id);
+        if (!$header) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($header, '/pencucian-bahan')) {
+            return $r;
+        }
+
         $items = $this->request->getPost('items');
         if (empty($items)) return redirect()->back()->with('error', 'Minimal 1 baris.')->withInput();
 

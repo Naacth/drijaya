@@ -2,11 +2,14 @@
 
 namespace App\Controllers;
 
+use App\Traits\ChecksAhliGiziOwnership;
 use App\Models\MonitoringSuhuMasakModel;
 use App\Models\MonitoringSuhuMasakItemModel;
 
 class MonitoringSuhuMasakController extends BaseController
 {
+    use ChecksAhliGiziOwnership;
+
     protected $headerModel;
     protected $itemModel;
 
@@ -65,6 +68,9 @@ class MonitoringSuhuMasakController extends BaseController
         $b->select('monitoring_suhu_masak.*, users.nama as user_nama')->join('users', 'users.id = monitoring_suhu_masak.created_by')->where('monitoring_suhu_masak.id', $id);
         $header = $b->get()->getRowArray();
         if (!$header) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($header, '/monitoring-suhu-masak')) {
+            return $r;
+        }
         return view('monitoring_suhu_masak/show', ['header' => $header, 'items' => $this->itemModel->where('monitoring_suhu_masak_id', $id)->findAll(), 'title' => 'Detail Monitoring Suhu']);
     }
 
@@ -72,7 +78,7 @@ class MonitoringSuhuMasakController extends BaseController
     {
         $header = $this->headerModel->find($id);
         if (!$header) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
-        return view('monitoring_suhu_masak/print', ['header' => $header, 'items' => $this->itemModel->where('monitoring_suhu_masak_id', $id)->findAll(), 'title' => 'Cetak Monitoring Suhu', 'signature' => (new \App\Models\UserSignatureModel())->where('user_id', $header['created_by'])->first()]);
+        return view('monitoring_suhu_masak/print', ['header' => $header, 'items' => $this->itemModel->where('monitoring_suhu_masak_id', $id)->findAll(), 'title' => 'Cetak Monitoring Suhu', 'signature' => signature_row_for_pdf(isset($header['created_by']) ? (int) $header['created_by'] : null)]);
     }
 
     public function exportExcel($id)
@@ -93,7 +99,10 @@ class MonitoringSuhuMasakController extends BaseController
     {
         $header = $this->headerModel->find($id);
         if (!$header) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
-        
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($header, '/monitoring-suhu-masak')) {
+            return $r;
+        }
+
         $data = [
             'header' => $header,
             'items'  => $this->itemModel->where('monitoring_suhu_masak_id', $id)->findAll(),
@@ -104,6 +113,14 @@ class MonitoringSuhuMasakController extends BaseController
 
     public function update($id)
     {
+        $header = $this->headerModel->find($id);
+        if (!$header) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($header, '/monitoring-suhu-masak')) {
+            return $r;
+        }
+
         $items = $this->request->getPost('items');
         if (empty($items)) return redirect()->back()->with('error', 'Minimal 1 baris.')->withInput();
 

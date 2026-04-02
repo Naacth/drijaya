@@ -6,6 +6,9 @@
         <h4 class="mb-1" style="font-weight: 700;">Detail Monitoring Suhu</h4>
     </div>
     <div class="d-flex gap-2">
+        <?php if (session()->get('role') === 'ahli_gizi'): ?>
+        <a href="<?= site_url('monitoring-suhu-masak/edit/' . $header['id']) ?>" class="btn btn-warning"><i class="bi bi-pencil me-1"></i> Edit</a>
+        <?php endif; ?>
         <a href="<?= site_url('monitoring-suhu-masak/export-pdf/' . $header['id']) ?>" target="_blank" class="btn btn-outline-danger"><i class="bi bi-file-pdf"></i></a>
         <a href="<?= site_url('monitoring-suhu-masak/export-excel/' . $header['id']) ?>" class="btn btn-outline-success"><i class="bi bi-file-excel"></i></a>
     </div>

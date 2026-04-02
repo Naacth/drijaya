@@ -4,9 +4,12 @@ namespace App\Controllers;
 
 use App\Models\CekBahanBakuModel;
 use App\Models\CekBahanBakuItemModel;
+use App\Traits\ChecksAslapOwnsRecord;
 
 class CekBahanBakuController extends BaseController
 {
+    use ChecksAslapOwnsRecord;
+
     protected $headerModel;
     protected $itemModel;
 
@@ -102,11 +105,84 @@ class CekBahanBakuController extends BaseController
 
         if (!$header) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
 
+        if ($r = $this->redirectIfAslapCannotAccessRecord($header, '/cek-bahan-baku')) {
+            return $r;
+        }
+
         $data['header'] = $header;
         $data['items'] = $this->itemModel->where('cek_bahan_baku_id', $id)->findAll();
         $data['title'] = 'Detail Form Pemeriksaan Bahan Makanan';
 
         return view('cek_bahan/show', $data);
+    }
+
+    public function edit($id)
+    {
+        $db = \Config\Database::connect();
+        $builder = $db->table('cek_bahan_baku');
+        $builder->select('cek_bahan_baku.*, users.nama as user_nama');
+        $builder->join('users', 'users.id = cek_bahan_baku.created_by');
+        $builder->where('cek_bahan_baku.id', $id);
+        $header = $builder->get()->getRowArray();
+
+        if (!$header) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+
+        if ($r = $this->redirectIfAslapCannotAccessRecord($header, '/cek-bahan-baku')) {
+            return $r;
+        }
+
+        $data['header'] = $header;
+        $data['items'] = $this->itemModel->where('cek_bahan_baku_id', $id)->findAll();
+        $data['title'] = 'Ubah Form Pemeriksaan Bahan Makanan';
+
+        return view('cek_bahan/edit', $data);
+    }
+
+    public function update($id)
+    {
+        $header = $this->headerModel->find($id);
+        if (!$header) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+
+        if ($r = $this->redirectIfAslapCannotAccessRecord($header, '/cek-bahan-baku')) {
+            return $r;
+        }
+
+        $items = $this->request->getPost('items');
+        if (empty($items)) {
+            return redirect()->back()->with('error', 'Minimal harus mengisi 1 baris bahan makanan.')->withInput();
+        }
+
+        $db = \Config\Database::connect();
+        $db->transStart();
+
+        $this->headerModel->update($id, [
+            'tanggal_laporan'  => $this->request->getPost('tanggal_laporan'),
+            'nama_sppg'        => $this->request->getPost('nama_sppg'),
+            'alamat_sppg'      => $this->request->getPost('alamat_sppg'),
+            'nama_kepala_sppg' => $this->request->getPost('nama_kepala_sppg'),
+        ]);
+
+        $this->itemModel->where('cek_bahan_baku_id', $id)->delete();
+
+        foreach ($items as $item) {
+            $this->itemModel->insert([
+                'cek_bahan_baku_id' => $id,
+                'tgl_bahan'         => $item['tgl_bahan'],
+                'jenis_bahan'       => $item['jenis_bahan'],
+                'satuan'            => $item['satuan'],
+                'banyaknya'         => $item['banyaknya'],
+                'jumlah_sesuai'     => $item['jumlah_sesuai'],
+                'kondisi_bahan'     => $item['kondisi_bahan'],
+            ]);
+        }
+
+        $db->transComplete();
+
+        if ($db->transStatus() === false) {
+            return redirect()->back()->with('error', 'Gagal memperbarui formulir.')->withInput();
+        }
+
+        return redirect()->to('/cek-bahan-baku/show/' . $id)->with('success', 'Formulir berhasil diperbarui.');
     }
 
     public function exportPdf($id)
@@ -117,6 +193,9 @@ class CekBahanBakuController extends BaseController
         $data['header'] = $header;
         $data['items']  = $this->itemModel->where('cek_bahan_baku_id', $id)->findAll();
         $data['title']  = 'Cetak Pemeriksaan Bahan Makanan';
+
+        $createdBy          = isset($header['created_by']) ? (int) $header['created_by'] : 0;
+        $data['signature'] = signature_row_for_pdf($createdBy > 0 ? $createdBy : null);
 
         return view('cek_bahan/print', $data);
     }

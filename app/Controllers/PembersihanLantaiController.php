@@ -2,10 +2,13 @@
 
 namespace App\Controllers;
 
+use App\Traits\ChecksAhliGiziOwnership;
 use App\Models\PembersihanLantaiModel;
 
 class PembersihanLantaiController extends BaseController
 {
+    use ChecksAhliGiziOwnership;
+
     protected $model;
     public function __construct() { $this->model = new PembersihanLantaiModel(); }
 
@@ -45,6 +48,10 @@ class PembersihanLantaiController extends BaseController
     public function show($id)
     {
         $form = $this->model->find($id);
+        if (!$form) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($form, '/pembersihan-lantai')) {
+            return $r;
+        }
         return view('pembersihan_lantai/show', ['title' => 'Detail Pembersihan Lantai', 'header' => $form]);
     }
 
@@ -53,7 +60,7 @@ class PembersihanLantaiController extends BaseController
         $form = $this->model->find($id);
         $data = [
             'header' => $form, 'title' => 'Cetak Pembersihan Lantai',
-            'signature' => (new \App\Models\UserSignatureModel())->where('user_id', $form['created_by'])->first()
+            'signature' => signature_row_for_pdf(isset($form['created_by']) ? (int) $form['created_by'] : null)
         ];
         return view('pembersihan_lantai/print', $data);
     }
@@ -72,11 +79,22 @@ class PembersihanLantaiController extends BaseController
     {
         $form = $this->model->find($id);
         if (!$form) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($form, '/pembersihan-lantai')) {
+            return $r;
+        }
         return view('pembersihan_lantai/edit', ['title' => 'Edit Pembersihan Lantai', 'header' => $form]);
     }
 
     public function update($id)
     {
+        $form = $this->model->find($id);
+        if (!$form) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($form, '/pembersihan-lantai')) {
+            return $r;
+        }
+
         $data = [
             'tanggal' => $this->request->getPost('tanggal'),
             'nama_personil' => $this->request->getPost('nama_personil'),

@@ -7,7 +7,12 @@
             <h4 class="fw-bold mb-0">Detail Data Penerima Manfaat</h4>
             <p class="text-muted small">Informasi porsi per sekolah dan status verifikasi.</p>
         </div>
-        <div class="d-flex gap-2">
+        <div class="d-flex gap-2 flex-wrap">
+            <?php if (session()->get('role') === 'aslap'): ?>
+            <a href="<?= base_url('penerima-manfaat/edit/' . $header['id']) ?>" class="btn btn-primary btn-sm">
+                <i class="bi bi-pencil-square me-1"></i> Ubah
+            </a>
+            <?php endif; ?>
             <a href="<?= base_url('penerima-manfaat/export-excel/' . $header['id']) ?>" class="btn btn-outline-success btn-sm">
                 <i class="bi bi-file-earmark-excel me-1"></i> Export Excel
             </a>

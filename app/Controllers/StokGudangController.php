@@ -4,9 +4,12 @@ namespace App\Controllers;
 
 use App\Models\StokGudangModel;
 use App\Models\StokGudangItemModel;
+use App\Traits\ChecksAslapOwnsRecord;
 
 class StokGudangController extends BaseController
 {
+    use ChecksAslapOwnsRecord;
+
     protected $headerModel;
     protected $itemModel;
 
@@ -97,11 +100,82 @@ class StokGudangController extends BaseController
 
         if (!$header) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
 
+        if ($r = $this->redirectIfAslapCannotAccessRecord($header, '/stok-gudang')) {
+            return $r;
+        }
+
         $data['header'] = $header;
         $data['items']  = $this->itemModel->where('stok_gudang_id', $id)->findAll();
         $data['title']  = 'Detail Stok Gudang';
 
         return view('stok_gudang/show', $data);
+    }
+
+    public function edit($id)
+    {
+        $db      = \Config\Database::connect();
+        $builder = $db->table('stok_gudang');
+        $builder->select('stok_gudang.*, users.nama as user_nama');
+        $builder->join('users', 'users.id = stok_gudang.created_by');
+        $builder->where('stok_gudang.id', $id);
+        $header = $builder->get()->getRowArray();
+
+        if (!$header) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+
+        if ($r = $this->redirectIfAslapCannotAccessRecord($header, '/stok-gudang')) {
+            return $r;
+        }
+
+        $data['header'] = $header;
+        $data['items']  = $this->itemModel->where('stok_gudang_id', $id)->findAll();
+        $data['title']  = 'Ubah Stok Barang Gudang';
+
+        return view('stok_gudang/edit', $data);
+    }
+
+    public function update($id)
+    {
+        $header = $this->headerModel->find($id);
+        if (!$header) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+
+        if ($r = $this->redirectIfAslapCannotAccessRecord($header, '/stok-gudang')) {
+            return $r;
+        }
+
+        $items = $this->request->getPost('items');
+        if (empty($items)) {
+            return redirect()->back()->with('error', 'Minimal harus mengisi 1 baris produk.')->withInput();
+        }
+
+        $db = \Config\Database::connect();
+        $db->transStart();
+
+        $this->headerModel->update($id, [
+            'nama_sppg' => $this->request->getPost('nama_sppg'),
+            'tanggal'   => $this->request->getPost('tanggal'),
+        ]);
+
+        $this->itemModel->where('stok_gudang_id', $id)->delete();
+
+        foreach ($items as $item) {
+            $this->itemModel->insert([
+                'stok_gudang_id' => $id,
+                'nama_produk'    => $item['nama_produk'],
+                'nama_penerima'  => $item['nama_penerima'] ?? '',
+                'stok_awal'      => $item['stok_awal'] ?? '',
+                'barang_masuk'   => $item['barang_masuk'] ?? '',
+                'barang_keluar'  => $item['barang_keluar'] ?? '',
+                'stok_akhir'     => $item['stok_akhir'] ?? '',
+            ]);
+        }
+
+        $db->transComplete();
+
+        if ($db->transStatus() === false) {
+            return redirect()->back()->with('error', 'Gagal memperbarui.')->withInput();
+        }
+
+        return redirect()->to('/stok-gudang/show/' . $id)->with('success', 'Stok gudang berhasil diperbarui.');
     }
 
     public function exportPdf($id)
@@ -112,7 +186,7 @@ class StokGudangController extends BaseController
         $data['header'] = $header;
         $data['items']  = $this->itemModel->where('stok_gudang_id', $id)->findAll();
         $data['title']  = 'Cetak Stok Gudang';
-        $data['signature'] = (new \App\Models\UserSignatureModel())->where('user_id', $header['created_by'])->first();
+        $data['signature'] = signature_row_for_pdf(isset($header['created_by']) ? (int) $header['created_by'] : null);
 
         return view('stok_gudang/print', $data);
     }

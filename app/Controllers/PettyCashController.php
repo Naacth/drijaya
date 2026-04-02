@@ -37,7 +37,8 @@ class PettyCashController extends BaseController
             'title'        => 'Laporan Petty Cash',
             'entries'      => $entryBuilder->findAll(100),
             'summary'      => $this->pettyCashModel->getSummary($sppgId, date('Y-m-01'), date('Y-m-t')),
-            'currentSaldo' => ($totalAll['in'] ?? 0) - ($totalAll['out'] ?? 0)
+            'currentSaldo' => ($totalAll['in'] ?? 0) - ($totalAll['out'] ?? 0),
+            'user_sppg_id' => $this->resolveUserSppgId(),
         ];
 
         return view('petty_cash/index', $data);
@@ -85,6 +86,53 @@ class PettyCashController extends BaseController
         }
 
         return redirect()->to('/petty-cash')->with('success', 'Catatan petty cash berhasil disimpan');
+    }
+
+    public function edit($id)
+    {
+        $row = $this->pettyCashModel->find($id);
+        if (!$row) {
+            return redirect()->to('/petty-cash')->with('error', 'Data tidak ditemukan.');
+        }
+        if (!$this->userCanEditPettyCash($row)) {
+            return redirect()->to('/petty-cash')->with('error', 'Anda tidak memiliki akses mengubah entri ini.');
+        }
+
+        $data = [
+            'title' => 'Ubah Entri Petty Cash',
+            'entry' => $row,
+        ];
+
+        return view('petty_cash/edit', $data);
+    }
+
+    public function update($id)
+    {
+        $row = $this->pettyCashModel->find($id);
+        if (!$row) {
+            return redirect()->to('/petty-cash')->with('error', 'Data tidak ditemukan.');
+        }
+        if (!$this->userCanEditPettyCash($row)) {
+            return redirect()->to('/petty-cash')->with('error', 'Anda tidak memiliki akses mengubah entri ini.');
+        }
+
+        $tanggal     = $this->request->getPost('tanggal');
+        $keterangan  = $this->request->getPost('keterangan');
+        $pemasukkan  = (float) $this->request->getPost('pemasukkan');
+        $pengeluaran = (float) $this->request->getPost('pengeluaran');
+
+        if (empty($keterangan)) {
+            return redirect()->back()->withInput()->with('error', 'Keterangan wajib diisi.');
+        }
+
+        $this->pettyCashModel->update($id, [
+            'tanggal'     => $tanggal,
+            'keterangan'  => $keterangan,
+            'pemasukkan'  => $pemasukkan,
+            'pengeluaran' => $pengeluaran,
+        ]);
+
+        return redirect()->to('/petty-cash')->with('success', 'Entri berhasil diperbarui.');
     }
 
     public function report()
@@ -223,5 +271,37 @@ class PettyCashController extends BaseController
         
         $this->pettyCashModel->delete($id);
         return redirect()->back()->with('success', 'Catatan berhasil dihapus.');
+    }
+
+    private function resolveUserSppgId(): ?int
+    {
+        $sppgId = session()->get('sppg_id');
+        $userId = session()->get('user_id');
+        if (!$sppgId && $userId) {
+            $user = (new \App\Models\UserModel())->find($userId);
+            $sppgId = $user['sppg_id'] ?? null;
+            if ($sppgId) {
+                session()->set('sppg_id', $sppgId);
+            }
+        }
+
+        return $sppgId !== null && $sppgId !== '' ? (int) $sppgId : null;
+    }
+
+    private function userCanEditPettyCash(array $row): bool
+    {
+        $role = session()->get('role');
+        if ($role === 'admin') {
+            return true;
+        }
+        if ($role !== 'akuntan') {
+            return false;
+        }
+        $userSppg = $this->resolveUserSppgId();
+        if ($userSppg === null) {
+            return false;
+        }
+
+        return (int) ($row['sppg_id'] ?? 0) === $userSppg;
     }
 }

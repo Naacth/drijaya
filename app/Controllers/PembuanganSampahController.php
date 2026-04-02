@@ -2,10 +2,13 @@
 
 namespace App\Controllers;
 
+use App\Traits\ChecksAhliGiziOwnership;
 use App\Models\PembuanganSampahModel;
 
 class PembuanganSampahController extends BaseController
 {
+    use ChecksAhliGiziOwnership;
+
     protected $model;
     public function __construct() { $this->model = new PembuanganSampahModel(); }
 
@@ -45,6 +48,10 @@ class PembuanganSampahController extends BaseController
     public function show($id)
     {
         $form = $this->model->find($id);
+        if (!$form) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($form, '/pembuangan-sampah')) {
+            return $r;
+        }
         return view('pembuangan_sampah/show', ['title' => 'Detail Pembuangan Sampah', 'header' => $form, 'rekap' => json_decode($form['rekap_data'], true)]);
     }
 
@@ -66,6 +73,9 @@ class PembuanganSampahController extends BaseController
     {
         $form = $this->model->find($id);
         if (!$form) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($form, '/pembuangan-sampah')) {
+            return $r;
+        }
         return view('pembuangan_sampah/edit', [
             'title' => 'Edit Pembuangan Sampah', 
             'header' => $form, 
@@ -75,6 +85,14 @@ class PembuanganSampahController extends BaseController
 
     public function update($id)
     {
+        $form = $this->model->find($id);
+        if (!$form) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($form, '/pembuangan-sampah')) {
+            return $r;
+        }
+
         $data = [
             'bulan' => $this->request->getPost('bulan'),
             'tahun' => $this->request->getPost('tahun'),

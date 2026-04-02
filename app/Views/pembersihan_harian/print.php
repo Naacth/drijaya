@@ -55,6 +55,7 @@
             body { -webkit-print-color-adjust: exact; }
         }
     </style>
+<?= view('layout/print_signatures_style') ?>
 </head>
 <body onload="window.print()">
     <div class="no-print" style="text-align: center; margin-bottom: 20px; padding: 10px; background: #f8fafc; border-bottom: 1px solid #e2e8f0;">
@@ -104,8 +105,8 @@
                     <td class="sig-box">
                         <p>Ahli Gizi / Verifikator,</p>
                         <div class="sig-space">
-                            <?php if ($signature && $signature['image_data']): ?>
-                                <img src="<?= $signature['image_data'] ?>" style="max-height: 55px;">
+                            <?php if (($__sig = signature_data_uri($signature ?? [], 'ttd_ahli_gizi')) !== ''): ?>
+                                <img src="<?= $__sig ?>" alt="TTD" style="max-height: 55px;">
                             <?php endif; ?>
                         </div>
                         <p class="sig-name">( <?= esc($header['nama_verifikator']) ?> )</p>

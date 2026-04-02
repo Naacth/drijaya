@@ -19,6 +19,7 @@
         .footer td { text-align: center; width: 50%; }
         .signature-box { height: 100px; }
     </style>
+<?= view('layout/print_signatures_style') ?>
 </head>
 <body>
     <!-- HEADER -->

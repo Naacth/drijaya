@@ -2,10 +2,13 @@
 
 namespace App\Controllers;
 
+use App\Traits\ChecksAhliGiziOwnership;
 use App\Models\PembersihanMingguanModel;
 
 class PembersihanMingguanController extends BaseController
 {
+    use ChecksAhliGiziOwnership;
+
     protected $model;
     public function __construct() { $this->model = new PembersihanMingguanModel(); }
 
@@ -46,6 +49,10 @@ class PembersihanMingguanController extends BaseController
     public function show($id)
     {
         $form = $this->model->find($id);
+        if (!$form) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($form, '/pembersihan-mingguan')) {
+            return $r;
+        }
         return view('pembersihan_mingguan/show', ['title' => 'Detail Pembersihan Mingguan', 'header' => $form, 'checklist' => json_decode($form['checklist_data'], true)]);
     }
 
@@ -75,6 +82,9 @@ class PembersihanMingguanController extends BaseController
     {
         $form = $this->model->find($id);
         if (!$form) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($form, '/pembersihan-mingguan')) {
+            return $r;
+        }
         return view('pembersihan_mingguan/edit', [
             'title' => 'Edit Pembersihan Mingguan', 
             'header' => $form, 
@@ -84,6 +94,14 @@ class PembersihanMingguanController extends BaseController
 
     public function update($id)
     {
+        $form = $this->model->find($id);
+        if (!$form) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($form, '/pembersihan-mingguan')) {
+            return $r;
+        }
+
         $data = [
             'area_pencucian' => $this->request->getPost('area_pencucian'),
             'minggu_ke' => $this->request->getPost('minggu_ke'),

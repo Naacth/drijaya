@@ -2,11 +2,12 @@
 
 namespace App\Controllers;
 
+use App\Traits\ChecksAhliGiziOwnership;
 use App\Models\PembersihanTransportasiModel;
-use App\Models\UserSignatureModel;
-
 class PembersihanTransportasiController extends BaseController
 {
+    use ChecksAhliGiziOwnership;
+
     protected $model;
     public function __construct() { $this->model = new PembersihanTransportasiModel(); }
 
@@ -49,6 +50,9 @@ class PembersihanTransportasiController extends BaseController
     {
         $form = $this->model->find($id);
         if (!$form) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($form, '/pembersihan-transportasi')) {
+            return $r;
+        }
         return view('pembersihan_transportasi/show', ['title' => 'Detail Pembersihan Transportasi', 'header' => $form, 'rekap' => json_decode($form['rekap_data'], true)]);
     }
 
@@ -56,11 +60,22 @@ class PembersihanTransportasiController extends BaseController
     {
         $form = $this->model->find($id);
         if (!$form) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($form, '/pembersihan-transportasi')) {
+            return $r;
+        }
         return view('pembersihan_transportasi/edit', ['title' => 'Edit Pembersihan Transportasi', 'header' => $form, 'rekap' => json_decode($form['rekap_data'], true)]);
     }
 
     public function update($id)
     {
+        $form = $this->model->find($id);
+        if (!$form) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($form, '/pembersihan-transportasi')) {
+            return $r;
+        }
+
         $data = [
             'bulan' => $this->request->getPost('bulan'),
             'tahun' => $this->request->getPost('tahun'),
@@ -79,7 +94,7 @@ class PembersihanTransportasiController extends BaseController
         if (!$form) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
         return view('pembersihan_transportasi/print', [
             'header' => $form, 'rekap' => json_decode($form['rekap_data'], true), 'title' => 'Cetak Pembersihan Transportasi',
-            'signature' => (new UserSignatureModel())->where('user_id', $form['created_by'])->first()
+            'signature' => signature_row_for_pdf(isset($form['created_by']) ? (int) $form['created_by'] : null)
         ]);
     }
 

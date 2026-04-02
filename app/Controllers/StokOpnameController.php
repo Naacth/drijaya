@@ -3,9 +3,12 @@ namespace App\Controllers;
 
 use App\Models\StokOpnameModel;
 use App\Models\StokOpnameItemModel;
+use App\Traits\ChecksAslapOwnsRecord;
 
 class StokOpnameController extends BaseController
 {
+    use ChecksAslapOwnsRecord;
+
     protected $headerModel;
     protected $itemModel;
 
@@ -113,6 +116,10 @@ class StokOpnameController extends BaseController
 
         if (!$header) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
 
+        if ($r = $this->redirectIfAslapCannotAccessRecord($header, '/stok-opname')) {
+            return $r;
+        }
+
         $allItems = $this->itemModel->where('stok_opname_id', $id)->orderBy('hari_ke', 'ASC')->findAll();
         // Group by hari_ke
         $grouped = [];
@@ -125,6 +132,96 @@ class StokOpnameController extends BaseController
         $data['title'] = 'Detail Stok Opname';
 
         return view('stok_opname/show', $data);
+    }
+
+    public function edit($id)
+    {
+        $db = \Config\Database::connect();
+        $builder = $db->table('stok_opname');
+        $builder->select('stok_opname.*, users.nama as user_nama');
+        $builder->join('users', 'users.id = stok_opname.created_by');
+        $builder->where('stok_opname.id', $id);
+        $header = $builder->get()->getRowArray();
+
+        if (!$header) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+
+        if ($r = $this->redirectIfAslapCannotAccessRecord($header, '/stok-opname')) {
+            return $r;
+        }
+
+        $allItems = $this->itemModel->where('stok_opname_id', $id)->orderBy('hari_ke', 'ASC')->findAll();
+        $grouped = [];
+        foreach ($allItems as $item) {
+            $grouped[$item['hari_ke']][] = $item;
+        }
+        ksort($grouped, SORT_NUMERIC);
+
+        $data['header'] = $header;
+        $data['grouped_items'] = $grouped;
+        $data['title'] = 'Ubah Stok Opname';
+
+        return view('stok_opname/edit', $data);
+    }
+
+    public function update($id)
+    {
+        $header = $this->headerModel->find($id);
+        if (!$header) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+
+        if ($r = $this->redirectIfAslapCannotAccessRecord($header, '/stok-opname')) {
+            return $r;
+        }
+
+        $days = $this->request->getPost('days');
+        if (empty($days)) {
+            return redirect()->back()->with('error', 'Minimal harus mengisi 1 hari.')->withInput();
+        }
+
+        $db = \Config\Database::connect();
+        $db->transStart();
+
+        $this->headerModel->update($id, [
+            'nama_sppg'        => $this->request->getPost('nama_sppg'),
+            'kelurahan_desa'   => $this->request->getPost('kelurahan_desa'),
+            'kecamatan'        => $this->request->getPost('kecamatan'),
+            'kabupaten_kota'   => $this->request->getPost('kabupaten_kota'),
+            'provinsi'         => $this->request->getPost('provinsi'),
+            'periode_awal'     => $this->request->getPost('periode_awal'),
+            'periode_akhir'    => $this->request->getPost('periode_akhir'),
+            'nama_kepala_sppg' => $this->request->getPost('nama_kepala_sppg'),
+            'nama_akuntan'     => $this->request->getPost('nama_akuntan'),
+        ]);
+
+        $this->itemModel->where('stok_opname_id', $id)->delete();
+
+        foreach ($days as $dayNum => $items) {
+            if (!is_array($items)) {
+                continue;
+            }
+            foreach ($items as $item) {
+                if (empty($item['nama_bahan'])) {
+                    continue;
+                }
+                $this->itemModel->insert([
+                    'stok_opname_id' => $id,
+                    'hari_ke'        => $dayNum,
+                    'nama_bahan'     => $item['nama_bahan'],
+                    'satuan'         => $item['satuan'] ?? '',
+                    'stok_fisik'     => $item['stok_fisik'] ?? '',
+                    'stok_di_kartu'  => $item['stok_di_kartu'] ?? '',
+                    'selisih'        => $item['selisih'] ?? '',
+                    'keterangan'     => $item['keterangan'] ?? '',
+                ]);
+            }
+        }
+
+        $db->transComplete();
+
+        if ($db->transStatus() === false) {
+            return redirect()->back()->with('error', 'Gagal memperbarui.')->withInput();
+        }
+
+        return redirect()->to('/stok-opname/show/' . $id)->with('success', 'Stok Opname berhasil diperbarui.');
     }
 
     public function exportPdf($id)
@@ -141,7 +238,7 @@ class StokOpnameController extends BaseController
         $data['header'] = $header;
         $data['grouped_items'] = $grouped;
         $data['title'] = 'Cetak Stok Opname';
-        $data['signature'] = (new \App\Models\UserSignatureModel())->where('user_id', $header['created_by'])->first();
+        $data['signature'] = signature_row_for_pdf(isset($header['created_by']) ? (int) $header['created_by'] : null);
 
         return view('stok_opname/print', $data);
     }

@@ -20,6 +20,7 @@
         .sig-table td { width: 50%; text-align: center; border: none; }
         @media print { .no-print { display: none; } }
     </style>
+<?= view('layout/print_signatures_style') ?>
 </head>
 <body onload="window.print()">
     <div class="no-print" style="text-align: center; margin-bottom: 20px; padding: 10px; background: #f8fafc; border-bottom: 1px solid #e2e8f0;">
@@ -70,8 +71,8 @@
         <tr>
             <td>
                 <p>Check By (Ahli Gizi),</p>
-                <?php if (isset($signature) && $signature && $signature['image_data']): ?>
-                    <img src="<?= $signature['image_data'] ?>" height="60">
+                <?php if (($__sig = signature_data_uri($signature ?? [], 'ttd_ahli_gizi')) !== ''): ?>
+                    <img src="<?= $__sig ?>" alt="TTD" height="60">
                 <?php else: ?>
                     <div style="height:60px;"></div>
                 <?php endif; ?>

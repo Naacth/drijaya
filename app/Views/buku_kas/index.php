@@ -41,7 +41,7 @@
                         <th class="py-3">Keterangan / Operasional</th>
                         <th class="py-3 text-end" width="150">Debet</th>
                         <th class="py-3 text-end" width="150">Kredit</th>
-                        <th class="py-3 text-center" width="100">Aksi</th>
+                        <th class="py-3 text-center" width="120">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -52,7 +52,11 @@
                             </td>
                         </tr>
                     <?php else: ?>
-                        <?php foreach ($entries as $e): ?>
+                        <?php foreach ($entries as $e):
+                            $role = session()->get('role');
+                            $usppg = $user_sppg_id ?? null;
+                            $showEdit = ($role === 'admin') || ($role === 'akuntan' && $usppg !== null && (int) ($e['sppg_id'] ?? 0) === (int) $usppg);
+                            ?>
                             <tr>
                                 <td class="ps-4">
                                     <div class="fw-bold"><?= date('d M Y', strtotime($e['tanggal'])) ?></div>
@@ -66,13 +70,21 @@
                                     <?= $e['kredit'] > 0 ? 'Rp '.number_format($e['kredit'], 0, ',', '.') : '-' ?>
                                 </td>
                                 <td class="text-center">
-                                    <?php if (session()->get('role') === 'admin'): ?>
-                                    <a href="<?= site_url('buku-kas/delete/'.$e['id']) ?>" 
-                                       class="btn btn-sm btn-light text-danger border" 
-                                       onclick="return confirm('Hapus entri ini?')">
-                                        <i class="bi bi-trash"></i>
-                                    </a>
-                                    <?php endif; ?>
+                                    <div class="d-inline-flex gap-1 flex-wrap justify-content-center">
+                                        <?php if ($showEdit): ?>
+                                        <a href="<?= site_url('buku-kas/edit/'.$e['id']) ?>" class="btn btn-sm btn-light text-primary border" title="Ubah">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <?php endif; ?>
+                                        <?php if ($role === 'admin'): ?>
+                                        <a href="<?= site_url('buku-kas/delete/'.$e['id']) ?>"
+                                           class="btn btn-sm btn-light text-danger border"
+                                           onclick="return confirm('Hapus entri ini?')"
+                                           title="Hapus">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                        <?php endif; ?>
+                                    </div>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

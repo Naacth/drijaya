@@ -24,20 +24,23 @@
             .no-print { display: none; }
         }
     </style>
+<?= view('layout/print_signatures_style') ?>
 </head>
 <body>
     <div class="no-print" style="background:#fff; padding:10px; border-bottom:1px solid #ddd; position:fixed; top:0; left:0; right:0; text-align:center;">
         <button onclick="window.print()" style="padding:8px 20px; cursor:pointer;">CETAK LAPORAN</button>
     </div>
 
+    <?php $__bgnR = public_asset_data_uri('bgn.png'); ?>
     <table class="header">
         <tr>
-            <td width="80"><img src="<?= base_url('bgn.png') ?>" width="80"></td>
-            <td style="text-align: center; padding: 0 20px;">
+            <td width="90" style="vertical-align: middle;">
+                <img src="<?= $__bgnR !== '' ? $__bgnR : base_url('bgn.png') ?>" alt="Logo BGN" width="80" style="height: auto;">
+            </td>
+            <td style="text-align: center; padding: 0 16px; vertical-align: middle;">
                 <h2 style="margin: 0; font-size: 16pt;"><?= esc($header['nama_sppg']) ?></h2>
                 <p style="margin: 5px 0 0; font-size: 9pt; color: #666;"><?= esc($header['alamat_sppg']) ?></p>
             </td>
-            <td width="80" style="text-align: right;"><img src="<?= base_url('yayasan.png') ?>" width="80"></td>
         </tr>
     </table>
 

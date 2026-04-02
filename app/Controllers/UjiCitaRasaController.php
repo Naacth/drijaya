@@ -2,11 +2,14 @@
 
 namespace App\Controllers;
 
+use App\Traits\ChecksAhliGiziOwnership;
 use App\Models\UjiCitaRasaModel;
 use App\Models\UjiCitaRasaItemModel;
 
 class UjiCitaRasaController extends BaseController
 {
+    use ChecksAhliGiziOwnership;
+
     protected $headerModel;
     protected $itemModel;
 
@@ -90,6 +93,9 @@ class UjiCitaRasaController extends BaseController
         $builder->where('uji_cita_rasa.id', $id);
         $header = $builder->get()->getRowArray();
         if (!$header) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($header, '/uji-cita-rasa')) {
+            return $r;
+        }
 
         $data['header'] = $header;
         $data['items']  = $this->itemModel->where('uji_cita_rasa_id', $id)->findAll();
@@ -104,7 +110,7 @@ class UjiCitaRasaController extends BaseController
         $data['header']    = $header;
         $data['items']     = $this->itemModel->where('uji_cita_rasa_id', $id)->findAll();
         $data['title']     = 'Cetak Uji Cita Rasa';
-        $data['signature'] = (new \App\Models\UserSignatureModel())->where('user_id', $header['created_by'])->first();
+        $data['signature'] = signature_row_for_pdf(isset($header['created_by']) ? (int) $header['created_by'] : null);
         return view('uji_cita_rasa/print', $data);
     }
 
@@ -135,7 +141,10 @@ class UjiCitaRasaController extends BaseController
     {
         $header = $this->headerModel->find($id);
         if (!$header) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
-        
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($header, '/uji-cita-rasa')) {
+            return $r;
+        }
+
         $data = [
             'header' => $header,
             'items'  => $this->itemModel->where('uji_cita_rasa_id', $id)->findAll(),
@@ -146,6 +155,14 @@ class UjiCitaRasaController extends BaseController
 
     public function update($id)
     {
+        $header = $this->headerModel->find($id);
+        if (!$header) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+        if ($r = $this->redirectIfAhliGiziCannotAccessRecord($header, '/uji-cita-rasa')) {
+            return $r;
+        }
+
         $items = $this->request->getPost('items');
         if (empty($items)) {
             return redirect()->back()->with('error', 'Minimal harus mengisi 1 baris.')->withInput();

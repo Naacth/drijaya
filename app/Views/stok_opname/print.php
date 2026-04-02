@@ -38,6 +38,7 @@
         .sig-name { border-bottom: 1px solid #000; display: inline-block; min-width: 180px; padding-bottom: 2px; margin-top: 60px; }
         .note { font-size: 11px; margin-top: 20px; }
     </style>
+<?= view('layout/print_signatures_style') ?>
 </head>
 <body onload="window.print()">
 
@@ -119,8 +120,8 @@
                         <p>Mengetahui</p>
                         <p>Kepala SPPG,</p>
                         <div style="height: 60px; display: flex; align-items: end; padding-left: 20%;">
-                            <?php if (!empty($signature['ttd_kepala_sppg'])): ?>
-                                <img src="<?= base_url('uploads/signatures/' . $signature['ttd_kepala_sppg']) ?>" style="max-height: 55px; max-width: 150px; object-fit: contain;">
+                            <?php if (($__sig = signature_data_uri($signature ?? [], 'ttd_kepala_sppg')) !== ''): ?>
+                                <img src="<?= $__sig ?>" alt="TTD" style="max-height: 55px; max-width: 150px; object-fit: contain;">
                             <?php endif; ?>
                         </div>
                         <p>(<?= esc($header['nama_kepala_sppg'] ?? '.....................') ?>)</p>
@@ -129,8 +130,8 @@
                         <p>&nbsp;</p>
                         <p>Akuntan SPPG,</p>
                         <div style="height: 60px; display: flex; align-items: end; padding-left: 20%;">
-                            <?php if (!empty($signature['ttd_akuntan'])): ?>
-                                <img src="<?= base_url('uploads/signatures/' . $signature['ttd_akuntan']) ?>" style="max-height: 55px; max-width: 150px; object-fit: contain;">
+                            <?php if (($__sig = signature_data_uri($signature ?? [], 'ttd_akuntan')) !== ''): ?>
+                                <img src="<?= $__sig ?>" alt="TTD" style="max-height: 55px; max-width: 150px; object-fit: contain;">
                             <?php endif; ?>
                         </div>
                         <p>(<?= esc($header['nama_akuntan'] ?? '.....................') ?>)</p>
