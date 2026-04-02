@@ -30,34 +30,38 @@
                         <table class="table table-premium align-middle mb-0">
                             <thead>
                                 <tr>
-                                    <th width="60" class="text-center">No</th>
+                                    <th width="50" class="text-center">No</th>
+                                    <th width="100" class="text-center">Banyaknya</th>
+                                    <th width="80" class="text-center">Satuan</th>
                                     <th>Nama Barang</th>
-                                    <th width="120" class="text-center">Qty Pesan</th>
-                                    <th width="120" class="text-center">Qty Faktual</th>
-                                    <th width="150" class="text-end">Harga Satuan</th>
-                                    <th width="150" class="text-end">Total</th>
+                                    <th width="130" class="text-end">Harga Satuan</th>
+                                    <th width="100" class="text-end">Tambahan</th>
+                                    <th width="120" class="text-center">Jml Faktual</th>
+                                    <th width="140" class="text-end">Total</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php foreach ($items as $index => $item): ?>
                                     <tr>
                                         <td class="text-center"><?= $index + 1 ?></td>
+                                        <td class="text-center"><?= $item['qty'] ?></td>
+                                        <td class="text-center text-muted small"><?= $item['satuan'] ?></td>
                                         <td>
                                             <span class="fw-medium"><?= $item['nama_barang'] ?></span>
                                             <?php if ($item['catatan']): ?>
                                                 <br><small class="text-muted"><?= $item['catatan'] ?></small>
                                             <?php endif; ?>
                                         </td>
-                                        <td class="text-center text-muted small"><?= $item['qty'] ?> <?= $item['satuan'] ?></td>
-                                        <td class="text-center fw-medium"><?= $item['jumlah_faktual'] ?> <?= $item['satuan'] ?></td>
-                                        <td class="text-end">Rp <?= number_format($item['harga_satuan'], 0, ',', '.') ?></td>
-                                        <td class="text-end fw-bold">Rp <?= number_format($item['total'], 0, ',', '.') ?></td>
+                                        <td class="text-end">Rp <?= number_format($item['harga_satuan'] ?? 0, 0, ',', '.') ?></td>
+                                        <td class="text-end">Rp <?= number_format($item['tambahan'] ?? 0, 0, ',', '.') ?></td>
+                                        <td class="text-center fw-medium"><?= $item['jumlah_faktual'] ?? '' ?></td>
+                                        <td class="text-end fw-bold">Rp <?= number_format($item['total'] ?? 0, 0, ',', '.') ?></td>
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>
                             <tfoot class="bg-light">
                                 <tr>
-                                    <th colspan="5" class="text-end py-3">TOTAL KESELURUHAN</th>
+                                    <th colspan="7" class="text-end py-3 text-uppercase small">Total Keseluruhan</th>
                                     <th class="text-end py-3 text-primary h5 fw-bold mb-0">Rp <?= number_format($po['total'], 0, ',', '.') ?></th>
                                 </tr>
                             </tfoot>

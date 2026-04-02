@@ -87,6 +87,7 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
         $routes->get('print/(:num)', 'PoController::print/$1');
         $routes->get('export-excel', 'PoController::exportExcel');
         $routes->get('export-pdf', 'PoController::exportPdf');
+        $routes->get('get-akg-details/(:num)', 'PoController::getAkgDetails/$1');
     });
 
     // Beneficiary Data Routes
@@ -314,3 +315,5 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
 
 // Temporary migration route for database setup
 $routes->get('migrate-db-temp', 'MigrationController::index');
+$routes->get('update-db-special', 'UpdateDbController::index');
+$routes->get('truncate-all', 'TruncateDbController::index');

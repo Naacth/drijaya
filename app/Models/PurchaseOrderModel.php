@@ -10,7 +10,7 @@ class PurchaseOrderModel extends Model
     protected $primaryKey    = 'id';
     protected $useTimestamps = true;
     protected $allowedFields = [
-        'user_id', 'nomor_po', 'tanggal', 'vendor', 'menu', 'total',
+        'user_id', 'analisis_gizi_id', 'nomor_po', 'tanggal', 'vendor', 'menu', 'total',
         'status', 'file_name', 'file_path', 'keterangan'
     ];
 

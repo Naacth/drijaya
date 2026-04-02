@@ -60,9 +60,13 @@ class PoController extends BaseController
 
     public function create()
     {
-        if (session()->get('role') != 'ahli_gizi') {
-            return redirect()->to('/po')->with('error', 'Hanya Ahli Gizi yang dapat membuat PO.');
+        $role = session()->get('role');
+        if (!in_array($role, ['ahli_gizi', 'akuntan'])) {
+            return redirect()->to('/po')->with('error', 'Hanya Ahli Gizi atau Akuntan yang dapat membuat PO.');
         }
+
+        $akgModel = new \App\Models\AnalisisGiziModel();
+        $data['akgs']  = $akgModel->orderBy('created_at', 'DESC')->limit(20)->findAll();
         $data['title'] = 'Buat Purchase Order Baru';
         return view('po/create', $data);
     }
@@ -70,7 +74,7 @@ class PoController extends BaseController
     public function store()
     {
         $role = session()->get('role');
-        if ($role != 'ahli_gizi') {
+        if (!in_array($role, ['ahli_gizi', 'akuntan'])) {
             return redirect()->to('/po')->with('error', 'Unauthorized');
         }
 
@@ -78,7 +82,6 @@ class PoController extends BaseController
         $rules = [
             'vendor'  => 'required',
             'tanggal' => 'required|valid_date',
-            'menu'    => 'required',
             'items.*.nama_barang' => 'required',
             'items.*.qty'         => 'required|numeric',
             'items.*.satuan'      => 'required',
@@ -93,15 +96,22 @@ class PoController extends BaseController
         $db = \Config\Database::connect();
         $db->transStart();
 
+        $role   = session()->get('role');
+        $status = 'draft';
+        if ($this->request->getPost('action') == 'submit') {
+            $status = ($role == 'akuntan') ? 'menunggu_review' : 'menunggu_harga';
+        }
+
         $poData = [
-            'user_id'    => session()->get('user_id'),
-            'nomor_po'   => 'PO-' . date('YmdHis'),
-            'tanggal'    => $this->request->getPost('tanggal'),
-            'vendor'     => $this->request->getPost('vendor'),
-            'menu'       => $this->request->getPost('menu'),
-            'status'     => ($this->request->getPost('action') == 'submit') ? 'menunggu_harga' : 'draft',
-            'keterangan' => $this->request->getPost('keterangan'),
-            'total'      => 0
+            'user_id'          => session()->get('user_id'),
+            'analisis_gizi_id' => $this->request->getPost('analisis_gizi_id') ?: null,
+            'nomor_po'         => 'PO-' . date('YmdHis'),
+            'tanggal'          => $this->request->getPost('tanggal'),
+            'vendor'           => $this->request->getPost('vendor'),
+            'menu'             => $this->request->getPost('menu'),
+            'status'           => $status,
+            'keterangan'       => $this->request->getPost('keterangan'),
+            'total'            => 0
         ];
 
         $poId = $this->poModel->insert($poData);
@@ -113,12 +123,20 @@ class PoController extends BaseController
         }
 
         foreach ($items as $item) {
+            $hargaSatuan   = (float)($item['harga_satuan'] ?? 0);
+            $jumlahFaktual = (float)($item['jumlah_faktual'] ?? 0);
+            $tambahan      = (float)($item['tambahan'] ?? 0);
+            $totalRow      = ($hargaSatuan * $jumlahFaktual) + $tambahan;
+
             $this->itemModel->insert([
                 'po_id'          => $poId,
                 'nama_barang'    => $item['nama_barang'],
                 'qty'            => $item['qty'],
                 'satuan'         => $item['satuan'],
-                'jumlah_faktual' => $item['qty'], // Default same as qty
+                'harga_satuan'   => $hargaSatuan,
+                'tambahan'       => $tambahan,
+                'jumlah_faktual' => $jumlahFaktual,
+                'total'          => $totalRow,
                 'catatan'        => $item['catatan'] ?? ''
             ]);
         }
@@ -129,7 +147,16 @@ class PoController extends BaseController
             return redirect()->back()->with('error', 'Gagal menyimpan item PO. Bagian teknis sedang meninjau.')->withInput();
         }
 
-        return redirect()->to('/po')->with('success', ($poData['status'] == 'draft') ? 'Draft PO berhasil disimpan.' : 'PO berhasil diajukan ke Akuntan.');
+        // Update grand total
+        $grandTotal = 0;
+        $savedItems = $this->itemModel->where('po_id', $poId)->findAll();
+        foreach ($savedItems as $si) {
+            $grandTotal += (float)$si['total'];
+        }
+        $this->poModel->update($poId, ['total' => $grandTotal]);
+
+        $message = ($status == 'draft') ? 'Draft PO berhasil disimpan.' : (($status == 'menunggu_review') ? 'PO berhasil diajukan ke PIC.' : 'PO berhasil diajukan ke Akuntan.');
+        return redirect()->to('/po')->with('success', $message);
     }
 
     public function editPrice($id)
@@ -360,5 +387,21 @@ class PoController extends BaseController
         $db->transComplete();
 
         return redirect()->to('/po')->with('success', 'Purchase Order berhasil dihapus.');
+    }
+
+    public function getAkgDetails($id)
+    {
+        $akgModel = new \App\Models\AnalisisGiziModel();
+        $itemModel = new \App\Models\AnalisisGiziItemModel();
+
+        $header = $akgModel->find($id);
+        if (!$header) return $this->response->setJSON(['error' => 'Data tidak ditemukan']);
+
+        $items = $itemModel->where('analisis_gizi_id', $id)->findAll();
+        
+        return $this->response->setJSON([
+            'header' => $header,
+            'items'  => $items
+        ]);
     }
 }

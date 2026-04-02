@@ -16,7 +16,7 @@
                     <i class="bi bi-file-earmark-pdf me-1"></i> Export PDF
                 </a>
             <?php endif; ?>
-            <?php if (session()->get('role') == 'ahli_gizi'): ?>
+            <?php if (in_array(session()->get('role'), ['ahli_gizi', 'akuntan'])): ?>
                 <a href="<?= base_url('po/create') ?>" class="btn btn-primary btn-sm shadow-sm">
                     <i class="bi bi-plus-lg me-1"></i> Buat PO Baru
                 </a>

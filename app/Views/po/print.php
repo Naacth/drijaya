@@ -46,94 +46,93 @@
             <img src="<?= base_url('bgn.png') ?>" alt="Logo BGN" style="width: 100px; height: auto;">
         </div>
         <div style="text-align: center; flex: 1;">
-            <h2 style="margin: 0; color: #000; font-size: 20pt; letter-spacing: 1px;">PURCHASE ORDER</h2>
+            <h2 style="margin: 0; color: #000; font-size: 20pt; letter-spacing: 1px;">FORM PURCHASE ORDER</h2>
             <p style="margin: 5px 0 0; font-weight: bold;"><?= session()->get('sppg_nama') ?? 'Dapur SPPG Bunar' ?></p>
-            <h3 style="margin: 5px 0 0; font-weight: normal; color: #666; font-size: 14pt;">#<?= $po['nomor_po'] ?> | <?= date('d/m/Y', strtotime($po['tanggal'])) ?></h3>
         </div>
         <div style="width: 120px; text-align: right;">
             <img src="<?= base_url('yayasan.png') ?>" alt="Logo Yayasan" style="width: 95px; height: auto;">
         </div>
     </div>
 
-    <div class="info-section">
-        <div class="info-box">
-            <h4>Pemasok / Vendor</h4>
-            <div class="fw-bold fs-5"><?= $po['vendor'] ?></div>
-        </div>
-        <div class="info-box text-end">
-            <h4>Detail Menu</h4>
-            <div><?= $po['menu'] ?></div>
-        </div>
+    <div class="info-section" style="margin-bottom: 15px;">
+        <table class="info-table">
+            <tr>
+                <td width="120">Dari</td>
+                <td>: <?= session()->get('sppg_nama') ?? 'Dapur SPPG Bunar, Kec. Balaraja' ?></td>
+            </tr>
+            <tr>
+                <td>Nama Supplier</td>
+                <td>: <?= $po['vendor'] ?></td>
+            </tr>
+            <tr>
+                <td>Tanggal</td>
+                <td>: <?= date('d F Y', strtotime($po['tanggal'])) ?></td>
+            </tr>
+        </table>
     </div>
 
-    <table class="items-table">
+    <table class="items-table" style="font-size: 10pt; width: 100%; border-collapse: collapse;">
         <thead>
-            <tr>
-                <th width="50">NO</th>
-                <th>DESKRIPSI BARANG</th>
-                <th width="100" style="text-align: center;">QTY</th>
-                <th width="100" style="text-align: center;">SATUAN</th>
-                <th width="150" style="text-align: right;">HARGA</th>
-                <th width="150" style="text-align: right;">TOTAL</th>
+            <tr style="text-align: center; background-color: #f0f0f0;">
+                <th style="border: 1px solid #000; padding: 5px;" width="30">No.</th>
+                <th style="border: 1px solid #000; padding: 5px;" width="80">Banyaknya</th>
+                <th style="border: 1px solid #000; padding: 5px;" width="80">Satuan</th>
+                <th style="border: 1px solid #000; padding: 5px;">Nama Barang</th>
+                <th style="border: 1px solid #000; padding: 5px;" width="110">Harga Satuan</th>
+                <th style="border: 1px solid #000; padding: 5px;" width="80">Tambahan</th>
+                <th style="border: 1px solid #000; padding: 5px;" width="110">Jumlah Faktual</th>
+                <th style="border: 1px solid #000; padding: 5px;" width="120">Total</th>
+                <th style="border: 1px solid #000; padding: 5px;">Catatan</th>
             </tr>
         </thead>
         <tbody>
             <?php foreach ($items as $index => $item): ?>
                 <tr>
-                    <td><?= $index + 1 ?></td>
-                    <td>
-                        <strong><?= $item['nama_barang'] ?></strong>
-                        <?php if($item['catatan']): ?><br><small><?= $item['catatan'] ?></small><?php endif; ?>
-                    </td>
-                    <td style="text-align: center;"><?= number_format($item['qty'], 2, ',', '.') ?></td>
-                    <td style="text-align: center;"><?= $item['satuan'] ?></td>
-                    <td style="text-align: right;">Rp <?= number_format($item['harga_satuan'], 0, ',', '.') ?></td>
-                    <td style="text-align: right;">Rp <?= number_format($item['total'], 0, ',', '.') ?></td>
+                    <td style="border: 1px solid #000; padding: 5px; text-align: center;"><?= $index + 1 ?></td>
+                    <td style="border: 1px solid #000; padding: 5px; text-align: center;"><?= number_format($item['qty'] ?? 0, 2, ',', '.') ?></td>
+                    <td style="border: 1px solid #000; padding: 5px; text-align: center;"><?= $item['satuan'] ?? '' ?></td>
+                    <td style="border: 1px solid #000; padding: 5px;"><?= $item['nama_barang'] ?? '' ?></td>
+                    <td style="border: 1px solid #000; padding: 5px; text-align: right;">Rp <?= number_format($item['harga_satuan'] ?? 0, 0, ',', '.') ?></td>
+                    <td style="border: 1px solid #000; padding: 5px; text-align: right;">Rp <?= number_format($item['tambahan'] ?? 0, 0, ',', '.') ?></td>
+                    <td style="border: 1px solid #000; padding: 5px; text-align: center;"><?= number_format($item['jumlah_faktual'] ?? 0, 2, ',', '.') ?></td>
+                    <td style="border: 1px solid #000; padding: 5px; text-align: right;">Rp <?= number_format($item['total'] ?? 0, 0, ',', '.') ?></td>
+                    <td style="border: 1px solid #000; padding: 5px;"><?= $item['catatan'] ?? '' ?></td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
+        <tfoot>
+            <tr style="font-weight: bold; background-color: #f9f9f9;">
+                <td colspan="7" style="border: 1px solid #000; padding: 5px; text-align: center;">Total</td>
+                <td style="border: 1px solid #000; padding: 5px; text-align: right;">Rp <?= number_format($po['total'], 0, ',', '.') ?></td>
+                <td style="border: 1px solid #000; padding: 5px;"></td>
+            </tr>
+        </tfoot>
     </table>
 
-    <div class="total-section">
-        <div class="total-box">
-            <div class="total-row grand-total">
-                <span>TOTAL</span>
-                <span>Rp <?= number_format($po['total'], 0, ',', '.') ?></span>
-            </div>
-        </div>
-    </div>
+    <p style="font-size: 10pt; margin-bottom: 30px;">
+        Demikian surat permintaan penawaran harga bahan baku ini kami sampaikan, atas perhatian dan kerjasamanya kami ucapkan terimakasih.
+    </p>
 
-    <div class="signature-section">
-        <?php
-        $ahliGizi = $po['pembuat'];
-        $akuntan = '( .................... )';
-        $pic = '( .................... )';
-        
-        foreach ($approvals as $app) {
-            if ($app['role'] == 'akuntan' || $app['role'] == 'pic') {
-                 // logic to pick the latest approved/reviewed by each role
-            }
-        }
-        // Simpler: find by role
-        foreach ($approvals as $app) {
-            if (strpos($app['role'], 'akuntan') !== false) $akuntan = $app['nama'];
-            if (strpos($app['role'], 'pic') !== false || strpos($app['role'], 'kepala') !== false) $pic = $app['nama'];
-        }
-        ?>
-        <div class="signature-box">
-            <div class="title">Dipesan Oleh,</div>
-            <div class="name"><?= $ahliGizi ?></div>
-            <div class="role">Ahli Gizi</div>
+    <div class="signature-section" style="display: flex; justify-content: space-between; font-size: 9pt; text-align: center;">
+        <div style="width: 24%;">
+            <div style="font-weight: bold; margin-bottom: 60px;">Akuntan Satuan Pelayanan</div>
+            <div style="text-decoration: underline; font-weight: bold;">( Yusta Anjaya, S.AK )</div>
+            <div>Dibuat Oleh</div>
         </div>
-        <div class="signature-box">
-            <div class="title">Diperiksa Oleh,</div>
-            <div class="name"><?= $akuntan ?></div>
-            <div class="role">Akuntan</div>
+        <div style="width: 24%;">
+            <div style="font-weight: bold; margin-bottom: 60px;">Ahli Gizi Satuan Pelayanan</div>
+            <div style="text-decoration: underline; font-weight: bold;">( Desy Junesty, AMD.GZ )</div>
+            <div>Diketahui</div>
         </div>
-        <div class="signature-box">
-            <div class="title">Disetujui Oleh,</div>
-            <div class="name"><?= $pic ?></div>
-            <div class="role">PIC / Kepala SPPG</div>
+        <div style="width: 24%;">
+            <div style="font-weight: bold; margin-bottom: 60px;">Kepala Koki Satuan Pelayanan</div>
+            <div style="text-decoration: underline; font-weight: bold;">( Dera )</div>
+            <div>Diketahui</div>
+        </div>
+        <div style="width: 24%;">
+            <div style="font-weight: bold; margin-bottom: 43px;">Kepala satuan Pelayanan Pemenuhan Gizi</div>
+            <div style="text-decoration: underline; font-weight: bold;">( M.Rizki Waluya, S.P.W.K. )</div>
+            <div>Disetujui Oleh</div>
         </div>
     </div>
 
