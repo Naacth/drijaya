@@ -166,7 +166,11 @@ class PoController extends BaseController
             return redirect()->to('/po')->with('error', 'Purchase Order tidak ditemukan.');
         }
 
-        if (!in_array($po['status'], ['draft', 'rejected']) || $po['user_id'] != session()->get('user_id')) {
+        $role = session()->get('role');
+        $isCreator = ($po['user_id'] == session()->get('user_id'));
+        $canEdit = in_array($role, ['admin', 'pic', 'akuntan']) || $isCreator;
+
+        if (!in_array($po['status'], ['draft', 'rejected']) || !$canEdit) {
             return redirect()->to('/po')->with('error', 'Purchase Order tidak dapat diubah.');
         }
 
@@ -188,7 +192,11 @@ class PoController extends BaseController
             return redirect()->to('/po')->with('error', 'Purchase Order tidak ditemukan.');
         }
 
-        if (!in_array($po['status'], ['draft', 'rejected']) || $po['user_id'] != session()->get('user_id')) {
+        $role = session()->get('role');
+        $isCreator = ($po['user_id'] == session()->get('user_id'));
+        $canEdit = in_array($role, ['admin', 'pic', 'akuntan']) || $isCreator;
+
+        if (!in_array($po['status'], ['draft', 'rejected']) || !$canEdit) {
             return redirect()->to('/po')->with('error', 'Purchase Order tidak dapat diubah.');
         }
 
