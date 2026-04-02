@@ -78,6 +78,8 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
         $routes->get('create', 'PoController::create');
         $routes->post('store', 'PoController::store');
         $routes->get('show/(:num)', 'PoController::show/$1');
+        $routes->get('edit/(:num)', 'PoController::edit/$1');
+        $routes->post('update/(:num)', 'PoController::update/$1');
         $routes->get('edit-price/(:num)', 'PoController::editPrice/$1');
         $routes->post('update-price/(:num)', 'PoController::updatePrice/$1');
         $routes->get('review/(:num)', 'PoController::review/$1');

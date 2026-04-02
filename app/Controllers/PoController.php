@@ -158,6 +158,115 @@ class PoController extends BaseController
         $message = ($status == 'draft') ? 'Draft PO berhasil disimpan.' : (($status == 'menunggu_review') ? 'PO berhasil diajukan ke PIC.' : 'PO berhasil diajukan ke Akuntan.');
         return redirect()->to('/po')->with('success', $message);
     }
+    public function edit($id)
+    {
+        $po = $this->poModel->find($id);
+
+        if (!$po) {
+            return redirect()->to('/po')->with('error', 'Purchase Order tidak ditemukan.');
+        }
+
+        if (!in_array($po['status'], ['draft', 'rejected']) || $po['user_id'] != session()->get('user_id')) {
+            return redirect()->to('/po')->with('error', 'Purchase Order tidak dapat diubah.');
+        }
+
+        $data['title'] = 'Edit Purchase Order';
+        $data['po']    = $po;
+        $data['items'] = $this->itemModel->where('po_id', $id)->findAll();
+        
+        $akgModel = new \App\Models\AnalisisGiziModel();
+        $data['akgList'] = $akgModel->where('status', 'approved')->orderBy('tanggal', 'DESC')->findAll();
+
+        return view('po/edit', $data);
+    }
+
+    public function update($id)
+    {
+        $po = $this->poModel->find($id);
+
+        if (!$po) {
+            return redirect()->to('/po')->with('error', 'Purchase Order tidak ditemukan.');
+        }
+
+        if (!in_array($po['status'], ['draft', 'rejected']) || $po['user_id'] != session()->get('user_id')) {
+            return redirect()->to('/po')->with('error', 'Purchase Order tidak dapat diubah.');
+        }
+
+        // Validation
+        $rules = [
+            'vendor'  => 'required',
+            'tanggal' => 'required|valid_date',
+            'items.*.nama_barang' => 'required',
+            'items.*.qty'         => 'required|numeric',
+            'items.*.satuan'      => 'required',
+        ];
+
+        if (!$this->validate($rules)) {
+            return redirect()->back()->with('error', 'Mohon lengkapi semua field yang wajib diisi.')->withInput();
+        }
+
+        $items = $this->request->getPost('items');
+        
+        $db = \Config\Database::connect();
+        $db->transStart();
+
+        $role   = session()->get('role');
+        $status = 'draft';
+        if ($this->request->getPost('action') == 'submit') {
+            $status = ($role == 'akuntan') ? 'menunggu_review' : 'menunggu_harga';
+        }
+
+        $poData = [
+            'analisis_gizi_id' => $this->request->getPost('analisis_gizi_id') ?: null,
+            'tanggal'          => $this->request->getPost('tanggal'),
+            'vendor'           => $this->request->getPost('vendor'),
+            'menu'             => $this->request->getPost('menu'),
+            'status'           => $status,
+            'keterangan'       => $this->request->getPost('keterangan'),
+            'total'            => 0
+        ];
+
+        $this->poModel->update($id, $poData);
+
+        // Delete old items and re-insert
+        $this->itemModel->where('po_id', $id)->delete();
+
+        foreach ($items as $item) {
+            $hargaSatuan   = (float)($item['harga_satuan'] ?? 0);
+            $jumlahFaktual = (float)($item['jumlah_faktual'] ?? 0);
+            $tambahan      = (float)($item['tambahan'] ?? 0);
+            $totalRow      = ($hargaSatuan * $jumlahFaktual) + $tambahan;
+
+            $this->itemModel->insert([
+                'po_id'          => $id,
+                'nama_barang'    => $item['nama_barang'],
+                'qty'            => $item['qty'],
+                'satuan'         => $item['satuan'],
+                'harga_satuan'   => $hargaSatuan,
+                'tambahan'       => $tambahan,
+                'jumlah_faktual' => $jumlahFaktual,
+                'total'          => $totalRow,
+                'catatan'        => $item['catatan'] ?? ''
+            ]);
+        }
+
+        $db->transComplete();
+
+        if ($db->transStatus() === false) {
+            return redirect()->back()->with('error', 'Gagal update item PO. Bagian teknis sedang meninjau.')->withInput();
+        }
+
+        // Update grand total
+        $grandTotal = 0;
+        $savedItems = $this->itemModel->where('po_id', $id)->findAll();
+        foreach ($savedItems as $si) {
+            $grandTotal += (float)$si['total'];
+        }
+        $this->poModel->update($id, ['total' => $grandTotal]);
+
+        $message = ($status == 'draft') ? 'Draft PO berhasil diubah.' : (($status == 'menunggu_review') ? 'PO berhasil diajukan ke PIC.' : 'PO berhasil diajukan ke Akuntan.');
+        return redirect()->to('/po')->with('success', $message);
+    }
 
     public function editPrice($id)
     {
