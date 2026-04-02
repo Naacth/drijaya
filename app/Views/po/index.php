@@ -133,7 +133,7 @@
                                                 <i class="bi bi-eye"></i>
                                             </a>
                                             
-                                            <?php if (in_array($po['status'], ['draft', 'rejected']) && $po['user_id'] == session()->get('user_id')): ?>
+                                            <?php if (in_array($po['status'], ['draft', 'rejected'])): ?>
                                                 <a href="<?= base_url('po/edit/' . $po['id']) ?>" class="btn btn-warning text-white" title="Edit">
                                                     <i class="bi bi-pencil"></i>
                                                 </a>
