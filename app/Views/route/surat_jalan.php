@@ -19,7 +19,8 @@
             background: #fff;
             box-sizing: border-box;
         }
-        .page-container { width: 100%; margin: 0 auto; padding: 0.2cm 0; }
+        html, body { width: 100%; }
+        .page-container { width: 100%; margin: 0 auto; padding: 0; }
         
         /* Header Styling */
         .header-block { border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 15px; }
@@ -60,14 +61,17 @@
         .main-table { width: 100%; border-collapse: collapse; margin-bottom: 15px; table-layout: fixed; }
         .main-table th, .main-table td { 
             border: 1px solid #000; 
-            padding: 6px 3px; 
+            padding: 4px 2px; 
             word-wrap: break-word;
             overflow-wrap: break-word;
-            font-size: 10px;
+            font-size: 9px;
             text-align: center;
         }
         .main-table th { background-color: #f2f2f2; font-weight: normal; }
         .text-start { text-align: left !important; padding-left: 5px !important; }
+
+        /* Prevent accidental horizontal overflow */
+        .main-table, .detail-table, .sj-sig-table { max-width: 100%; }
         
         /* Signatures — pakai .sj-sig-table agar tidak bentrok dengan layout/print_signatures_style.php */
         .sig-section { width: 100%; margin-top: 10px; page-break-inside: avoid; }
@@ -121,6 +125,8 @@
             tr { page-break-inside: avoid; page-break-after: auto; }
             thead { display: table-header-group; }
             tfoot { display: table-footer-group; }
+            /* Ensure content fits printable width */
+            .page-container { padding: 0; }
         }
     </style>
 <?= view('layout/print_signatures_style') ?>
@@ -182,16 +188,16 @@
         <table class="main-table">
             <thead>
                 <tr>
-                    <th rowspan="2" width="40">No</th>
-                    <th rowspan="2" width="120">Kategori</th>
-                    <th rowspan="2" width="100">Jumlah Porsi</th>
+                    <th rowspan="2" width="30">No</th>
+                    <th rowspan="2" width="90">Kategori</th>
+                    <th rowspan="2" width="80">Jumlah Porsi</th>
                     <th colspan="3">Jumlah Alat Makan</th>
                     <th rowspan="2">Keterangan</th>
                 </tr>
                 <tr>
-                    <th width="80">Sebelum</th>
-                    <th width="80">Sesudah</th>
-                    <th width="80">Sisa</th>
+                    <th width="65">Sebelum</th>
+                    <th width="65">Sesudah</th>
+                    <th width="55">Sisa</th>
                 </tr>
             </thead>
             <tbody>
