@@ -139,7 +139,16 @@
                     <td class="text-center"><?= $i + 1 ?></td>
                     <td><?= $hasItem ? esc($items[$i]['nama_barang']) : '&nbsp;' ?></td>
                     <td class="text-center"><?= $hasItem ? esc($items[$i]['satuan']) : '' ?></td>
-                    <td class="text-center"><?= $hasItem ? number_format($items[$i]['banyak_barang'], 2) : '' ?></td>
+                    <td class="text-center">
+                        <?php
+                            if ($hasItem) {
+                                $qty = (float) ($items[$i]['banyak_barang'] ?? 0);
+                                echo ((int) $qty == $qty)
+                                    ? (int) $qty
+                                    : rtrim(rtrim(number_format($qty, 2, '.', ''), '0'), '.');
+                            }
+                        ?>
+                    </td>
                     <td class="text-center" style="font-size:12px; height: 35px;"><?= $hasItem && !empty($items[$i]['nama_qc']) ? esc($items[$i]['nama_qc']) : '' ?></td>
                     <td class="text-center" style="font-size:12px; height: 35px;"><?= $hasItem && !empty($items[$i]['nama_pemasok']) ? esc($items[$i]['nama_pemasok']) : '' ?></td>
                     <td class="text-center"><?= $hasItem ? esc(ucwords($items[$i]['keterangan'])) : '' ?></td>

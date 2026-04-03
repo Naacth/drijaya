@@ -77,7 +77,13 @@
                             <td><?= $i + 1 ?></td>
                             <td class="fw-medium text-dark"><?= esc($item['nama_barang']) ?></td>
                             <td><?= esc($item['satuan']) ?></td>
-                            <td><?= number_format($item['banyak_barang'], 2) ?></td>
+                            <td>
+                                <?php
+                                    $qty = (float) ($item['banyak_barang'] ?? 0);
+                                    $out = ((int) $qty == $qty) ? (string) (int) $qty : rtrim(rtrim(number_format($qty, 2, '.', ''), '0'), '.');
+                                    echo esc($out);
+                                ?>
+                            </td>
                             <td><?= esc($item['nama_qc'] ?: '-') ?></td>
                             <td><?= esc($item['nama_pemasok'] ?: '-') ?></td>
                             <td>
