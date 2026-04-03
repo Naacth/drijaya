@@ -5,9 +5,12 @@
         <h4 class="mb-1" style="font-weight: 700;">Uji Cita Rasa (Tester)</h4>
         <p class="text-muted small mb-0">Validasi kualitas rasa dan kesesuaian porsi masakan.</p>
     </div>
-    <?php if (in_array(session()->get('role'), ['ahli_gizi'])): ?>
+    <div class="text-end d-flex gap-2 align-items-center flex-wrap justify-content-end">
+        <?= $this->include('layout/print_blank_button', ['printBlankUrl' => 'uji-cita-rasa/export-pdf-blank', 'printBlankRoles' => ['ahli_gizi', 'admin'], 'printBlankWrapperClass' => 'mb-0']) ?>
+        <?php if (in_array(session()->get('role'), ['ahli_gizi'])): ?>
     <a href="<?= site_url('uji-cita-rasa/create') ?>" class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i> Buat Baru</a>
     <?php endif; ?>
+    </div>
 </div>
 <div class="data-card animate-in" style="animation-delay: 0.1s;">
     <div class="card-header"><h6><i class="bi bi-cup-straw me-2"></i>Riwayat Uji Cita Rasa</h6></div>

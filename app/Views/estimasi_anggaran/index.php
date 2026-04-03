@@ -5,9 +5,12 @@
         <h4 class="mb-1" style="font-weight: 700;">Estimasi Anggaran (Menu Kering)</h4>
         <p class="text-muted small mb-0">Rencana dan perhitungan estimasi biaya porsi harian.</p>
     </div>
-    <?php if (session()->get('role') === 'ahli_gizi'): ?>
+    <div class="text-end d-flex gap-2 align-items-center flex-wrap justify-content-end">
+        <?= $this->include('layout/print_blank_button', ['printBlankUrl' => 'estimasi-anggaran/export-pdf-blank', 'printBlankRoles' => ['ahli_gizi', 'admin'], 'printBlankWrapperClass' => 'mb-0']) ?>
+        <?php if (session()->get('role') === 'ahli_gizi'): ?>
     <a href="<?= site_url('estimasi-anggaran/create') ?>" class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i> Buat Baru</a>
     <?php endif; ?>
+    </div>
 </div>
 
 <div class="data-card animate-in" style="animation-delay: 0.1s;">

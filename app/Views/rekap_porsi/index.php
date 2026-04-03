@@ -6,11 +6,14 @@
         <h4 class="mb-1" style="font-weight: 700;">Rekap Jumlah Porsi</h4>
         <p class="text-muted small mb-0">Riwayat rekap porsi yang terdistribusikan harian.</p>
     </div>
+    <div class="text-end d-flex gap-2 align-items-center flex-wrap justify-content-end">
+        <?= $this->include('layout/print_blank_button', ['printBlankUrl' => 'rekap-porsi/export-pdf-blank', 'printBlankRoles' => ['aslap', 'admin'], 'printBlankWrapperClass' => 'mb-0']) ?>
     <?php if (session()->get('role') === 'aslap'): ?>
     <a href="<?= site_url('rekap-porsi/create') ?>" class="btn btn-primary">
         <i class="bi bi-plus-lg me-1"></i> Input Rekap Porsi
     </a>
     <?php endif; ?>
+    </div>
 </div>
 
 <div class="data-card animate-in" style="animation-delay: 0.1s;">

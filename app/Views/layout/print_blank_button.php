@@ -10,9 +10,10 @@ if (! isset($printBlankUrl) || $printBlankUrl === '') {
 if (! in_array((string) session()->get('role'), $printBlankRoles, true)) {
     return;
 }
+$wrapperClass = $printBlankWrapperClass ?? 'mb-0 mt-2';
 ?>
-<p class="mb-0 mt-2">
+<div class="<?= esc($wrapperClass, 'attr') ?>">
     <a href="<?= site_url($printBlankUrl) ?>" target="_blank" rel="noopener noreferrer" class="btn btn-outline-secondary btn-sm">
         <i class="bi bi-file-earmark-pdf"></i> Cetak form kosong (PDF)
     </a>
-</p>
+</div>

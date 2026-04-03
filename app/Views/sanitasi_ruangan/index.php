@@ -6,9 +6,12 @@
             <h4 class="mb-1" style="font-weight: 700;"><?= esc($title) ?></h4>
             <p class="text-muted small mb-0">Monitoring kebersihan fasilitas dan peralatan dapur.</p>
         </div>
-        <?php if (session()->get('role') === 'ahli_gizi'): ?>
+        <div class="text-end d-flex gap-2 align-items-center flex-wrap justify-content-end">
+            <?= $this->include('layout/print_blank_button', ['printBlankUrl' => 'sanitasi-ruangan/export-pdf-blank', 'printBlankRoles' => ['ahli_gizi', 'admin'], 'printBlankWrapperClass' => 'mb-0']) ?>
+            <?php if (session()->get('role') === 'ahli_gizi'): ?>
             <a href="<?= site_url('sanitasi-ruangan/create') ?>" class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i> Buat Baru</a>
-        <?php endif; ?>
+            <?php endif; ?>
+        </div>
     </div>
 
     <div class="card shadow-sm border-0">

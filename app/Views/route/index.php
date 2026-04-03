@@ -7,11 +7,14 @@
             <h4 class="fw-bold mb-0">Manajemen Rute Pengiriman</h4>
             <p class="text-muted small">Kelola alur distribusi makanan (mobil, driver, dan rute sekolah).</p>
         </div>
+        <div class="d-flex gap-2 align-items-center">
+            <?= $this->include('layout/print_blank_button', ['printBlankUrl' => 'routes/export-pdf-blank', 'printBlankRoles' => ['aslap', 'admin'], 'printBlankWrapperClass' => 'mb-0']) ?>
         <?php if (session()->get('role') == 'aslap'): ?>
             <a href="<?= base_url('routes/create') ?>" class="btn btn-primary btn-sm shadow-sm">
                 <i class="bi bi-truck me-1"></i> Buat Rute Baru
             </a>
         <?php endif; ?>
+        </div>
     </div>
 
     <div class="row g-3 mb-4 animate-in">

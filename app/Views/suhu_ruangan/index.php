@@ -5,9 +5,12 @@
         <h4 class="mb-1" style="font-weight: 700;">Catatan Suhu Ruangan</h4>
         <p class="text-muted small mb-0">Pemantauan suhu dan kelembapan area penyimpanan kering (dry storage).</p>
     </div>
-    <?php if (session()->get('role') === 'ahli_gizi'): ?>
+    <div class="text-end d-flex gap-2 align-items-center flex-wrap justify-content-end">
+        <?= $this->include('layout/print_blank_button', ['printBlankUrl' => 'suhu-ruangan/export-pdf-blank', 'printBlankRoles' => ['ahli_gizi', 'admin'], 'printBlankWrapperClass' => 'mb-0']) ?>
+        <?php if (session()->get('role') === 'ahli_gizi'): ?>
     <a href="<?= site_url('suhu-ruangan/create') ?>" class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i> Buat Baru</a>
     <?php endif; ?>
+    </div>
 </div>
 <div class="data-card animate-in" style="animation-delay: 0.1s;">
     <div class="card-header"><h6><i class="bi bi-thermometer-half me-2"></i>Riwayat Suhu Ruangan</h6></div>

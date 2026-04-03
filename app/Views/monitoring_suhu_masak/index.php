@@ -5,9 +5,12 @@
         <h4 class="mb-1" style="font-weight: 700;">Monitoring Suhu Pemasakan</h4>
         <p class="text-muted small mb-0">Memastikan suhu internal masakan mencapai standar keamanan pangan.</p>
     </div>
-    <?php if (session()->get('role') === 'ahli_gizi'): ?>
+    <div class="text-end d-flex gap-2 align-items-center flex-wrap justify-content-end">
+        <?= $this->include('layout/print_blank_button', ['printBlankUrl' => 'monitoring-suhu-masak/export-pdf-blank', 'printBlankRoles' => ['ahli_gizi', 'admin'], 'printBlankWrapperClass' => 'mb-0']) ?>
+        <?php if (session()->get('role') === 'ahli_gizi'): ?>
     <a href="<?= site_url('monitoring-suhu-masak/create') ?>" class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i> Buat Baru</a>
     <?php endif; ?>
+    </div>
 </div>
 <div class="data-card animate-in" style="animation-delay: 0.1s;">
     <div class="card-header"><h6><i class="bi bi-thermometer-high me-2"></i>Riwayat Monitoring Suhu</h6></div>

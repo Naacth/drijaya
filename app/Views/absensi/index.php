@@ -7,6 +7,7 @@
         <p class="text-muted small mb-0">Daftar kehadiran harian relawan SPPG</p>
     </div>
     <div class="d-flex gap-2">
+        <?= $this->include('layout/print_blank_button', ['printBlankUrl' => 'absensi/export-pdf-blank', 'printBlankRoles' => ['aslap', 'admin'], 'printBlankWrapperClass' => 'mb-0']) ?>
         <a href="<?= site_url('absensi/rekap') ?>" class="btn btn-outline-primary px-4 shadow-sm">
             <i class="bi bi-calendar-range me-2"></i>Rekap 2 Minggu
         </a>

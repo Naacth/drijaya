@@ -6,9 +6,12 @@
         <h4 class="mb-1" style="font-weight: 700;">Pengajuan Barang Rusak</h4>
         <p class="text-muted small mb-0">Daftar pengajuan barang rusak / perlu perbaikan.</p>
     </div>
+    <div class="text-end d-flex gap-2 align-items-center flex-wrap justify-content-end">
+        <?= $this->include('layout/print_blank_button', ['printBlankUrl' => 'pengajuan-barang-rusak/export-pdf-blank', 'printBlankRoles' => ['pic', 'admin'], 'printBlankWrapperClass' => 'mb-0']) ?>
     <?php if (session()->get('role') === 'pic'): ?>
     <a href="<?= site_url('pengajuan-barang-rusak/create') ?>" class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i> Buat Pengajuan</a>
     <?php endif; ?>
+    </div>
 </div>
 
 <div class="data-card animate-in" style="animation-delay: 0.1s;">

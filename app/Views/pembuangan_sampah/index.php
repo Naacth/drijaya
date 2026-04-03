@@ -7,9 +7,12 @@
         <h4 class="mb-1" style="font-weight: 700;"><?= esc($title) ?></h4>
         <p class="text-muted small mb-0">Pencatatan realisasi pembuangan sampah 3 kali sehari.</p>
     </div>
-    <?php if (session()->get('role') === 'ahli_gizi'): ?>
+    <div class="text-end d-flex gap-2 align-items-center flex-wrap justify-content-end">
+        <?= $this->include('layout/print_blank_button', ['printBlankUrl' => 'pembuangan-sampah/export-pdf-blank', 'printBlankRoles' => ['ahli_gizi', 'admin'], 'printBlankWrapperClass' => 'mb-0']) ?>
+        <?php if (session()->get('role') === 'ahli_gizi'): ?>
     <a href="<?= site_url('pembuangan-sampah/create') ?>" class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i> Buat Baru</a>
     <?php endif; ?>
+    </div>
 </div>
     </div>
 

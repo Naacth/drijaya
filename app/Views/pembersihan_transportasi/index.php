@@ -3,11 +3,14 @@
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h4 class="mb-0 text-gray-800"><?= $title ?></h4>
+        <div class="d-flex gap-2 align-items-center">
+            <?= $this->include('layout/print_blank_button', ['printBlankUrl' => 'pembersihan-transportasi/export-pdf-blank', 'printBlankRoles' => ['ahli_gizi', 'admin'], 'printBlankWrapperClass' => 'mb-0']) ?>
         <?php if(session()->get('role') == 'ahli_gizi'): ?>
         <a href="<?= site_url('pembersihan-transportasi/create') ?>" class="btn btn-primary btn-sm px-3 shadow-sm rounded-pill">
             <i class="fas fa-plus me-1"></i> Buat Baru
         </a>
         <?php endif; ?>
+        </div>
     </div>
 
     <div class="card shadow-sm border-0">

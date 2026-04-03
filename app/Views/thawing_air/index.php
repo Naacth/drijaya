@@ -5,9 +5,12 @@
         <h4 class="mb-1" style="font-weight: 700;">Checklist Thawing (Metode Air)</h4>
         <p class="text-muted small mb-0">Pemantauan proses pencairan bahan makanan menggunakan media air mengalir.</p>
     </div>
-    <?php if (session()->get('role') === 'ahli_gizi'): ?>
+    <div class="text-end d-flex gap-2 align-items-center flex-wrap justify-content-end">
+        <?= $this->include('layout/print_blank_button', ['printBlankUrl' => 'thawing-air/export-pdf-blank', 'printBlankRoles' => ['ahli_gizi', 'admin'], 'printBlankWrapperClass' => 'mb-0']) ?>
+        <?php if (session()->get('role') === 'ahli_gizi'): ?>
     <a href="<?= site_url('thawing-air/create') ?>" class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i> Buat Baru</a>
     <?php endif; ?>
+    </div>
 </div>
 <div class="data-card animate-in" style="animation-delay: 0.1s;">
     <div class="card-header"><h6><i class="bi bi-water me-2"></i>Riwayat Thawing Air</h6></div>

@@ -8,6 +8,7 @@
             <p class="text-muted small">Kelola dan pantau proses pengadaan bahan makanan.</p>
         </div>
         <div class="d-flex gap-2">
+            <?= $this->include('layout/print_blank_button', ['printBlankUrl' => 'po/export-pdf-blank', 'printBlankRoles' => ['admin', 'pic', 'akuntan'], 'printBlankWrapperClass' => 'mb-0']) ?>
             <?php if (in_array(session()->get('role'), ['admin', 'pic'])): ?>
                 <a href="<?= base_url('po/export-excel') ?>" class="btn btn-outline-success btn-sm shadow-sm">
                     <i class="bi bi-file-earmark-excel me-1"></i> Export Excel
