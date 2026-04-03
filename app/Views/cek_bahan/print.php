@@ -24,7 +24,7 @@
             .page-container { width: 100%; max-width: none; }
             .no-print { display: none !important; }
             .print-dark-header th { 
-                background-color: #333 !important; 
+                background-color: #0088cc !important; 
                 color: #fff !important; 
                 -webkit-print-color-adjust: exact; 
                 print-color-adjust: exact; 
@@ -78,7 +78,7 @@
         }
         
         .print-dark-header th {
-            background-color: #333;
+            background-color: #0088cc;
             color: #fff;
             text-align: center;
             vertical-align: middle;
@@ -119,7 +119,7 @@
 <body onload="window.print()">
 
     <div class="no-print" style="text-align: center; margin-bottom: 20px;">
-        <button onclick="window.print()" style="padding: 10px 20px; font-size: 16px; cursor: pointer; background: #333; color: #fff; border: none; border-radius: 5px;">Cetak formulir</button>
+        <button onclick="window.print()" style="padding: 10px 20px; font-size: 16px; cursor: pointer; background: #0088cc; color: #fff; border: none; border-radius: 5px;">Cetak formulir</button>
         <button onclick="window.close()" style="padding: 10px 20px; font-size: 16px; cursor: pointer; margin-left: 10px; border-radius: 5px;">Tutup</button>
     </div>
 
