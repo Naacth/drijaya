@@ -69,15 +69,43 @@
         .main-table th { background-color: #f2f2f2; font-weight: normal; }
         .text-start { text-align: left !important; padding-left: 5px !important; }
         
-        /* Signatures */
+        /* Signatures — pakai .sj-sig-table agar tidak bentrok dengan layout/print_signatures_style.php */
         .sig-section { width: 100%; margin-top: 10px; page-break-inside: avoid; }
-        .sig-table { width: 100%; border-collapse: collapse; }
-        .sig-table th, .sig-table td { border: 1px solid #000; width: 25%; text-align: center; padding: 4px; }
-        .sig-table th { background: #f2f2f2; font-weight: normal; border-bottom: none; }
-        .sig-space { height: 55px; border-top: none; border-bottom: none; }
-        .sig-space img { max-height: 50px; max-width: 90%; }
-        .sig-name { font-weight: bold; border-top: none; padding-top: 2px !important; }
-        .sig-name span { border-bottom: 1px solid #000; display: inline-block; min-width: 80%; }
+        .sj-sig-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        .sj-sig-table th, .sj-sig-table td { border: 1px solid #000; width: 25%; text-align: center; padding: 4px; }
+        .sj-sig-table th { background: #f2f2f2; font-weight: normal; border-bottom: none; }
+        .sj-sig-table td.sj-sig-space {
+            height: 68px;
+            min-height: 68px;
+            padding: 8px 4px !important;
+            vertical-align: middle !important;
+            text-align: center !important;
+            /* override global .sig-space (flex + max-width) */
+            display: table-cell !important;
+            max-width: none !important;
+            margin: 0 !important;
+        }
+        .sj-sig-table td.sj-sig-space img {
+            display: block;
+            margin: 0 auto;
+            max-height: 52px;
+            max-width: 100%;
+            object-fit: contain;
+        }
+        .sj-sig-table td.sj-sig-name {
+            border-top: 1px solid #000;
+            padding: 8px 4px !important;
+            vertical-align: top;
+            font-size: 10px;
+            line-height: 1.35;
+        }
+        .sj-sig-table td.sj-sig-name .sj-sig-line {
+            display: block;
+            border-bottom: 1px solid #000;
+            min-height: 1.1em;
+            margin-bottom: 4px;
+        }
+        .sj-sig-table td.sj-sig-name small { color: #000; font-size: 9px; }
         
         /* Print Utilities */
         @media print { 
@@ -207,7 +235,7 @@
 
         <!-- SIGNATURES -->
         <div class="sig-section">
-            <table class="sig-table">
+            <table class="sj-sig-table">
                 <thead>
                     <tr>
                         <th>Dibuat Oleh</th>
@@ -218,38 +246,38 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td class="sig-space">
+                        <td class="sj-sig-space">
                             <?php if (($__sig = signature_data_uri_with_aslap_fallback($signature ?? [], $user_signature ?? [], 'ttd_akuntan')) !== ''): ?>
-                                <img src="<?= $__sig ?>" alt="ttd">
+                                <img src="<?= $__sig ?>" alt="">
                             <?php endif; ?>
                         </td>
-                        <td class="sig-space">
+                        <td class="sj-sig-space">
                             <?php if (($__sig = signature_data_uri_with_aslap_fallback($signature ?? [], $user_signature ?? [], 'ttd_ahli_gizi')) !== ''): ?>
-                                <img src="<?= $__sig ?>" alt="ttd">
+                                <img src="<?= $__sig ?>" alt="">
                             <?php endif; ?>
                         </td>
-                        <td class="sig-space">
+                        <td class="sj-sig-space">
                             <?php if (($__sig = signature_data_uri_with_aslap_fallback($signature ?? [], $user_signature ?? [], 'ttd_kepala_dapur')) !== ''): ?>
-                                <img src="<?= $__sig ?>" alt="ttd">
+                                <img src="<?= $__sig ?>" alt="">
                             <?php endif; ?>
                         </td>
-                        <td class="sig-space"></td>
+                        <td class="sj-sig-space"></td>
                     </tr>
                     <tr>
-                        <td class="sig-name">
-                            <span><?= esc($signature['nama_akuntan']) ?></span><br>
+                        <td class="sj-sig-name">
+                            <span class="sj-sig-line"><?= esc($signature['nama_akuntan'] ?? '') ?></span>
                             <small>(Akuntan)</small>
                         </td>
-                        <td class="sig-name">
-                            <span><?= esc($signature['nama_ahli_gizi']) ?></span><br>
+                        <td class="sj-sig-name">
+                            <span class="sj-sig-line"><?= esc($signature['nama_ahli_gizi'] ?? '') ?></span>
                             <small>(Ahli Gizi)</small>
                         </td>
-                        <td class="sig-name">
-                            <span><?= esc($signature['nama_kepala_dapur']) ?></span><br>
+                        <td class="sj-sig-name">
+                            <span class="sj-sig-line"><?= esc($signature['nama_kepala_dapur'] ?? '') ?></span>
                             <small>(Kepala Dapur)</small>
                         </td>
-                        <td class="sig-name">
-                            <span></span><br>
+                        <td class="sj-sig-name">
+                            <span class="sj-sig-line">&nbsp;</span>
                             <small>(Pihak Sekolah)</small>
                         </td>
                     </tr>
