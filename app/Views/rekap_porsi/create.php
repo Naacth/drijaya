@@ -58,6 +58,8 @@
                                 <option value="SMP">SMP</option>
                                 <option value="MTS">MTS</option>
                                 <option value="SMA">SMA</option>
+                                <option value="Guru">Guru</option>
+                                <option value="Staff">Staff</option>
                             </select>
                         </td>
                         <td><input type="text" name="items[0][sekolah]" class="form-control form-control-sm" required></td>
@@ -97,6 +99,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     <option value="SMP">SMP</option>
                     <option value="MTS">MTS</option>
                     <option value="SMA">SMA</option>
+                    <option value="Guru">Guru</option>
+                    <option value="Staff">Staff</option>
                 </select>
             </td>
             <td><input type="text" name="items[${index}][sekolah]" class="form-control form-control-sm" required></td>

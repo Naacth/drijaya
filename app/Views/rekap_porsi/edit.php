@@ -1,5 +1,5 @@
 <?php
-$tingOpts = ['PAUD', 'TK', 'SD 1-3', 'SD 4-6', 'MI 1-3', 'MI 4-6', 'SMP', 'MTS', 'SMA'];
+$tingOpts = ['PAUD', 'TK', 'SD 1-3', 'SD 4-6', 'MI 1-3', 'MI 4-6', 'SMP', 'MTS', 'SMA', 'Guru', 'Staff'];
 ?>
 <?= $this->extend('layout/main') ?>
 <?= $this->section('content') ?>

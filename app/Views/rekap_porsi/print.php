@@ -64,6 +64,8 @@
         .bg-smp { background-color: #f2f2f2 !important; } 
         .bg-mts { background-color: #fee6d2 !important; } 
         .bg-sma { background-color: #fff9e6 !important; } 
+        .bg-guru { background-color: #e6f7ff !important; }
+        .bg-staff { background-color: #f3e8ff !important; }
 
         /* Print Utilities */
         @media print { 
@@ -121,6 +123,8 @@
                         case 'SMP': $bgClass = 'bg-smp'; break;
                         case 'MTS': $bgClass = 'bg-mts'; break;
                         case 'SMA': $bgClass = 'bg-sma'; break;
+                        case 'Guru': $bgClass = 'bg-guru'; break;
+                        case 'Staff': $bgClass = 'bg-staff'; break;
                     }
                 ?>
                 <tr>
