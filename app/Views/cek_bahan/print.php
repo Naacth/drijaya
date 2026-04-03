@@ -15,7 +15,8 @@
         }
         
         .page-container {
-            width: 850px;
+            width: 100%;
+            max-width: 850px;
             margin: 0 auto;
         }
 

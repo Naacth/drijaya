@@ -13,13 +13,14 @@
         }
         
         .page-container {
-            width: 850px;
+            width: 100%;
+            max-width: 850px;
             margin: 0 auto;
         }
 
         @media print {
             body { padding: 0; }
-            .page-container { width: 100%; }
+            .page-container { width: 100%; max-width: none; }
             .no-print { display: none !important; }
             .bg-blue { background-color: #0088cc !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             .text-white { color: #fff !important; }

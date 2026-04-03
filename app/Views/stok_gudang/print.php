@@ -4,14 +4,16 @@
     <meta charset="UTF-8">
     <title><?= $title ?></title>
     <style>
+        @page { size: A4; margin: 12mm; }
         body { 
             font-family: Arial, sans-serif; 
-            font-size: 12px; 
+            font-size: 11px; 
             color: #000; 
             background: #fff;
             margin: 0; padding: 20px;
+            box-sizing: border-box;
         }
-        .page-container { width: 750px; margin: 0 auto; background: #fff; padding: 20px; }
+        .page-container { width: 100%; max-width: 780px; margin: 0 auto; background: #fff; padding: 12px; }
 
         @media print {
             body { padding: 0; background: #fff; }
@@ -37,12 +39,15 @@
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 15px;
+            table-layout: fixed;
         }
         .data-table th, .data-table td {
             border: 1px solid #000;
-            padding: 5px 8px;
+            padding: 4px 6px;
             text-align: center;
-            font-size: 12px;
+            font-size: 10px;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
         .data-table th {
             background-color: #f2f2f2;

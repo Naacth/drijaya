@@ -17,8 +17,9 @@
             margin: 0;
             padding: 0;
             background: #fff;
+            box-sizing: border-box;
         }
-        .page-container { width: 100%; margin: 0 auto; }
+        .page-container { width: 100%; margin: 0 auto; padding: 0.2cm 0; }
         
         /* Header Styling */
         .header-block { border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 15px; }
@@ -81,8 +82,17 @@
         /* Print Utilities */
         @media print { 
             .no-print { display: none !important; } 
-            body { -webkit-print-color-adjust: exact; }
+            body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             .page-break { page-break-after: always; }
+            /* Avoid cut-off due to flex in print */
+            .info-section { display: block; }
+            .kepada-box, .detail-table { width: 100%; }
+            .kepada-box { margin-bottom: 6px; }
+            /* Avoid splitting table rows across pages */
+            table { page-break-inside: auto; }
+            tr { page-break-inside: avoid; page-break-after: auto; }
+            thead { display: table-header-group; }
+            tfoot { display: table-footer-group; }
         }
     </style>
 <?= view('layout/print_signatures_style') ?>

@@ -5,11 +5,11 @@
     <title><?= $title ?></title>
     <style>
         body { font-family: 'Times New Roman', Times, serif; font-size: 13px; color: #000; background: #fff; margin: 0; padding: 20px; }
-        .page-container { width: 750px; margin: 0 auto; }
+        .page-container { width: 100%; max-width: 780px; margin: 0 auto; }
 
         @media print {
             body { padding: 0; }
-            .page-container { width: 100%; }
+            .page-container { width: 100%; max-width: none; }
             .no-print { display: none !important; }
         }
 
