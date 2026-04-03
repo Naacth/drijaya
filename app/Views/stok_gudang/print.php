@@ -7,14 +7,14 @@
         body { 
             font-family: Arial, sans-serif; 
             font-size: 12px; 
-            color: #fff; 
-            background: #1a1a2e;
+            color: #000; 
+            background: #fff;
             margin: 0; padding: 20px;
         }
-        .page-container { width: 750px; margin: 0 auto; background: #1a1a2e; padding: 20px; }
+        .page-container { width: 750px; margin: 0 auto; background: #fff; padding: 20px; }
 
         @media print {
-            body { padding: 0; background: #1a1a2e; }
+            body { padding: 0; background: #fff; }
             .page-container { width: 100%; }
             .no-print { display: none !important; }
             * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
@@ -39,30 +39,30 @@
             margin-bottom: 15px;
         }
         .data-table th, .data-table td {
-            border: 1px solid #555;
+            border: 1px solid #000;
             padding: 5px 8px;
             text-align: center;
             font-size: 12px;
         }
         .data-table th {
-            background-color: #2a2a4a;
-            color: #fff;
+            background-color: #f2f2f2;
+            color: #000;
             font-weight: bold;
         }
         .data-table td {
-            background-color: #1a1a2e;
-            color: #ddd;
+            background-color: #fff;
+            color: #000;
         }
         .data-table td.name { text-align: left; }
 
         .sig-section { margin-top: 25px; text-align: center; }
         .sig-table { width: 100%; border-collapse: collapse; }
         .sig-table td {
-            border: 1px solid #555;
+            border: 1px solid #000;
             padding: 8px;
             text-align: center;
             vertical-align: top;
-            color: #ddd;
+            color: #000;
             font-size: 11px;
         }
         .sig-space { height: 60px; }
@@ -96,13 +96,13 @@
                         <img src="<?= $__logo !== '' ? $__logo : base_url('bgn.png') ?>" alt="Logo BGN" style="width: 100px; height: auto;">
                     </td>
                     <td style="text-align: center; border: none;">
-                        <h2 style="font-size: 16px; font-weight: bold; margin: 0; color: #fff;">SPPG BUNAR SUKAMULYA</h2>
-                        <p style="font-size: 11px; margin: 8px 2px 0; color: #fff;"><?= esc(session()->get('sppg_alamat') ?? 'Alamat belum diatur') ?></p>
-                        <p style="font-size: 11px; margin: 2px 0; color: #fff;">15610</p>
+                        <h2 style="font-size: 16px; font-weight: bold; margin: 0; color: #000;">SPPG BUNAR SUKAMULYA</h2>
+                        <p style="font-size: 11px; margin: 8px 2px 0; color: #000;"><?= esc(session()->get('sppg_alamat') ?? 'Alamat belum diatur') ?></p>
+                        <p style="font-size: 11px; margin: 2px 0; color: #000;">15610</p>
                     </td>
                 </tr>
             </table>
-            <hr style="border: none; border-top: 3px double #fff; margin: 8px 0;">
+            <hr style="border: none; border-top: 3px double #000; margin: 8px 0;">
         </div>
 
         <div class="title-line">STOCK BARANG DI GUDANG</div>
