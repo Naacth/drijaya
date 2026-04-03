@@ -989,6 +989,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        const currentUserRole = "<?= esc((string) session()->get('role')) ?>";
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('sidebarOverlay');
         const toggle  = document.getElementById('sidebarToggle');
@@ -1026,6 +1027,44 @@
                 }
             }
         });
+
+        // Non-admin users can view/edit only: hide delete actions globally in UI.
+        if (currentUserRole !== 'admin') {
+            document.addEventListener('DOMContentLoaded', () => {
+                document.querySelectorAll('form[action*="/delete/"], form[action$="/delete"]').forEach((el) => {
+                    const actionWrap = el.closest('td, .btn-group, .d-flex, .action-buttons');
+                    if (actionWrap) {
+                        el.remove();
+                    } else {
+                        el.style.display = 'none';
+                    }
+                });
+
+                document.querySelectorAll('a[href*="/delete/"], a[href$="/delete"]').forEach((el) => {
+                    el.remove();
+                });
+            });
+        }
+
+        // Admin: many views render "Hapus" as an <a href=".../delete/{id}"> (GET),
+        // but routes expect POST. Convert the click to a POST submit to avoid 404.
+        if (currentUserRole === 'admin') {
+            document.addEventListener('click', function (e) {
+                if (e.defaultPrevented) return; // respect inline onclick="return confirm(...)"
+                const link = e.target.closest('a[href*="/delete/"], a[href$="/delete"]');
+                if (!link) return;
+
+                const href = link.getAttribute('href');
+                if (!href) return;
+
+                e.preventDefault();
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = href;
+                document.body.appendChild(form);
+                form.submit();
+            });
+        }
     </script>
 </body>
 </html>

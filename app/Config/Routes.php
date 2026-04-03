@@ -32,6 +32,7 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
         $routes->post('store', 'AbsensiController::store');
         $routes->get('edit/(:num)', 'AbsensiController::edit/$1');
         $routes->post('update/(:num)', 'AbsensiController::update/$1');
+        $routes->post('delete/(:num)', 'AbsensiController::delete/$1', ['filter' => 'role:admin']);
         $routes->get('show/(:num)', 'AbsensiController::show/$1');
         $routes->get('export-pdf/(:num)', 'AbsensiController::exportPdf/$1');
         $routes->get('rekap', 'AbsensiController::rekap');
@@ -88,6 +89,7 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
         $routes->post('do-review/(:num)', 'PoController::doReview/$1');
         $routes->get('approve/(:num)', 'PoController::approve/$1');
         $routes->post('do-approve/(:num)', 'PoController::doApprove/$1');
+        $routes->post('delete/(:num)', 'PoController::delete/$1', ['filter' => 'role:admin']);
         $routes->get('print/(:num)', 'PoController::print/$1');
         $routes->get('export-excel', 'PoController::exportExcel');
         $routes->get('export-pdf', 'PoController::exportPdf');
@@ -104,6 +106,7 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
         $routes->get('show/(:num)', 'BeneficiaryController::show/$1');
         $routes->post('approve/(:num)', 'BeneficiaryController::approve/$1');
         $routes->post('reject/(:num)', 'BeneficiaryController::reject/$1');
+        $routes->post('delete/(:num)', 'BeneficiaryController::delete/$1', ['filter' => 'role:admin']);
         $routes->get('export-pdf/(:num)', 'BeneficiaryController::exportPdf/$1');
         $routes->get('export-excel/(:num)', 'BeneficiaryController::exportExcel/$1');
     });
@@ -331,7 +334,7 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
             $routes->get('show/(:num)', "$controller::show/$1");
             $routes->get('edit/(:num)', "$controller::edit/$1", ['filter' => 'role:ahli_gizi,admin']);
             $routes->post('update/(:num)', "$controller::update/$1", ['filter' => 'role:ahli_gizi,admin']);
-            $routes->get('delete/(:num)', "$controller::delete/$1", ['filter' => 'role:admin']);
+            $routes->post('delete/(:num)', "$controller::delete/$1", ['filter' => 'role:admin']);
             $routes->get('print/(:num)', "$controller::print/$1");
             $routes->get('export-pdf/(:num)', "$controller::exportPdf/$1");
             $routes->get('export-excel/(:num)', "$controller::exportExcel/$1");
