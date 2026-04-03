@@ -8,7 +8,7 @@ use CodeIgniter\HTTP\ResponseInterface;
 class RelawanController extends BaseController
 {
     protected $relawanModel;
-    protected $divisions = ['cuci ompreng', 'cooking', 'persiapan', 'security', 'akuntan', 'ahligizi', 'supir', 'packing'];
+    protected $divisions = ['cuci ompreng', 'cooking', 'persiapan', 'security', 'kebersihan', 'aslap', 'akuntan', 'ahligizi', 'distribusi', 'packing'];
 
     public function __construct()
     {
