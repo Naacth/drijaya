@@ -45,6 +45,9 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
         $routes->get('reports/(:num)', 'AdminController::reportDetail/$1');
         $routes->post('reports/(:num)/status', 'AdminController::updateStatus/$1');
         $routes->get('reports/(:num)/download', 'AdminController::download/$1');
+        $routes->get('users', 'AdminController::users');
+        $routes->get('users/edit/(:num)', 'AdminController::editUser/$1');
+        $routes->post('users/update/(:num)', 'AdminController::updateUser/$1');
         $routes->get('switch-sppg/(:num)', 'DashboardController::switchSppg/$1');
     });
 

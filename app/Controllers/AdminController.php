@@ -8,10 +8,12 @@ use App\Models\UserModel;
 class AdminController extends BaseController
 {
     protected $reportModel;
+    protected $userModel;
 
     public function __construct()
     {
         $this->reportModel = new ReportModel();
+        $this->userModel   = new UserModel();
     }
 
     public function reports()
@@ -71,5 +73,75 @@ class AdminController extends BaseController
         }
 
         return $this->response->download(WRITEPATH . 'uploads/' . $report['file_path'], null)->setFileName($report['file_name']);
+    }
+
+    public function users()
+    {
+        $sppgId = session()->get('sppg_id');
+        $builder = $this->userModel->orderBy('id', 'ASC');
+
+        if (! empty($sppgId)) {
+            $builder->where('sppg_id', $sppgId);
+        }
+
+        return view('admin/users_index', [
+            'title' => 'Manajemen User',
+            'users' => $builder->findAll(),
+        ]);
+    }
+
+    public function editUser($id)
+    {
+        $sppgId = session()->get('sppg_id');
+        $user = $this->userModel->find((int) $id);
+
+        if (! $user) {
+            return redirect()->to('/admin/users')->with('error', 'User tidak ditemukan.');
+        }
+
+        if (! empty($sppgId) && (int) ($user['sppg_id'] ?? 0) !== (int) $sppgId) {
+            return redirect()->to('/admin/users')->with('error', 'Anda tidak memiliki akses ke user ini.');
+        }
+
+        return view('admin/users_edit', [
+            'title' => 'Edit User',
+            'user'  => $user,
+        ]);
+    }
+
+    public function updateUser($id)
+    {
+        $sppgId = session()->get('sppg_id');
+        $user = $this->userModel->find((int) $id);
+
+        if (! $user) {
+            return redirect()->to('/admin/users')->with('error', 'User tidak ditemukan.');
+        }
+
+        if (! empty($sppgId) && (int) ($user['sppg_id'] ?? 0) !== (int) $sppgId) {
+            return redirect()->to('/admin/users')->with('error', 'Anda tidak memiliki akses ke user ini.');
+        }
+
+        $rules = [
+            'nama' => 'required|min_length[3]',
+            'password' => 'permit_empty|min_length[6]',
+        ];
+
+        if (! $this->validate($rules)) {
+            return redirect()->back()->withInput()->with('error', implode(' ', $this->validator->getErrors()));
+        }
+
+        $payload = [
+            'nama' => trim((string) $this->request->getPost('nama')),
+        ];
+
+        $password = (string) $this->request->getPost('password');
+        if ($password !== '') {
+            $payload['password'] = $password;
+        }
+
+        $this->userModel->update((int) $id, $payload);
+
+        return redirect()->to('/admin/users')->with('success', 'Data user berhasil diperbarui.');
     }
 }

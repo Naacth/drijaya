@@ -595,6 +595,9 @@
                         <span class="badge rounded-pill bg-danger ms-auto animate-pulse"><?= $pendingReportsCount ?></span>
                     <?php endif; ?>
                 </a>
+                <a href="<?= site_url('admin/users') ?>" class="nav-link <?= str_starts_with(uri_string(), 'admin/users') ? 'active' : '' ?>">
+                    <i class="bi bi-people"></i> Manajemen User
+                </a>
                 <a href="<?= base_url('penerima-manfaat') ?>" class="nav-link <?= str_starts_with(uri_string(), 'penerima-manfaat') ? 'active' : '' ?>">
                     <i class="bi bi-people-fill"></i> Penerima Manfaat
                 </a>
