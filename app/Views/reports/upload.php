@@ -10,11 +10,16 @@
             </div>
             <div class="card-body p-4">
                 <?php
-                    $role = session()->get('role');
-                    if ($role === 'aslap') {
+                    $role = (string) session()->get('role');
+                    $uri  = uri_string();
+                    if (str_starts_with($uri, 'aslap/upload')) {
                         $actionUrl = site_url('aslap/upload');
+                    } elseif (str_starts_with($uri, 'akuntan/upload')) {
+                        $actionUrl = site_url('akuntan/upload');
                     } elseif ($role === 'akuntan') {
                         $actionUrl = site_url('akuntan/upload');
+                    } elseif ($role === 'aslap') {
+                        $actionUrl = site_url('aslap/upload');
                     } else {
                         $actionUrl = site_url('ahli-gizi/upload');
                     }
@@ -64,6 +69,9 @@
                         <tr>
                             <th>Judul</th>
                             <th>File</th>
+                            <?php if ($role === 'admin'): ?>
+                            <th>Pengirim</th>
+                            <?php endif; ?>
                             <th>Tanggal</th>
                             <th>Status</th>
                         </tr>
@@ -71,7 +79,7 @@
                     <tbody>
                         <?php if (empty($reports)): ?>
                         <tr>
-                            <td colspan="4" class="text-center py-4 text-muted">
+                            <td colspan="<?= $role === 'admin' ? '5' : '4' ?>" class="text-center py-4 text-muted">
                                 <i class="bi bi-inbox fs-2 d-block mb-2"></i>
                                 Belum ada laporan dikirim
                             </td>
@@ -85,6 +93,9 @@
                                     <i class="bi bi-file-earmark me-1"></i><?= esc($r['file_name']) ?>
                                 </span>
                             </td>
+                            <?php if ($role === 'admin'): ?>
+                            <td><?= esc($r['user_nama'] ?? '-') ?></td>
+                            <?php endif; ?>
                             <td><?= date('d M Y', strtotime($r['created_at'])) ?></td>
                             <td><span class="badge-status badge-<?= $r['status'] ?>"><?= ucfirst($r['status']) ?></span></td>
                         </tr>

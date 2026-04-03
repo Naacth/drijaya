@@ -24,10 +24,25 @@ class AslapController extends BaseController
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
         }
 
-        $userId  = session()->get('user_id');
-        $reports = $this->reportModel->where(['user_id' => $userId, 'kategori' => $kategori])
-                                     ->orderBy('created_at', 'DESC')
-                                     ->findAll();
+        $role   = (string) session()->get('role');
+        $userId = (int) session()->get('user_id');
+        $sppgId = session()->get('sppg_id');
+
+        $query = $this->reportModel
+            ->select('reports.*, users.nama as user_nama')
+            ->join('users', 'users.id = reports.user_id')
+            ->where('reports.kategori', $kategori)
+            ->orderBy('reports.created_at', 'DESC');
+
+        if ($role === 'admin') {
+            if (! empty($sppgId)) {
+                $query->where('users.sppg_id', $sppgId);
+            }
+        } else {
+            $query->where('reports.user_id', $userId);
+        }
+
+        $reports = $query->findAll();
 
         $data = [
             'title'    => $kategoriLabels[$kategori],

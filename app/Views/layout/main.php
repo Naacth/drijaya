@@ -667,6 +667,8 @@
                     <div class="nav-dropdown-menu">
                         <a href="<?= site_url('buku-kas/report') ?>" class="nav-link"><i class="bi bi-journal-text"></i> Buku Kas</a>
                         <a href="<?= site_url('petty-cash/report') ?>" class="nav-link"><i class="bi bi-cash-stack"></i> Petty Cash</a>
+                        <a href="<?= site_url('akuntan/upload/laporan_keuangan') ?>" class="nav-link"><i class="bi bi-journal-check"></i> Laporan Keuangan</a>
+                        <a href="<?= site_url('akuntan/upload/pemasukan_pengeluaran') ?>" class="nav-link"><i class="bi bi-graph-up-arrow"></i> Pemasukan & Pengeluaran</a>
                         <a href="<?= site_url('po') ?>" class="nav-link"><i class="bi bi-receipt-cutoff"></i> Purchase Order</a>
                     </div>
                 </div>

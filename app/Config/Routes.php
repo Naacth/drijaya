@@ -17,7 +17,7 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
     $routes->get('dashboard', 'DashboardController::index');
     
     // Absensi Relawan (Aslap only)
-    $routes->group('relawan', ['filter' => 'role:aslap'], function($routes) {
+    $routes->group('relawan', ['filter' => 'role:aslap,admin'], function($routes) {
         $routes->get('/', 'RelawanController::index');
         $routes->get('create', 'RelawanController::create');
         $routes->post('store', 'RelawanController::store');
@@ -26,7 +26,7 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
         $routes->post('delete/(:num)', 'RelawanController::delete/$1', ['filter' => 'role:admin']);
     });
 
-    $routes->group('absensi', ['filter' => 'role:aslap'], function($routes) {
+    $routes->group('absensi', ['filter' => 'role:aslap,admin'], function($routes) {
         $routes->get('/', 'AbsensiController::index');
         $routes->get('create', 'AbsensiController::create');
         $routes->post('store', 'AbsensiController::store');
@@ -59,14 +59,14 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
     });
 
     // Aslap routes
-    $routes->group('aslap', ['filter' => 'role:aslap'], function ($routes) {
+    $routes->group('aslap', ['filter' => 'role:aslap,admin'], function ($routes) {
         $routes->get('upload/(:segment)', 'AslapController::uploadForm/$1');
         $routes->post('upload', 'AslapController::upload');
         $routes->get('history', 'AslapController::history');
     });
 
     // Akuntan routes
-    $routes->group('akuntan', ['filter' => 'role:akuntan'], function ($routes) {
+    $routes->group('akuntan', ['filter' => 'role:akuntan,admin'], function ($routes) {
         $routes->get('upload/(:segment)', 'AkuntanController::uploadForm/$1');
         $routes->post('upload', 'AkuntanController::upload');
         $routes->get('po', 'AkuntanController::orders');
