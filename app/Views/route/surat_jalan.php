@@ -20,7 +20,8 @@
             box-sizing: border-box;
         }
         html, body { width: 100%; }
-        .page-container { width: 100%; margin: 0 auto; padding: 0; }
+        /* Screen: fluid. Print: overridden to A4-safe width */
+        .page-container { width: 100%; margin: 0 auto; padding: 0; max-width: 190mm; }
         
         /* Header Styling */
         .header-block { border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 15px; }
@@ -116,6 +117,9 @@
             .no-print { display: none !important; } 
             body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             .page-break { page-break-after: always; }
+            /* Hard cap to printable width to prevent right cut-off */
+            html, body { width: 210mm; }
+            .page-container { width: 190mm; max-width: none; margin: 0 auto; }
             /* Avoid cut-off due to flex in print */
             .info-section { display: block; }
             .kepada-box, .detail-table { width: 100%; }
