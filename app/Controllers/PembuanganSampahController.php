@@ -103,6 +103,13 @@ class PembuanganSampahController extends BaseController
         return redirect()->to('/pembuangan-sampah')->with('success', 'Data berhasil diperbarui.');
     }
 
+    public function exportPdfBlank()
+    {
+        return view('pembuangan_sampah/print_blank', [
+            'title' => 'Form Kontrol Pembuangan Sampah (kosong)',
+        ]);
+    }
+
     public function delete($id)
     {
         if (session()->get('role') !== 'admin') {

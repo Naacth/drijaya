@@ -200,6 +200,25 @@ class CekBahanBakuController extends BaseController
         return view('cek_bahan/print', $data);
     }
 
+    public function exportPdfBlank()
+    {
+        helper('print');
+
+        return view('cek_bahan/print', [
+            'blank'     => true,
+            'header'    => [
+                'tanggal_laporan'  => '',
+                'nama_sppg'        => '',
+                'alamat_sppg'      => '',
+                'nama_kepala_sppg' => '',
+                'created_by'       => null,
+            ],
+            'items'     => [],
+            'title'     => 'Form Pemeriksaan Bahan Makanan (kosong)',
+            'signature' => signature_row_for_pdf(null),
+        ]);
+    }
+
     public function exportExcel($id)
     {
         $header = $this->headerModel->find($id);

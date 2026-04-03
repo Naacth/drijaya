@@ -1,6 +1,10 @@
 <?= $this->extend('layout/main') ?>
 
 <?= $this->section('content') ?>
+
+<?= $this->include('layout/print_blank_button', ['printBlankUrl' => 'routes/export-pdf-blank']) ?>
+
+
 <div class="container-fluid animate-in">
     <div class="d-flex align-items-center justify-content-between mb-4">
         <div>

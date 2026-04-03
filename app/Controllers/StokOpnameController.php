@@ -243,6 +243,35 @@ class StokOpnameController extends BaseController
         return view('stok_opname/print', $data);
     }
 
+    public function exportPdfBlank()
+    {
+        helper('print');
+        $empty = ['nama_bahan' => '', 'satuan' => '', 'stok_fisik' => '', 'stok_di_kartu' => '', 'selisih' => '', 'keterangan' => ''];
+        $grouped = [];
+        for ($d = 1; $d <= 7; $d++) {
+            $grouped[$d] = [$empty];
+        }
+
+        return view('stok_opname/print', [
+            'blank'          => true,
+            'header'         => [
+                'nama_sppg'        => '',
+                'kelurahan_desa'   => '',
+                'kecamatan'        => '',
+                'kabupaten_kota'   => '',
+                'provinsi'         => '',
+                'periode_awal'     => '',
+                'periode_akhir'    => '',
+                'nama_kepala_sppg' => '',
+                'nama_akuntan'     => '',
+                'created_by'       => null,
+            ],
+            'grouped_items'  => $grouped,
+            'title'          => 'Form Stok Opname (kosong)',
+            'signature'      => signature_row_for_pdf(null),
+        ]);
+    }
+
     public function exportExcel($id)
     {
         $header = $this->headerModel->find($id);

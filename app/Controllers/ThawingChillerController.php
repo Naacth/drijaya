@@ -82,6 +82,30 @@ class ThawingChillerController extends BaseController
         return view('thawing_chiller/print', ['header' => $header, 'items' => $this->itemModel->where('monitoring_thawing_chiller_id', $id)->findAll(), 'title' => 'Cetak Thawing Chiller', 'signature' => signature_row_for_pdf(isset($header['created_by']) ? (int) $header['created_by'] : null)]);
     }
 
+    public function exportPdfBlank()
+    {
+        helper('print');
+        $items = [];
+        for ($i = 0; $i < 10; $i++) {
+            $items[] = [
+                'nama_bahan'               => '',
+                'jumlah'                   => '',
+                'tgl_jam_keluar_freezer'   => '',
+                'tgl_jam_selesai_thawing'  => '',
+                'tgl_jam_pemasakan'        => '',
+                'paraf'                    => '',
+            ];
+        }
+
+        return view('thawing_chiller/print', [
+            'blank'     => true,
+            'header'    => ['tanggal' => '', 'nama_petugas' => '', 'created_by' => null],
+            'items'     => $items,
+            'title'     => 'Form Thawing Chiller (kosong)',
+            'signature' => signature_row_for_pdf(null),
+        ]);
+    }
+
     public function exportExcel($id)
     {
         $header = $this->headerModel->find($id);

@@ -81,6 +81,23 @@ class MonitoringSuhuMasakController extends BaseController
         return view('monitoring_suhu_masak/print', ['header' => $header, 'items' => $this->itemModel->where('monitoring_suhu_masak_id', $id)->findAll(), 'title' => 'Cetak Monitoring Suhu', 'signature' => signature_row_for_pdf(isset($header['created_by']) ? (int) $header['created_by'] : null)]);
     }
 
+    public function exportPdfBlank()
+    {
+        helper('print');
+        $items = [];
+        for ($i = 0; $i < 10; $i++) {
+            $items[] = ['nama_makanan' => '', 'suhu_pemasakan' => '', 'jam_matang' => '', 'jadwal_penyajian' => ''];
+        }
+
+        return view('monitoring_suhu_masak/print', [
+            'blank'     => true,
+            'header'    => ['tanggal' => '', 'nama_pelaksana' => '', 'nama_pemeriksa' => '', 'created_by' => null],
+            'items'     => $items,
+            'title'     => 'Form Monitoring Suhu Masak (kosong)',
+            'signature' => signature_row_for_pdf(null),
+        ]);
+    }
+
     public function exportExcel($id)
     {
         $header = $this->headerModel->find($id);

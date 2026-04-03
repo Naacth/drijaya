@@ -66,6 +66,25 @@ class PengeluaranChemicalController extends BaseController
         ]);
     }
 
+    public function exportPdfBlank()
+    {
+        helper('print');
+
+        return view('pengeluaran_chemical/print', [
+            'blank'     => true,
+            'header'    => [
+                'tanggal'        => '',
+                'nama_chemical'  => '',
+                'jumlah'         => '',
+                'unit'           => '',
+                'nama_personil'  => '',
+                'created_by'     => null,
+            ],
+            'title'     => 'Form Pengeluaran Chemical (kosong)',
+            'signature' => signature_row_for_pdf(null),
+        ]);
+    }
+
     public function exportExcel($id)
     {
         $form = $this->model->find($id);

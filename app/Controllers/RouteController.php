@@ -245,6 +245,37 @@ class RouteController extends BaseController
         return view('route/export_pdf', $data);
     }
 
+    public function exportPdfBlank()
+    {
+        helper('print');
+        $items = [];
+        for ($i = 0; $i < 12; $i++) {
+            $items[] = [
+                'nama_sekolah' => '',
+                'porsi_besar'  => '',
+                'porsi_kecil'  => '',
+                'jumlah'       => '',
+                'jam_antar'    => '',
+                'sesi'         => '',
+            ];
+        }
+
+        return view('route/export_pdf', [
+            'blank'  => true,
+            'header' => [
+                'tanggal'     => '',
+                'sppg'        => '',
+                'mobil'       => '',
+                'kecamatan'   => '',
+                'driver'      => '',
+                'status'      => '',
+                'total_porsi' => '',
+            ],
+            'items'  => $items,
+            'title'  => 'Alur Pengiriman (form kosong)',
+        ]);
+    }
+
     public function suratJalanPdf($id)
     {
         $header = $this->routeModel->getWithCreator()->find($id);

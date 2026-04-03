@@ -148,7 +148,7 @@
             <tr>
                 <td class="label">Tanggal Pemeriksaan</td>
                 <td class="colon">:</td>
-                <td><?= date('d/m/Y', strtotime($header['tanggal_pemeriksaan'])) ?></td>
+                <td><?= format_date_id($header['tanggal_pemeriksaan'] ?? null) ?></td>
             </tr>
             <tr>
                 <td class="label">Waktu Pemeriksaan</td>

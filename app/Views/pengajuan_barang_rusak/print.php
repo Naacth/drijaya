@@ -40,7 +40,7 @@
         </div>
 
         <table class="info-table">
-            <tr><td class="label">Tanggal</td><td class="colon">:</td><td><?= date('d/m/Y', strtotime($header['tanggal'])) ?></td></tr>
+            <tr><td class="label">Tanggal</td><td class="colon">:</td><td><?= format_date_id($header['tanggal'] ?? null) ?></td></tr>
             <tr><td class="label">Nama Barang</td><td class="colon">:</td><td><?= esc($header['nama_barang']) ?></td></tr>
             <tr><td class="label">Jumlah</td><td class="colon">:</td><td><?= $header['jumlah'] ?> <?= esc($header['satuan']) ?></td></tr>
             <tr><td class="label">Kondisi / Kerusakan</td><td class="colon">:</td><td><?= esc($header['kondisi'] ?: '-') ?></td></tr>

@@ -57,7 +57,7 @@
             <?php foreach ($rekap as $i => $row): ?>
             <tr>
                 <td class="text-center fw-bold"><?= $i + 1 ?></td>
-                <td class="text-center"><?= date('d/m/Y', strtotime($row['tanggal'])) ?></td>
+                <td class="text-center"><?= format_date_id($row['tanggal'] ?? null) ?></td>
                 <td><?= $row['nama_personil'] ?></td>
                 <td class="text-center"><?= $row['jam'] ?></td>
                 <td class="text-center"><?= $row['paraf'] ?></td>

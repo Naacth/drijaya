@@ -108,7 +108,7 @@
             <tr>
                 <td width="160">Tanggal</td>
                 <td width="10">:</td>
-                <td><?= date('d/m/Y', strtotime($header['tanggal'])) ?></td>
+                <td><?= format_date_id($header['tanggal'] ?? null) ?></td>
             </tr>
             <tr>
                 <td>Penanggung Jawab</td>

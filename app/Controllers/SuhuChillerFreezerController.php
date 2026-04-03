@@ -80,6 +80,26 @@ class SuhuChillerFreezerController extends BaseController
         return view('suhu_chiller_freezer/print', ['header' => $header, 'title' => 'Cetak Suhu Chiller & Freezer', 'signature' => $sig]);
     }
 
+    public function exportPdfBlank()
+    {
+        helper('print');
+
+        return view('suhu_chiller_freezer/print', [
+            'blank'     => true,
+            'header'    => [
+                'tanggal'         => '',
+                'chiller_pagi'    => '', 'chiller_siang' => '', 'chiller_malam' => '',
+                'freezer_pagi'    => '', 'freezer_siang' => '', 'freezer_malam' => '',
+                'kebersihan_rak'  => '',
+                'verifikasi'      => '',
+                'nama_petugas'    => '',
+                'created_by'      => null,
+            ],
+            'title'     => 'Form Suhu Chiller & Freezer (kosong)',
+            'signature' => signature_row_for_pdf(null),
+        ]);
+    }
+
     public function exportExcel($id)
     {
         $header = $this->model->find($id);

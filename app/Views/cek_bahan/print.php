@@ -164,7 +164,7 @@
                 ?>
                 <tr>
                     <td class="text-center"><?= $i + 1 ?></td>
-                    <td class="text-center"><?= $hasItem ? date('d/m/Y', strtotime($items[$i]['tgl_bahan'])) : '' ?></td>
+                    <td class="text-center"><?= $hasItem ? format_date_id($items[$i]['tgl_bahan'] ?? null) : '' ?></td>
                     <td><?= $hasItem ? esc($items[$i]['jenis_bahan']) : '&nbsp;' ?></td>
                     <td class="text-center"><?= $hasItem ? rtrim(rtrim(number_format($items[$i]['banyaknya'], 2), '0'), '.') : '' ?></td>
                     <td class="text-center"><?= $hasItem ? esc($items[$i]['satuan']) : '' ?></td>
@@ -182,11 +182,17 @@
             <tr>
                 <td>
                     <div class="sig-box">
-                        <?php 
+                        <?php
                         $months = [1=>'Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
-                        $tgl = date('d', strtotime($header['tanggal_laporan']));
-                        $bln = $months[(int)date('m', strtotime($header['tanggal_laporan']))];
-                        $thn = date('Y', strtotime($header['tanggal_laporan']));
+                        if (! empty($blank) || empty($header['tanggal_laporan'] ?? null)) {
+                            $tgl = '....';
+                            $bln = '................';
+                            $thn = '20....';
+                        } else {
+                            $tgl = date('d', strtotime($header['tanggal_laporan']));
+                            $bln = $months[(int)date('m', strtotime($header['tanggal_laporan']))];
+                            $thn = date('Y', strtotime($header['tanggal_laporan']));
+                        }
                         $__ttd = signature_data_uri($signature ?? [], 'ttd_kepala_sppg');
                         ?>
                         <p style="margin-bottom: 8px;">Tangerang, <?= $tgl . ' ' . $bln . ' ' . $thn ?></p>

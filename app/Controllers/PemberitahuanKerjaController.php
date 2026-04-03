@@ -197,6 +197,31 @@ class PemberitahuanKerjaController extends BaseController
         return view('pemberitahuan_kerja/print', $data);
     }
 
+    public function exportPdfBlank()
+    {
+        helper('print');
+
+        return view('pemberitahuan_kerja/print', [
+            'blank'  => true,
+            'header' => [
+                'no_surat'                  => '',
+                'tanggal'                   => '',
+                'divisi'                    => '',
+                'nama_pic'                  => '',
+                'jam_mulai'                 => '',
+                'jam_selesai'               => '',
+                'keterangan_jumlah_item'    => '',
+                'keterangan_dikerjakan'     => '',
+                'nama_anggota'              => '',
+                'ttd_anggota'               => '',
+                'nama_pj'                   => '',
+                'ttd_pj'                    => '',
+                'created_by'                => null,
+            ],
+            'title'  => 'Form Pemberitahuan Kerja (kosong)',
+        ]);
+    }
+
     public function delete($id)
     {
         if (session()->get('role') !== 'admin') {

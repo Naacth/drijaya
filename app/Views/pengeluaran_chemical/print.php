@@ -17,7 +17,7 @@
     <?= view('layout/print_header') ?>
     <div style="text-align:center; font-weight:bold; font-size:15px; text-decoration:underline; margin-bottom:15px;">BUKTI PENGELUARAN CHEMICAL SANITASI</div>
     <table class="table">
-        <tr><td width="30%">Tanggal</td><td><?= date('d/m/Y', strtotime($header['tanggal'])) ?></td></tr>
+        <tr><td width="30%">Tanggal</td><td><?= format_date_id($header['tanggal'] ?? null) ?></td></tr>
         <tr><td>Nama Chemical</td><td><strong><?= strtoupper($header['nama_chemical']) ?></strong></td></tr>
         <tr><td>Jumlah / Unit</td><td><?= $header['jumlah'] ?> <?= esc($header['unit']) ?></td></tr>
         <tr><td>Penerima (Personil)</td><td><?= esc($header['nama_personil']) ?></td></tr>

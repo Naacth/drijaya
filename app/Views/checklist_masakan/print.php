@@ -89,9 +89,9 @@
         <table class="info-table">
             <tr>
                 <td class="label">Hari / Tanggal</td>
-                <td class="value">: <?= date('l, d F Y', strtotime($header['tanggal'])) ?></td>
+                <td class="value">: <?= format_weekday_date_long_id($header['tanggal'] ?? null) ?></td>
                 <td class="label">Waktu Sajian</td>
-                <td class="value">: <?= date('H:i', strtotime($header['waktu_penyajian'])) ?> WIB</td>
+                <td class="value">: <?php $__wt = format_time_id($header['waktu_penyajian'] ?? null); ?><?= $__wt !== '' ? $__wt . ' WIB' : '' ?></td>
             </tr>
             <tr>
                 <td class="label">Petugas QC</td>

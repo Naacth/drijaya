@@ -65,6 +65,18 @@ class PembersihanLantaiController extends BaseController
         return view('pembersihan_lantai/print', $data);
     }
 
+    public function exportPdfBlank()
+    {
+        helper('print');
+
+        return view('pembersihan_lantai/print', [
+            'blank'     => true,
+            'header'    => ['tanggal' => '', 'nama_personil' => '', 'jam' => '', 'kondisi' => '', 'created_by' => null],
+            'title'     => 'Form Pembersihan Lantai (kosong)',
+            'signature' => signature_row_for_pdf(null),
+        ]);
+    }
+
     public function exportExcel($id)
     {
         $form = $this->model->find($id);

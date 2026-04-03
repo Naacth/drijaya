@@ -66,6 +66,25 @@ class SuhuRuanganController extends BaseController
         return view('suhu_ruangan/print', ['header' => $header, 'title' => 'Cetak Suhu Ruangan', 'signature' => signature_row_for_pdf(isset($header['created_by']) ? (int) $header['created_by'] : null)]);
     }
 
+    public function exportPdfBlank()
+    {
+        helper('print');
+
+        return view('suhu_ruangan/print', [
+            'blank'     => true,
+            'header'    => [
+                'tanggal'            => '',
+                'pagi_jam'           => '', 'pagi_kelembapan' => '', 'pagi_suhu' => '', 'pagi_keterangan' => '',
+                'siang_jam'          => '', 'siang_kelembapan' => '', 'siang_suhu' => '', 'siang_keterangan' => '',
+                'sore_jam'           => '', 'sore_kelembapan' => '', 'sore_suhu' => '', 'sore_keterangan' => '',
+                'nama_petugas'       => '',
+                'created_by'         => null,
+            ],
+            'title'     => 'Form Catatan Suhu Ruangan (kosong)',
+            'signature' => signature_row_for_pdf(null),
+        ]);
+    }
+
     public function exportExcel($id)
     {
         $header = $this->model->find($id);

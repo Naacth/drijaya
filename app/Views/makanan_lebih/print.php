@@ -83,7 +83,7 @@
         <div class="title-main">LAPORAN PENANGANAN MAKANAN LEBIH</div>
         <table class="info-table">
             <tr>
-                <td class="label">Tanggal</td><td class="value">: <?= date('d/m/Y', strtotime($header['tanggal'])) ?></td>
+                <td class="label">Tanggal</td><td class="value">: <?= format_date_id($header['tanggal'] ?? null) ?></td>
                 <td class="label">Nama Cook</td><td class="value">: <?= esc($header['nama_cook']) ?></td>
             </tr>
             <tr>

@@ -42,7 +42,7 @@
     <div class="info">
         <table border="0">
             <tr>
-                <td width="80">TANGGAL</td><td>: <strong><?= date('d/m/Y', strtotime($header['tanggal'])) ?></strong></td>
+                <td width="80">TANGGAL</td><td>: <strong><?= format_date_id($header['tanggal'] ?? null) ?></strong></td>
                 <td width="80" class="text-end">UNIT SPPG</td><td width="150">: <?= strtoupper($header['sppg']) ?></td>
             </tr>
             <tr>
@@ -76,7 +76,7 @@
                     <td class="text-center"><?= $item['porsi_besar'] ?></td>
                     <td class="text-center"><?= $item['porsi_kecil'] ?></td>
                     <td class="text-center"><strong><?= $item['jumlah'] ?></strong></td>
-                    <td class="text-center"><?= date('H:i', strtotime($item['jam_antar'])) ?></td>
+                    <td class="text-center"><?= ! empty($item['jam_antar']) ? format_time_id($item['jam_antar']) : '' ?></td>
                     <td class="text-center"><?= strtoupper($item['sesi']) ?></td>
                 </tr>
             <?php endforeach; ?>

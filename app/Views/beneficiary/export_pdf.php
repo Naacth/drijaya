@@ -35,7 +35,7 @@
         <table>
             <tr>
                 <td width="100">UNIT SPPG</td><td>: <strong><?= strtoupper($header['sppg']) ?></strong></td>
-                <td width="100" class="text-end">TANGGAL</td><td width="120">: <?= date('d/m/Y', strtotime($header['tanggal'])) ?></td>
+                <td width="100" class="text-end">TANGGAL</td><td width="120">: <?= format_date_id($header['tanggal'] ?? null) ?></td>
             </tr>
             <tr>
                 <td>KECAMATAN</td><td>: <?= strtoupper($header['kecamatan']) ?></td>

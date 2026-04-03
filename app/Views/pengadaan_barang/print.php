@@ -40,10 +40,10 @@
         </div>
 
         <table class="info-table">
-            <tr><td class="label">Tanggal</td><td class="colon">:</td><td><?= date('d/m/Y', strtotime($header['tanggal'])) ?></td></tr>
+            <tr><td class="label">Tanggal</td><td class="colon">:</td><td><?= format_date_id($header['tanggal'] ?? null) ?></td></tr>
             <tr><td class="label">Nama Barang</td><td class="colon">:</td><td><?= esc($header['nama_barang']) ?></td></tr>
             <tr><td class="label">Jumlah</td><td class="colon">:</td><td><?= $header['jumlah'] ?> <?= esc($header['satuan']) ?></td></tr>
-            <tr><td class="label">Estimasi Harga</td><td class="colon">:</td><td>Rp <?= number_format($header['estimasi_harga'], 0, ',', '.') ?></td></tr>
+            <tr><td class="label">Estimasi Harga</td><td class="colon">:</td><td>Rp <?= number_format((float) ($header['estimasi_harga'] ?? 0), 0, ',', '.') ?></td></tr>
             <tr><td class="label">Alasan Pengadaan</td><td class="colon">:</td><td><?= esc($header['alasan'] ?: '-') ?></td></tr>
             <tr><td class="label">Status</td><td class="colon">:</td><td><?= ucfirst($header['status']) ?></td></tr>
             <tr><td class="label">Diajukan Oleh</td><td class="colon">:</td><td><?= esc($user_nama) ?></td></tr>

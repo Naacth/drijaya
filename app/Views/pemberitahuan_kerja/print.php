@@ -72,13 +72,20 @@
         <?php
         $months = [1=>'Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
         $days = ['Sunday'=>'Minggu','Monday'=>'Senin','Tuesday'=>'Selasa','Wednesday'=>'Rabu','Thursday'=>'Kamis','Friday'=>'Jumat','Saturday'=>'Sabtu'];
-        $hari = $days[date('l', strtotime($header['tanggal']))];
-        $tgl = date('d', strtotime($header['tanggal']));
-        $bln = $months[(int)date('m', strtotime($header['tanggal']))];
-        $thn = date('Y', strtotime($header['tanggal']));
+        if (! empty($blank) || empty($header['tanggal'] ?? null)) {
+            $hari = '...............';
+            $tgl = '....';
+            $bln = '................';
+            $thn = '20....';
+        } else {
+            $hari = $days[date('l', strtotime($header['tanggal']))];
+            $tgl = date('d', strtotime($header['tanggal']));
+            $bln = $months[(int)date('m', strtotime($header['tanggal']))];
+            $thn = date('Y', strtotime($header['tanggal']));
+        }
 
         // Determine divisi labels
-        $divisi = $header['divisi'];
+        $divisi = $header['divisi'] ?? '';
         if (str_contains($divisi, 'SIF 1')) {
             $formSubtitle = 'Forumulir pemberitahuan PIC persiapan SIF 1 :';
             $sigLeftLabel = 'ANGGOTA PERSIAPAN SIF 1 SPPG BUNAR SUKAMULYA';

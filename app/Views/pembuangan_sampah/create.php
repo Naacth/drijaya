@@ -1,5 +1,9 @@
 <?= $this->extend('layout/main') ?>
 <?= $this->section('content') ?>
+
+<?= $this->include('layout/print_blank_button', ['printBlankUrl' => 'pembuangan-sampah/export-pdf-blank']) ?>
+
+
 <style>.grid-cell { width: 40px; text-align: center; padding: 4px !important; border: 1px solid #dee2e6; }</style>
 <div class="container-fluid">
     <div class="card shadow-sm border-0 mb-4">

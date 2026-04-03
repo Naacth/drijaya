@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Absensi <?= date('d/m/Y', strtotime($absensi['tanggal'])) ?></title>
+    <title>Absensi <?= format_date_id($absensi['tanggal'] ?? null) ?: '(kosong)' ?></title>
     <style>
         @page { size: A4 portrait; margin: 1.5cm; }
         body { font-family: 'Helvetica', 'Arial', sans-serif; font-size: 10pt; color: #333; }
@@ -26,7 +26,7 @@
     <?= view('layout/print_header') ?>
 
     <div class="title">LAPORAN ABSENSI RELAWAN HARIAN</div>
-    <p><strong>Hari / Tanggal :</strong> <?= date('l, d F Y', strtotime($absensi['tanggal'])) ?></p>
+    <p><strong>Hari / Tanggal :</strong> <?= format_weekday_date_long_id($absensi['tanggal'] ?? null) ?: '______________________________' ?></p>
 
     <table class="data-table">
         <thead>
@@ -59,9 +59,9 @@
                 ____________________
             </td>
             <td>
-                Tangerang, <?= date('d/m/Y', strtotime($absensi['tanggal'])) ?><br>Asisten Lapangan
+                Tangerang, <?= format_date_id($absensi['tanggal'] ?? null) ?: '....../....../........' ?><br>Asisten Lapangan
                 <div class="signature-box"></div>
-                <strong><?= esc(session()->get('name')) ?></strong>
+                <strong><?= esc(session()->get('nama')) ?></strong>
             </td>
         </tr>
     </table>

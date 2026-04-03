@@ -72,6 +72,27 @@ class PembersihanHarianController extends BaseController
         return view('pembersihan_harian/print', $data);
     }
 
+    public function exportPdfBlank()
+    {
+        helper('print');
+        $keys = ['rak', 'kontainer', 'lampu', 'langit-langit', 'lantai', 'dinding', 'bodi_luar', 'gagang_pintu'];
+        $area = array_fill_keys($keys, '');
+
+        return view('pembersihan_harian/print', [
+            'blank'     => true,
+            'header'    => [
+                'tanggal'           => '',
+                'unit_type'         => 'chiller',
+                'nama_petugas'      => '',
+                'nama_verifikator'  => '',
+                'created_by'        => null,
+            ],
+            'area'      => $area,
+            'title'     => 'Form Pembersihan Harian (kosong)',
+            'signature' => signature_row_for_pdf(null),
+        ]);
+    }
+
     public function exportExcel($id)
     {
         $form = $this->model->find($id);

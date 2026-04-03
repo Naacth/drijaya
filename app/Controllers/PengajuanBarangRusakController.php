@@ -110,6 +110,29 @@ class PengajuanBarangRusakController extends BaseController
         return view('pengajuan_barang_rusak/print', ['header' => $form, 'title' => 'Cetak Pengajuan Barang Rusak', 'user_nama' => $user['nama'] ?? '-']);
     }
 
+    public function exportPdfBlank()
+    {
+        helper('print');
+
+        return view('pengajuan_barang_rusak/print', [
+            'blank'     => true,
+            'header'    => [
+                'id'           => 0,
+                'tanggal'      => '',
+                'nama_barang'  => '',
+                'jumlah'       => '',
+                'satuan'       => '',
+                'kondisi'      => '',
+                'keterangan'   => '',
+                'foto'         => '',
+                'status'       => '',
+                'created_by'   => null,
+            ],
+            'title'     => 'Form Pengajuan Barang Rusak (kosong)',
+            'user_nama' => '',
+        ]);
+    }
+
     public function exportExcel($id)
     {
         $form = $this->model->find($id);

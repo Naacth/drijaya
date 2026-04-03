@@ -194,6 +194,30 @@ class RekapPorsiController extends BaseController
         return view('rekap_porsi/print', $data);
     }
 
+    public function exportPdfBlank()
+    {
+        helper('print');
+        $items = [];
+        for ($i = 0; $i < 14; $i++) {
+            $items[] = [
+                'tingkatan'                      => '',
+                'sekolah'                        => '',
+                'jumlah_pm'                      => '',
+                'jumlah_terdistribusi'           => '',
+                'jumlah_tidak_terdistribusi'     => '',
+                'keterangan'                     => '',
+                'pengalihan'                     => '',
+            ];
+        }
+
+        return view('rekap_porsi/print', [
+            'blank'  => true,
+            'header' => ['tanggal' => '', 'created_by' => null],
+            'items'  => $items,
+            'title'  => 'Form Rekap Porsi (kosong)',
+        ]);
+    }
+
     public function exportExcel($id)
     {
         $header = $this->headerModel->find($id);

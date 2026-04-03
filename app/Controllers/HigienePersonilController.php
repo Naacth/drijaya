@@ -96,6 +96,38 @@ class HigienePersonilController extends BaseController
         ]);
     }
 
+    public function exportPdfBlank()
+    {
+        helper('print');
+        $rekap = [];
+        for ($i = 0; $i < 15; $i++) {
+            $rekap[] = [
+                'tanggal'        => '',
+                'nama_personil'  => '',
+                'kuku'           => '',
+                'rambut'         => '',
+                'pakaian'        => '',
+                'apd'            => '',
+                'paraf'          => '',
+                'keterangan'     => '',
+            ];
+        }
+
+        return view('higiene_personil/print', [
+            'blank'     => true,
+            'header'    => [
+                'bulan'      => '',
+                'tahun'      => '',
+                'nama_gizi'  => '',
+                'nama_kappg' => '',
+                'created_by' => null,
+            ],
+            'rekap'     => $rekap,
+            'title'     => 'Form Higiene Personil (kosong)',
+            'signature' => signature_row_for_pdf(null),
+        ]);
+    }
+
     public function exportExcel($id)
     {
         $form = $this->model->find($id);

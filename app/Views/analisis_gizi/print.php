@@ -98,7 +98,7 @@
             </tr>
             <tr>
                 <td class="label">Tanggal Sajian</td>
-                <td class="value">: <?= date('d F Y', strtotime($header['tanggal_sajian'])) ?></td>
+                <td class="value">: <?= format_date_long_id($header['tanggal_sajian'] ?? null) ?></td>
                 <td class="label">Ahli Gizi</td>
                 <td class="value">: <?= esc($header['user_nama']) ?></td>
             </tr>

@@ -92,7 +92,7 @@
         <table class="info-table">
             <tr>
                 <td class="label">Periode Tanggal</td>
-                <td class="value">: <?= date('d/m/Y', strtotime($header['tanggal_mulai'])) ?> s/d <?= date('d/m/Y', strtotime($header['tanggal_selesai'])) ?></td>
+                <td class="value">: <?= format_date_id($header['tanggal_mulai'] ?? null) ?> s/d <?= format_date_id($header['tanggal_selesai'] ?? null) ?></td>
                 <td class="label">Status Laporan</td>
                 <td class="value">: RESMI / VALID</td>
             </tr>

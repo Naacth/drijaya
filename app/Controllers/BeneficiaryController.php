@@ -248,6 +248,35 @@ class BeneficiaryController extends BaseController
         return view('beneficiary/export_pdf', $data);
     }
 
+    public function exportPdfBlank()
+    {
+        helper('print');
+        $items = [];
+        for ($i = 0; $i < 12; $i++) {
+            $items[] = [
+                'nama_sekolah'   => '',
+                'jumlah_siswa'   => 0,
+                'porsi_kecil'    => 0,
+                'porsi_besar'    => 0,
+                'pendidik'       => 0,
+                'non_pendidik'   => 0,
+                'total_porsi'    => 0,
+            ];
+        }
+
+        return view('beneficiary/export_pdf', [
+            'blank'  => true,
+            'header' => [
+                'sppg'     => '',
+                'tanggal'  => '',
+                'kecamatan'=> '',
+                'pembuat'  => '',
+            ],
+            'items'  => $items,
+            'title'  => 'Data Penerima Manfaat (form kosong)',
+        ]);
+    }
+
     public function exportExcel($id)
     {
         $header = $this->beneficiaryModel->getWithCreator()->find($id);

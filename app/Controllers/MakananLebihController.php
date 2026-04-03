@@ -102,6 +102,29 @@ class MakananLebihController extends BaseController
         return view('makanan_lebih/print', $data);
     }
 
+    public function exportPdfBlank()
+    {
+        helper('print');
+        $items = [];
+        for ($i = 0; $i < 10; $i++) {
+            $items[] = ['nama_item' => '', 'jumlah' => '', 'kondisi' => '', 'tindakan' => ''];
+        }
+
+        return view('makanan_lebih/print', [
+            'blank'     => true,
+            'header'    => [
+                'tanggal'        => '',
+                'nama_cook'      => '',
+                'nama_chef'      => '',
+                'nama_ahli_gizi' => '',
+                'created_by'     => null,
+            ],
+            'items'     => $items,
+            'title'     => 'Form Makanan Lebih (kosong)',
+            'signature' => signature_row_for_pdf(null),
+        ]);
+    }
+
     public function exportExcel($id)
     {
         $header = $this->headerModel->find($id);

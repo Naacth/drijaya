@@ -94,6 +94,28 @@ class PengadaanBarangController extends BaseController
         return view('pengadaan_barang/print', ['header' => $form, 'title' => 'Cetak Pengadaan Barang', 'user_nama' => $user['nama'] ?? '-']);
     }
 
+    public function exportPdfBlank()
+    {
+        helper('print');
+
+        return view('pengadaan_barang/print', [
+            'blank'     => true,
+            'header'    => [
+                'id'              => 0,
+                'tanggal'         => '',
+                'nama_barang'     => '',
+                'jumlah'          => '',
+                'satuan'          => '',
+                'estimasi_harga'  => '',
+                'alasan'          => '',
+                'status'          => '',
+                'created_by'      => null,
+            ],
+            'title'     => 'Form Pengadaan Barang (kosong)',
+            'user_nama' => '',
+        ]);
+    }
+
     public function exportExcel($id)
     {
         $form = $this->model->find($id);

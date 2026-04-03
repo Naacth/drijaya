@@ -26,7 +26,13 @@
 </head>
 <body>
     <div class="header"><?= $title ?></div>
-    <div class="period">PERIODE <?= date('d', strtotime($start)) ?> - <?= date('d F Y', strtotime($end)) ?></div>
+    <div class="period">PERIODE <?php
+        if (! empty($blank)) {
+            echo '____/____/________  —  ____/____/________';
+        } else {
+            echo date('d', strtotime($start)) . ' - ' . format_date_long_id($end);
+        }
+    ?></div>
 
     <table>
         <thead>
@@ -47,18 +53,19 @@
                 <td class="text-right fw-bold">Rp <?= number_format($saldoAwal, 0, ',', '.') ?></td>
             </tr>
             <?php 
+            <?php
             $runningSaldo = $saldoAwal;
-            if (empty($entries)): 
-                // Fill some empty rows for aesthetic if needed, but app logic follows data
-            else:
-                foreach ($entries as $e): 
-                    $runningSaldo += $e['pemasukkan'] - $e['pengeluaran'];
+            if (empty($entries) && empty($blank)):
+            ?>
+            <?php else:
+                foreach ($entries as $e):
+                    $runningSaldo += ($e['pemasukkan'] ?? 0) - ($e['pengeluaran'] ?? 0);
             ?>
                 <tr>
-                    <td class="text-center"><?= date('d/m/Y', strtotime($e['tanggal'])) ?></td>
-                    <td><?= esc($e['keterangan']) ?></td>
-                    <td class="text-right"><?= $e['pemasukkan'] > 0 ? number_format($e['pemasukkan'], 0, ',', '.') : '-' ?></td>
-                    <td class="text-right"><?= $e['pengeluaran'] > 0 ? number_format($e['pengeluaran'], 0, ',', '.') : '-' ?></td>
+                    <td class="text-center"><?= format_date_id($e['tanggal'] ?? null) ?></td>
+                    <td><?= esc($e['keterangan'] ?? '') ?></td>
+                    <td class="text-right"><?= ($e['pemasukkan'] ?? 0) > 0 ? number_format((float) $e['pemasukkan'], 0, ',', '.') : '-' ?></td>
+                    <td class="text-right"><?= ($e['pengeluaran'] ?? 0) > 0 ? number_format((float) $e['pengeluaran'], 0, ',', '.') : '-' ?></td>
                     <td class="text-right">Rp <?= number_format($runningSaldo, 0, ',', '.') ?></td>
                 </tr>
             <?php endforeach; ?>

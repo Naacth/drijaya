@@ -31,7 +31,7 @@
 
     <table class="info-table">
         <tr>
-            <td width="15%">Tanggal</td><td>: <?= date('d F Y', strtotime($header['tanggal'])) ?></td>
+            <td width="15%">Tanggal</td><td>: <?= format_date_long_id($header['tanggal'] ?? null) ?></td>
             <td width="15%">ID Form</td><td>: #SR-<?= str_pad($header['id'], 5, '0', STR_PAD_LEFT) ?></td>
         </tr>
     </table>
@@ -56,9 +56,13 @@
                 <td style="text-align:center;"><?= $no++ ?></td>
                 <td><?= $item ?></td>
                 <td style="text-align:center;">
+                    <?php if (! empty($blank)): ?>
+                        <span>&nbsp;</span>
+                    <?php else: ?>
                     <span class="<?= $isClean ? 'status-ok' : 'status-fail' ?>">
                         <?= $isClean ? 'BERSIH' : 'KOTOR' ?>
                     </span>
+                    <?php endif; ?>
                 </td>
             </tr>
             <?php endforeach; ?>

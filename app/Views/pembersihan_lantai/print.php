@@ -18,7 +18,7 @@
     <?= view('layout/print_header') ?>
     <div style="text-align:center; font-weight:bold; font-size:15px; text-decoration:underline; margin-bottom:15px;">LOG PEMBERSIHAN LANTAI AREA PRODUKSI</div>
     <table class="table">
-        <tr><td width="30%">Tanggal</td><td><?= date('d/m/Y', strtotime($header['tanggal'])) ?></td></tr>
+        <tr><td width="30%">Tanggal</td><td><?= format_date_id($header['tanggal'] ?? null) ?></td></tr>
         <tr><td>Jam</td><td><?= $header['jam'] ?></td></tr>
         <tr><td>Personil</td><td><?= esc($header['nama_personil']) ?></td></tr>
         <tr><td>Kondisi Lantai</td><td><strong><?= strtoupper($header['kondisi']) ?></strong></td></tr>

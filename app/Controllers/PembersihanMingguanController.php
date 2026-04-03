@@ -65,6 +65,26 @@ class PembersihanMingguanController extends BaseController
         ]);
     }
 
+    public function exportPdfBlank()
+    {
+        helper('print');
+        $keys = ['interior', 'exterior', 'gasket_pintu', 'defrosting', 'kondensor', 'evaporator', 'drainase', 'control_switch'];
+        $checklist = array_fill_keys($keys, '');
+
+        return view('pembersihan_mingguan/print', [
+            'blank'     => true,
+            'header'    => [
+                'area_pencucian'     => '',
+                'minggu_ke'          => '',
+                'bulan'              => '',
+                'nama_verifikator'   => '',
+                'created_by'         => null,
+            ],
+            'checklist' => $checklist,
+            'title'     => 'Form Pembersihan Mingguan (kosong)',
+        ]);
+    }
+
     public function exportExcel($id)
     {
         $form = $this->model->find($id);

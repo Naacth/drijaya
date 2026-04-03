@@ -93,6 +93,32 @@ class PemeriksaanSampelController extends BaseController
         return view('pemeriksaan_sampel/print', $data);
     }
 
+    public function exportPdfBlank()
+    {
+        helper('print');
+
+        return view('pemeriksaan_sampel/print', [
+            'blank'     => true,
+            'header'    => [
+                'tanggal'              => '',
+                'jam_matang'           => '',
+                'jenis_produk'         => '',
+                'bahaya_fisik'         => '',
+                'bahaya_biologi'       => '',
+                'jam_penarikan'        => '',
+                'tindak_lanjut'        => '',
+                'sampel_diambil'       => '',
+                'jumlah_sampel'        => '',
+                'tempat_penyimpanan'   => '',
+                'tanggal_pemusnahan'   => '',
+                'nama_pemeriksa'       => '',
+                'created_by'           => null,
+            ],
+            'title'     => 'Form Pemeriksaan Sampel (kosong)',
+            'signature' => signature_row_for_pdf(null),
+        ]);
+    }
+
     public function exportExcel($id)
     {
         $header = $this->model->find($id);

@@ -103,6 +103,23 @@ class PencucianBahanController extends BaseController
         ]);
     }
 
+    public function exportPdfBlank()
+    {
+        helper('print');
+        $items = [];
+        for ($i = 0; $i < 10; $i++) {
+            $items[] = ['nama_bahan' => '', 'bahan_kimia' => '', 'benda_asing' => '', 'tindak_lanjut' => '', 'jam_produksi' => ''];
+        }
+
+        return view('pencucian_bahan/print', [
+            'blank'     => true,
+            'header'    => ['tanggal' => '', 'nama_petugas' => '', 'created_by' => null],
+            'items'     => $items,
+            'title'     => 'Form Pencucian Bahan (kosong)',
+            'signature' => signature_row_for_pdf(null),
+        ]);
+    }
+
     public function exportExcel($id)
     {
         $header = $this->headerModel->find($id);

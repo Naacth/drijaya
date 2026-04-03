@@ -49,15 +49,6 @@
 
     <div class="page-container">
 
-        <?php
-        $months = [1=>'Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
-        $tglAwal = date('d', strtotime($header['periode_awal']));
-        $blnAwal = $months[(int)date('m', strtotime($header['periode_awal']))];
-        $tglAkhir = date('d', strtotime($header['periode_akhir']));
-        $blnAkhir = $months[(int)date('m', strtotime($header['periode_akhir']))];
-        $thn = date('Y', strtotime($header['periode_akhir']));
-        ?>
-
         <!-- HEADER -->
         <?= view('layout/print_header') ?>
 
@@ -106,11 +97,6 @@
         <?php endforeach; ?>
 
         <!-- SIGNATURE -->
-        <?php
-        $tglSign = date('d', strtotime($header['periode_akhir']));
-        $blnSign = $months[(int)date('m', strtotime($header['periode_akhir']))];
-        $thnSign = date('Y', strtotime($header['periode_akhir']));
-        ?>
         <div class="sig-section">
             <p style="text-align: right; margin-bottom: 10px;">............, .................... 20.....</p>
 

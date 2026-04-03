@@ -1,5 +1,9 @@
 <?= $this->extend('layout/main') ?>
 <?= $this->section('content') ?>
+
+<?= $this->include('layout/print_blank_button', ['printBlankUrl' => 'pengeluaran-chemical/export-pdf-blank']) ?>
+
+
 <div class="container-fluid">
     <div class="card shadow-sm border-0 col-lg-7 mx-auto">
         <div class="card-header bg-white py-3">

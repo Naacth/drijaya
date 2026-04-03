@@ -74,6 +74,25 @@ class SanitasiRuanganController extends BaseController
         return view('sanitasi_ruangan/print', $data);
     }
 
+    public function exportPdfBlank()
+    {
+        helper('print');
+
+        return view('sanitasi_ruangan/print', [
+            'blank'     => true,
+            'header'    => [
+                'id'              => 0,
+                'tanggal'         => '',
+                'nama_pelaksana'  => '',
+                'nama_pemeriksa'  => '',
+                'created_by'      => null,
+            ],
+            'fasilitas' => [],
+            'title'     => 'Form Sanitasi Ruangan (kosong)',
+            'signature' => signature_row_for_pdf(null),
+        ]);
+    }
+
     public function exportExcel($id)
     {
         $form = $this->model->find($id);

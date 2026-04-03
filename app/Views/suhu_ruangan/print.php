@@ -77,7 +77,7 @@
         <?= view('layout/print_header') ?>
         <div class="title-main">LAPORAN CATATAN SUHU & KELEMBAPAN RUANGAN</div>
         <div style="margin-bottom: 15px;">
-            Tanggal: <strong><?= date('d/m/Y', strtotime($header['tanggal'])) ?></strong><br>
+            Tanggal: <strong><?= format_date_id($header['tanggal'] ?? null) ?></strong><br>
             Petugas: <strong><?= esc($header['nama_petugas']) ?></strong>
         </div>
         <table class="data-table">

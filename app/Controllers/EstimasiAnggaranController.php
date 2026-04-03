@@ -195,6 +195,29 @@ class EstimasiAnggaranController extends BaseController
         return view('estimasi_anggaran/print', $data);
     }
 
+    public function exportPdfBlank()
+    {
+        helper('print');
+        $items = [];
+        for ($i = 0; $i < 12; $i++) {
+            $items[] = ['nama_item' => '', 'harga_satuan' => ''];
+        }
+
+        return view('estimasi_anggaran/print', [
+            'blank'  => true,
+            'header' => [
+                'tanggal_mulai'         => '',
+                'tanggal_selesai'       => '',
+                'kategori_porsi'        => '',
+                'total_kalkulasi'       => '',
+                'user_nama'             => '',
+                'created_by'            => null,
+            ],
+            'items'  => $items,
+            'title'  => 'Form Estimasi Anggaran (kosong)',
+        ]);
+    }
+
     public function exportExcel($id)
     {
         $header = $this->headerModel->find($id);

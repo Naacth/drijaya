@@ -96,6 +96,29 @@ class PembersihanTrollyController extends BaseController
         ]);
     }
 
+    public function exportPdfBlank()
+    {
+        helper('print');
+        $rekap = [];
+        for ($i = 0; $i < 15; $i++) {
+            $rekap[] = ['tanggal' => '', 'nama_personil' => '', 'jam' => '', 'paraf' => '', 'keterangan' => ''];
+        }
+
+        return view('pembersihan_trolly/print', [
+            'blank'     => true,
+            'header'    => [
+                'bulan'      => '',
+                'tahun'      => '',
+                'nama_gizi'  => '',
+                'nama_kappg' => '',
+                'created_by' => null,
+            ],
+            'rekap'     => $rekap,
+            'title'     => 'Form Pembersihan Trolly (kosong)',
+            'signature' => signature_row_for_pdf(null),
+        ]);
+    }
+
     public function exportExcel($id)
     {
         $form = $this->model->find($id);

@@ -199,6 +199,35 @@ class ChecklistMasakanController extends BaseController
         return view('checklist_masakan/print', $data);
     }
 
+    public function exportPdfBlank()
+    {
+        helper('print');
+        $items = [];
+        for ($i = 0; $i < 12; $i++) {
+            $items[] = [
+                'nama_masakan'     => '',
+                'gramasi_standar'  => '',
+                'gramasi_real'     => '',
+                'rasa'             => '',
+                'tekstur'          => '',
+                'keterangan'       => '',
+            ];
+        }
+
+        return view('checklist_masakan/print', [
+            'blank'  => true,
+            'header' => [
+                'id'                => 0,
+                'tanggal'           => '',
+                'waktu_penyajian'   => '',
+                'user_nama'         => '',
+                'created_by'        => null,
+            ],
+            'items'  => $items,
+            'title'  => 'Form Checklist Masakan (kosong)',
+        ]);
+    }
+
     public function exportExcel($id)
     {
         $header = $this->headerModel->find($id);

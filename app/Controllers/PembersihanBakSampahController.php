@@ -65,6 +65,18 @@ class PembersihanBakSampahController extends BaseController
         return view('pembersihan_bak_sampah/print', $data);
     }
 
+    public function exportPdfBlank()
+    {
+        helper('print');
+
+        return view('pembersihan_bak_sampah/print', [
+            'blank'     => true,
+            'header'    => ['tanggal' => '', 'nama_personil' => '', 'jam' => '', 'keterangan' => '', 'created_by' => null],
+            'title'     => 'Form Pembersihan Bak Sampah (kosong)',
+            'signature' => signature_row_for_pdf(null),
+        ]);
+    }
+
     public function exportExcel($id)
     {
         $form = $this->model->find($id);

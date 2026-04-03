@@ -1,5 +1,9 @@
 <?= $this->extend('layout/main') ?>
 <?= $this->section('content') ?>
+
+<?= $this->include('layout/print_blank_button', ['printBlankUrl' => 'sanitasi-ruangan/export-pdf-blank']) ?>
+
+
 <div class="container-fluid">
     <div class="row justify-content-center">
         <div class="col-lg-8">

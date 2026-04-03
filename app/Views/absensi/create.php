@@ -1,6 +1,10 @@
 <?= $this->extend('layout/main') ?>
 <?= $this->section('content') ?>
 
+<?= $this->include('layout/print_blank_button', ['printBlankUrl' => 'absensi/export-pdf-blank']) ?>
+
+
+
 <div class="mb-4">
     <div class="d-flex justify-content-between align-items-center">
         <div>

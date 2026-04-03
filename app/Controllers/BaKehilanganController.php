@@ -197,6 +197,31 @@ class BaKehilanganController extends BaseController
         return view('ba_kehilangan/print', $data);
     }
 
+    public function exportPdfBlank()
+    {
+        helper('print');
+
+        return view('ba_kehilangan/print', [
+            'blank'  => true,
+            'header' => [
+                'no_surat'               => '',
+                'nama_sekolah'           => '',
+                'nama_pj_sekolah'        => '',
+                'jam_kehilangan'         => '',
+                'jam_distribusi'         => '',
+                'tanggal_kejadian'       => '',
+                'jumlah_ompreng_hilang'  => '',
+                'jumlah_awal'            => '',
+                'jumlah_akhir'           => '',
+                'ttd_supir'              => '',
+                'nama_supir'             => '',
+                'ttd_pj_sekolah'         => '',
+                'created_by'             => null,
+            ],
+            'title'  => 'BA Kehilangan Ompreng (kosong)',
+        ]);
+    }
+
     public function delete($id)
     {
         if (session()->get('role') !== 'admin') {

@@ -201,6 +201,36 @@ class AnalisisGiziController extends BaseController
         return view('analisis_gizi/print', $data);
     }
 
+    public function exportPdfBlank()
+    {
+        helper('print');
+        $items = [];
+        for ($i = 0; $i < 14; $i++) {
+            $items[] = [
+                'nama_item'   => '',
+                'gramasi'     => '',
+                'kalori'      => '',
+                'protein'     => '',
+                'lemak'       => '',
+                'karbohidrat' => '',
+                'serat'       => '',
+            ];
+        }
+
+        return view('analisis_gizi/print', [
+            'blank'  => true,
+            'header' => [
+                'id'             => 0,
+                'nama_paket'     => '',
+                'tanggal_sajian' => '',
+                'user_nama'      => '',
+                'created_by'     => null,
+            ],
+            'items'  => $items,
+            'title'  => 'Form Analisis Gizi (kosong)',
+        ]);
+    }
+
     public function exportExcel($id)
     {
         $header = $this->headerModel->find($id);

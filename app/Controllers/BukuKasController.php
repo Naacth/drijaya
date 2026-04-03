@@ -180,6 +180,29 @@ class BukuKasController extends BaseController
         return view('buku_kas/print', $data);
     }
 
+    public function exportPdfBlank()
+    {
+        helper('print');
+        $entries = [];
+        for ($i = 0; $i < 16; $i++) {
+            $entries[] = ['tanggal' => '', 'keterangan' => '', 'debet' => 0, 'kredit' => 0];
+        }
+
+        return view('buku_kas/print', [
+            'blank'   => true,
+            'title'   => 'Buku Kas Operasional (form kosong)',
+            'entries' => $entries,
+            'start'   => '',
+            'end'     => '',
+            'summary' => ['debet' => 0, 'kredit' => 0],
+            'header'  => [
+                'nama_sppg'   => session()->get('sppg_nama') ?? '',
+                'alamat_sppg' => session()->get('sppg_alamat') ?? '',
+                'kepala_sppg' => '',
+            ],
+        ]);
+    }
+
     public function exportExcel()
     {
         $sppgId = session()->get('sppg_id');

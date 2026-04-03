@@ -201,6 +201,26 @@ class AbsensiController extends BaseController
 
         return view('absensi/print', $data);
     }
+
+    public function exportPdfBlank()
+    {
+        helper('print');
+
+        return view('absensi/print', [
+            'blank'   => true,
+            'absensi' => [
+                'tanggal'     => '',
+                'sppg_id'     => session()->get('sppg_id'),
+                'created_by'  => null,
+            ],
+            'items'   => [],
+            'title'   => 'Form Absensi Relawan (kosong)',
+            'header'  => [
+                'nama_sppg'     => session()->get('sppg_nama') ?? '',
+                'alamat_sppg'   => session()->get('sppg_alamat') ?? '',
+            ],
+        ]);
+    }
     
     public function rekap()
     {

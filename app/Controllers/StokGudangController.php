@@ -191,6 +191,19 @@ class StokGudangController extends BaseController
         return view('stok_gudang/print', $data);
     }
 
+    public function exportPdfBlank()
+    {
+        helper('print');
+
+        return view('stok_gudang/print', [
+            'blank'     => true,
+            'header'    => ['nama_sppg' => '', 'tanggal' => '', 'created_by' => null],
+            'items'     => [],
+            'title'     => 'Form Stok Gudang (kosong)',
+            'signature' => signature_row_for_pdf(null),
+        ]);
+    }
+
     public function exportExcel($id)
     {
         $header = $this->headerModel->find($id);

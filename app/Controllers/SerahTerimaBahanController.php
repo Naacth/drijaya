@@ -85,6 +85,32 @@ class SerahTerimaBahanController extends BaseController
         return view('serah_terima_bahan/print', ['header' => $header, 'items' => $this->itemModel->where('serah_terima_bahan_id', $id)->findAll(), 'title' => 'Cetak Serah Terima Bahan', 'signature' => signature_row_for_pdf(isset($header['created_by']) ? (int) $header['created_by'] : null)]);
     }
 
+    public function exportPdfBlank()
+    {
+        helper('print');
+        $items = [];
+        for ($i = 0; $i < 10; $i++) {
+            $items[] = [
+                'jam'                   => '',
+                'nama_bahan'            => '',
+                'tujuan_penggunaan'     => '',
+                'gramasi_per_porsi'     => '',
+                'jumlah_awal'           => '',
+                'jumlah_tidak_layak'    => '',
+                'tindak_lanjut'         => '',
+                'jumlah_akhir'          => '',
+            ];
+        }
+
+        return view('serah_terima_bahan/print', [
+            'blank'     => true,
+            'header'    => ['tanggal' => '', 'nama_pengirim' => '', 'nama_penerima' => '', 'created_by' => null],
+            'items'     => $items,
+            'title'     => 'Form Serah Terima Bahan (kosong)',
+            'signature' => signature_row_for_pdf(null),
+        ]);
+    }
+
     public function exportExcel($id)
     {
         $header = $this->headerModel->find($id);

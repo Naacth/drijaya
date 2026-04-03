@@ -1,6 +1,10 @@
 <?= $this->extend('layout/main') ?>
 <?= $this->section('content') ?>
 
+<?= $this->include('layout/print_blank_button', ['printBlankUrl' => 'buku-kas/export-pdf-blank']) ?>
+
+
+
 <div class="mb-4">
     <a href="<?= site_url('buku-kas') ?>" class="text-decoration-none small text-muted">
         <i class="bi bi-arrow-left"></i> Kembali ke Buku Kas

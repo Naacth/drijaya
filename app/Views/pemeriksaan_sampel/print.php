@@ -68,7 +68,7 @@
         <?= view('layout/print_header') ?>
         <div class="title-main">LAPORAN PEMERIKSAAN & SAMPEL MAKANAN</div>
         <table class="info-table">
-            <tr><td class="label">Tanggal Pemeriksaan</td><td><?= date('d/m/Y', strtotime($header['tanggal'])) ?></td></tr>
+            <tr><td class="label">Tanggal Pemeriksaan</td><td><?= format_date_id($header['tanggal'] ?? null) ?></td></tr>
             <tr><td class="label">Jam Matang</td><td><?= esc($header['jam_matang'] ?: '-') ?></td></tr>
             <tr><td class="label">Jenis Produk</td><td><?= esc($header['jenis_produk']) ?></td></tr>
             <tr><td class="label">Bahaya Fisik</td><td><?= esc($header['bahaya_fisik'] ?: 'TIDAK ADA') ?></td></tr>
@@ -78,7 +78,7 @@
             <tr><td class="label">Sampel Diambil</td><td><?= strtoupper($header['sampel_diambil']) ?></td></tr>
             <tr><td class="label">Jumlah Sampel</td><td><?= esc($header['jumlah_sampel'] ?: '-') ?></td></tr>
             <tr><td class="label">Tempat Penyimpanan</td><td><?= esc($header['tempat_penyimpanan'] ?: '-') ?></td></tr>
-            <tr><td class="label">Tanggal Pemusnahan</td><td><?= $header['tanggal_pemusnahan'] ? date('d/m/Y', strtotime($header['tanggal_pemusnahan'])) : '-' ?></td></tr>
+            <tr><td class="label">Tanggal Pemusnahan</td><td><?= ! empty($header['tanggal_pemusnahan']) ? format_date_id($header['tanggal_pemusnahan']) : '-' ?></td></tr>
         </table>
         <div class="sig-section">
             <table class="sig-table">

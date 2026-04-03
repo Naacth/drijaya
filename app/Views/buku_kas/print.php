@@ -45,7 +45,13 @@
         <tr>
             <td>Tanggal, Periode</td>
             <td>:</td>
-            <td><?= date('d/m/Y', strtotime($start)) ?> <?= $start != $end ? ' s/d '.date('d/m/Y', strtotime($end)) : '' ?></td>
+            <td><?php
+                if (! empty($blank)) {
+                    echo '____/____/________  s/d  ____/____/________';
+                } else {
+                    echo format_date_id($start) . ($start != $end ? ' s/d ' . format_date_id($end) : '');
+                }
+            ?></td>
         </tr>
     </table>
 
@@ -59,17 +65,17 @@
             </tr>
         </thead>
         <tbody>
-            <?php if (empty($entries)): ?>
+            <?php if (empty($entries) && empty($blank)): ?>
                 <tr>
                     <td colspan="4" class="text-center py-4">Tidak ada data transaksi.</td>
                 </tr>
             <?php else: ?>
                 <?php foreach ($entries as $e): ?>
                     <tr>
-                        <td class="text-center"><?= date('d/m/Y', strtotime($e['tanggal'])) ?></td>
-                        <td><?= esc($e['keterangan']) ?></td>
-                        <td class="text-right"><?= $e['debet'] > 0 ? number_format($e['debet'], 0, ',', '.') : '-' ?></td>
-                        <td class="text-right"><?= $e['kredit'] > 0 ? number_format($e['kredit'], 0, ',', '.') : '-' ?></td>
+                        <td class="text-center"><?= format_date_id($e['tanggal'] ?? null) ?></td>
+                        <td><?= esc($e['keterangan'] ?? '') ?></td>
+                        <td class="text-right"><?= ($e['debet'] ?? 0) > 0 ? number_format((float) $e['debet'], 0, ',', '.') : '-' ?></td>
+                        <td class="text-right"><?= ($e['kredit'] ?? 0) > 0 ? number_format((float) $e['kredit'], 0, ',', '.') : '-' ?></td>
                     </tr>
                 <?php endforeach; ?>
                 <tr style="background-color: #ccc; font-weight: bold;">

@@ -81,6 +81,23 @@ class ThawingAirController extends BaseController
         return view('thawing_air/print', ['header' => $header, 'items' => $this->itemModel->where('checklist_thawing_air_id', $id)->findAll(), 'title' => 'Cetak Thawing Air', 'signature' => signature_row_for_pdf(isset($header['created_by']) ? (int) $header['created_by'] : null)]);
     }
 
+    public function exportPdfBlank()
+    {
+        helper('print');
+        $items = [];
+        for ($i = 0; $i < 10; $i++) {
+            $items[] = ['nama_bahan' => '', 'jumlah' => '', 'suhu_air' => '', 'waktu_thawing' => '', 'paraf' => ''];
+        }
+
+        return view('thawing_air/print', [
+            'blank'     => true,
+            'header'    => ['tanggal' => '', 'nama_petugas' => '', 'created_by' => null],
+            'items'     => $items,
+            'title'     => 'Form Thawing Air (kosong)',
+            'signature' => signature_row_for_pdf(null),
+        ]);
+    }
+
     public function exportExcel($id)
     {
         $header = $this->headerModel->find($id);

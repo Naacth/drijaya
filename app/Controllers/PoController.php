@@ -492,6 +492,42 @@ class PoController extends BaseController
         return view('po/export_pdf', $data);
     }
 
+    public function exportPdfBlank()
+    {
+        if (! in_array(session()->get('role'), ['admin', 'pic', 'akuntan'], true)) {
+            return redirect()->to('/po')->with('error', 'Unauthorized');
+        }
+
+        helper('print');
+        $items = [];
+        for ($i = 0; $i < 8; $i++) {
+            $items[] = [
+                'qty'             => 0,
+                'satuan'          => '',
+                'nama_barang'     => '',
+                'harga_satuan'    => 0,
+                'tambahan'        => 0,
+                'jumlah_faktual'  => 0,
+                'total'           => 0,
+                'catatan'         => '',
+            ];
+        }
+
+        return view('po/print', [
+            'blank'       => true,
+            'po'          => [
+                'nomor_po' => '',
+                'tanggal'  => '',
+                'vendor'   => '',
+                'menu'     => '',
+                'total'    => 0,
+            ],
+            'items'       => $items,
+            'approvals'   => [],
+            'signature'   => signature_row_for_pdf(null),
+        ]);
+    }
+
     public function delete($id)
     {
         if (session()->get('role') !== 'admin') {

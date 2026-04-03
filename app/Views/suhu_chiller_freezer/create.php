@@ -1,5 +1,9 @@
 <?= $this->extend('layout/main') ?>
 <?= $this->section('content') ?>
+
+<?= $this->include('layout/print_blank_button', ['printBlankUrl' => 'suhu-chiller-freezer/export-pdf-blank']) ?>
+
+
 <div class="mb-4 animate-in">
     <a href="<?= site_url('suhu-chiller-freezer') ?>" class="text-decoration-none text-muted mb-3 d-inline-block"><i class="bi bi-arrow-left me-1"></i> Kembali</a>
     <h4 class="mb-1" style="font-weight: 700;">Input Suhu Chiller & Freezer</h4>

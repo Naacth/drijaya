@@ -129,9 +129,15 @@
         <!-- PARAGRAPH -->
         <?php
         $months = [1=>'Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
-        $tgl = date('d', strtotime($header['tanggal_kejadian']));
-        $bln = $months[(int)date('m', strtotime($header['tanggal_kejadian']))];
-        $thn = date('Y', strtotime($header['tanggal_kejadian']));
+        if (! empty($blank) || empty($header['tanggal_kejadian'] ?? null)) {
+            $tgl = '....';
+            $bln = '................';
+            $thn = '20....';
+        } else {
+            $tgl = date('d', strtotime($header['tanggal_kejadian']));
+            $bln = $months[(int)date('m', strtotime($header['tanggal_kejadian']))];
+            $thn = date('Y', strtotime($header['tanggal_kejadian']));
+        }
         ?>
         <div class="body-text" style="margin-top: 15px;">
             <p style="text-indent: 30px;">Bahwa pada tanggal <strong><?= $tgl ?></strong> bulan <strong><?= $bln ?></strong> tahun <strong><?= $thn ?></strong> memutuskan dan menetapkan bahwa telah kekurangan jumlah ompreng berjumlah <strong><?= $header['jumlah_ompreng_hilang'] ?></strong> <strong>Pcs</strong> dari jumlah awal <strong><?= $header['jumlah_awal'] ?></strong> <strong>menjadi</strong> <strong><?= $header['jumlah_akhir'] ?></strong>. Oleh karena itu kami selaku penerima manfaat dengan berita Acata ini menyampaikan <strong>Kehilangan Ompreng</strong> yang kedepannya akan menjadi laporan ke <strong>DAPUR SPPG BUNAR SUKAMULYA.</strong></p>

@@ -207,6 +207,29 @@ class UjiOrganoleptikController extends BaseController
         return view('uji_organoleptik/print', $data);
     }
 
+    public function exportPdfBlank()
+    {
+        helper('print');
+
+        return view('uji_organoleptik/print', [
+            'blank'     => true,
+            'header'    => [
+                'nama_pemeriksa'       => '',
+                'tempat_pemeriksaan'   => '',
+                'nama_tempat'          => '',
+                'tanggal_pemeriksaan'  => '',
+                'waktu_pemeriksaan'    => '',
+                'nama_aslap'           => '',
+                'nama_pemeriksa_plok'  => '',
+                'nama_kepala_sppg'     => '',
+                'created_by'           => null,
+            ],
+            'items'     => [],
+            'title'     => 'Form Uji Organoleptik (kosong)',
+            'signature' => signature_row_for_pdf(null),
+        ]);
+    }
+
     public function exportExcel($id)
     {
         $header = $this->headerModel->find($id);

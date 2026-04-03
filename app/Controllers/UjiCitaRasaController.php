@@ -114,6 +114,35 @@ class UjiCitaRasaController extends BaseController
         return view('uji_cita_rasa/print', $data);
     }
 
+    public function exportPdfBlank()
+    {
+        helper('print');
+        $items = [];
+        for ($i = 0; $i < 10; $i++) {
+            $items[] = [
+                'nama_masakan'     => '',
+                'gramasi_standar'  => '',
+                'gramasi_real'     => '',
+                'masalah'          => '',
+                'penyelesaian'     => '',
+            ];
+        }
+
+        return view('uji_cita_rasa/print', [
+            'blank'     => true,
+            'header'    => [
+                'tanggal'        => '',
+                'nama_checker'   => '',
+                'nama_chef'      => '',
+                'nama_ahli_gizi' => '',
+                'created_by'     => null,
+            ],
+            'items'     => $items,
+            'title'     => 'Form Uji Cita Rasa (kosong)',
+            'signature' => signature_row_for_pdf(null),
+        ]);
+    }
+
     public function exportExcel($id)
     {
         $header = $this->headerModel->find($id);

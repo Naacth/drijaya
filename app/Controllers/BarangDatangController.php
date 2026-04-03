@@ -194,6 +194,18 @@ class BarangDatangController extends BaseController
         return view('barang_datang/print', $data);
     }
 
+    public function exportPdfBlank()
+    {
+        helper('print');
+
+        return view('barang_datang/print', [
+            'blank'    => true,
+            'header'   => ['tanggal' => '', 'penanggung_jawab' => ''],
+            'items'    => [],
+            'title'    => 'Formulir Barang Datang (kosong)',
+        ]);
+    }
+
     public function exportExcel($id)
     {
         $header = $this->headerModel->find($id);

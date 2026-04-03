@@ -1,5 +1,9 @@
 <?= $this->extend('layout/main') ?>
 <?= $this->section('content') ?>
+
+<?= $this->include('layout/print_blank_button', ['printBlankUrl' => 'monitoring-suhu-masak/export-pdf-blank']) ?>
+
+
 <div class="mb-4 animate-in">
     <a href="<?= site_url('monitoring-suhu-masak') ?>" class="text-decoration-none text-muted mb-3 d-inline-block"><i class="bi bi-arrow-left me-1"></i> Kembali</a>
     <h4 class="mb-1" style="font-weight: 700;">Buat Form Monitoring Suhu</h4>

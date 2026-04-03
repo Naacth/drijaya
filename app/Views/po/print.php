@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Purchase Order - <?= $po['nomor_po'] ?></title>
+    <title>Purchase Order - <?= esc($po['nomor_po'] ?? '') ?: 'Form kosong' ?></title>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 11pt; color: #333; line-height: 1.4; margin: 0; padding: 40px; }
         .header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 3px solid #000; padding-bottom: 10px; margin-bottom: 20px; }
@@ -67,7 +67,7 @@
             </tr>
             <tr>
                 <td>Tanggal</td>
-                <td>: <?= date('d F Y', strtotime($po['tanggal'])) ?></td>
+                <td>: <?= format_date_long_id($po['tanggal'] ?? null) ?></td>
             </tr>
         </table>
     </div>

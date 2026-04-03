@@ -208,6 +208,25 @@ class PettyCashController extends BaseController
         return view('petty_cash/print', $data);
     }
 
+    public function exportPdfBlank()
+    {
+        helper('print');
+        $entries = [];
+        for ($i = 0; $i < 14; $i++) {
+            $entries[] = ['tanggal' => '', 'keterangan' => '', 'pemasukkan' => 0, 'pengeluaran' => 0];
+        }
+
+        return view('petty_cash/print', [
+            'blank'     => true,
+            'title'     => 'Laporan Petty Cash (form kosong)',
+            'entries'   => $entries,
+            'start'     => '',
+            'end'       => '',
+            'saldoAwal' => 0,
+            'summary'   => ['pemasukkan' => 0, 'pengeluaran' => 0],
+        ]);
+    }
+
     public function exportExcel()
     {
         $sppgId = session()->get('sppg_id');

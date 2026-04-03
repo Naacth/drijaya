@@ -88,13 +88,18 @@
         <?php
         $days = ['Sunday'=>'MINGGU','Monday'=>'SENIN','Tuesday'=>'SELASA','Wednesday'=>'RABU','Thursday'=>'KAMIS','Friday'=>'JUMAT','Saturday'=>'SABTU'];
         $months = [1=>'Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
-        $hari = $days[date('l', strtotime($header['tanggal']))];
-        $tgl = date('d', strtotime($header['tanggal'])) . ' ' . $months[(int)date('m', strtotime($header['tanggal']))] . ' ' . date('Y', strtotime($header['tanggal']));
+        if (! empty($blank) || empty($header['tanggal'] ?? null)) {
+            $hari = '';
+            $tgl = '';
+        } else {
+            $hari = $days[date('l', strtotime($header['tanggal']))];
+            $tgl = date('d', strtotime($header['tanggal'])) . ' ' . $months[(int)date('m', strtotime($header['tanggal']))] . ' ' . date('Y', strtotime($header['tanggal']));
+        }
         ?>
         <?= view('layout/print_header') ?>
 
         <div class="title-main">REKAPITULASI DISTRIBUSI PORSI PM</div>
-        <div class="header-info">Hari dan TGL: <span><?= $hari ?>, <?= $tgl ?></span></div>
+        <div class="header-info">Hari dan TGL: <span><?= $hari !== '' ? $hari . ', ' : '' ?><?= $tgl ?></span></div>
 
         <table class="data-table">
             <thead>

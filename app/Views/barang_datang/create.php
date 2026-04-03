@@ -1,6 +1,10 @@
 <?= $this->extend('layout/main') ?>
 <?= $this->section('content') ?>
 
+<?= $this->include('layout/print_blank_button', ['printBlankUrl' => 'barang-datang/export-pdf-blank']) ?>
+
+
+
 <div class="mb-4 animate-in">
     <a href="<?= site_url('barang-datang') ?>" class="text-decoration-none text-muted mb-3 d-inline-block">
         <i class="bi bi-arrow-left me-1"></i> Kembali ke Riwayat

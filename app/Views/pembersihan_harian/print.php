@@ -64,10 +64,10 @@
     </div>
     <div class="page-container">
         <?= view('layout/print_header') ?>
-        <div class="title-main">CHECKLIST PEMBERSIHAN HARIAN (UNIT <?= strtoupper($header['unit_type']) ?>)</div>
+        <div class="title-main">CHECKLIST PEMBERSIHAN HARIAN (UNIT <?= strtoupper($header['unit_type'] ?? '') ?>)</div>
 
         <div style="margin-bottom: 15px;">
-            Tanggal Periksa: <strong><?= date('d/m/Y', strtotime($header['tanggal'])) ?></strong>
+            Tanggal Periksa: <strong><?= format_date_id($header['tanggal'] ?? null) ?></strong>
         </div>
 
         <table class="data-table">
@@ -86,8 +86,8 @@
                 <tr>
                     <td><?= $no++ ?></td>
                     <td style="text-align: left; text-transform: capitalize; padding-left: 10px;"><?= str_replace('_', ' ', $k) ?></td>
-                    <td style="font-weight: bold; color: <?= $v == '1' ? '#065f46' : '#991b1b' ?>;">
-                        <?= $v == '1' ? 'BERSIH' : 'KOTOR / PERLU TINDAKAN' ?>
+                    <td style="font-weight: bold; <?= empty($blank) ? ($v == '1' ? 'color: #065f46;' : 'color: #991b1b;') : '' ?>">
+                        <?php if (! empty($blank)): ?>&nbsp;<?php else: ?><?= $v == '1' ? 'BERSIH' : 'KOTOR / PERLU TINDAKAN' ?><?php endif; ?>
                     </td>
                 </tr>
                 <?php endforeach; ?>

@@ -98,6 +98,30 @@ class PembersihanTransportasiController extends BaseController
         ]);
     }
 
+    public function exportPdfBlank()
+    {
+        helper('print');
+        $rekap = [];
+        for ($i = 0; $i < 15; $i++) {
+            $rekap[] = ['tanggal' => '', 'nama_personil' => '', 'jam' => '', 'paraf' => '', 'keterangan' => ''];
+        }
+
+        return view('pembersihan_transportasi/print', [
+            'blank'     => true,
+            'header'    => [
+                'nama_kendaraan' => '',
+                'bulan'          => '',
+                'tahun'          => '',
+                'nama_gizi'      => '',
+                'nama_kappg'     => '',
+                'created_by'     => null,
+            ],
+            'rekap'     => $rekap,
+            'title'     => 'Form Pembersihan Transportasi (kosong)',
+            'signature' => signature_row_for_pdf(null),
+        ]);
+    }
+
     public function exportExcel($id)
     {
         $form = $this->model->find($id);
