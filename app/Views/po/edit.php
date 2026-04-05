@@ -19,7 +19,7 @@
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label class="form-label text-uppercase small ls-1">Dari (Unit SPPG)</label>
-                            <input type="text" name="dari" class="form-control bg-light" value="Dapur SPPG Bunar, Kec. Balaraja" readonly>
+                            <input type="text" name="dari" class="form-control bg-light" value="<?= esc(session()->get('sppg_nama') ?? '') ?>" readonly>
                         </div>
                         <div class="mb-3">
                             <label class="form-label text-uppercase small ls-1">Nama Supplier</label>

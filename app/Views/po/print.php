@@ -51,7 +51,7 @@
         </div>
         <div style="text-align: center; flex: 1;">
             <h2 style="margin: 0; color: #000; font-size: 20pt; letter-spacing: 1px;">FORM PURCHASE ORDER</h2>
-            <p style="margin: 5px 0 0; font-weight: bold;"><?= session()->get('sppg_nama') ?? 'Dapur SPPG Bunar' ?></p>
+            <p style="margin: 5px 0 0; font-weight: bold;"><?= esc(session()->get('sppg_nama') ?? '') ?></p>
         </div>
     </div>
 
@@ -59,7 +59,7 @@
         <table class="info-table">
             <tr>
                 <td width="120">Dari</td>
-                <td>: <?= session()->get('sppg_nama') ?? 'Dapur SPPG Bunar, Kec. Balaraja' ?></td>
+                <td>: <?= esc(session()->get('sppg_nama') ?? '') ?></td>
             </tr>
             <tr>
                 <td>Nama Supplier</td>
