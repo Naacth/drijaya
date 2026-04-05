@@ -61,7 +61,7 @@
         .data-table td.name { text-align: left; }
 
         .sig-section { margin-top: 25px; text-align: center; }
-        .sig-table { width: 100%; border-collapse: collapse; }
+        .sig-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
         .sig-table td {
             border: 1px solid #000;
             padding: 8px;
@@ -69,9 +69,11 @@
             vertical-align: top;
             color: #000;
             font-size: 11px;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
-        .sig-space { height: 60px; }
-        .sig-role { font-weight: bold; font-size: 11px; }
+        .sig-space { height: 60px; vertical-align: bottom; }
+        .sig-role { font-weight: bold; font-size: 11px; margin-bottom: 5px; min-height: 25px; }
     </style>
 <?= view('layout/print_signatures_style') ?>
 </head>
@@ -155,7 +157,7 @@
                 <tr>
                     <td>
                         <p class="sig-role">Pengawas produksi &amp; kualitas</p>
-                        <div class="sig-space" style="display: flex; align-items: end; justify-content: center;">
+                        <div class="sig-space">
                             <?php if (($__sig = signature_data_uri($signature ?? [], 'ttd_ahli_gizi')) !== ''): ?>
                                 <img src="<?= $__sig ?>" alt="TTD" style="max-height: 55px; max-width: 100%; object-fit: contain;">
                             <?php endif; ?>
@@ -163,7 +165,7 @@
                     </td>
                     <td>
                         <p class="sig-role">Pengawas pengadaan bahan pangan</p>
-                        <div class="sig-space" style="display: flex; align-items: end; justify-content: center;">
+                        <div class="sig-space">
                             <?php if (($__sig = signature_data_uri($signature ?? [], 'ttd_akuntan')) !== ''): ?>
                                 <img src="<?= $__sig ?>" alt="TTD" style="max-height: 55px; max-width: 100%; object-fit: contain;">
                             <?php endif; ?>
@@ -171,7 +173,7 @@
                     </td>
                     <td>
                         <p class="sig-role">Kepala satuan pelayanan</p>
-                        <div class="sig-space" style="display: flex; align-items: end; justify-content: center;">
+                        <div class="sig-space">
                             <?php if (($__sig = signature_data_uri($signature ?? [], 'ttd_kepala_sppg')) !== ''): ?>
                                 <img src="<?= $__sig ?>" alt="TTD" style="max-height: 55px; max-width: 100%; object-fit: contain;">
                             <?php endif; ?>
