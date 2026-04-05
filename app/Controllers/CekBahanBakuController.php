@@ -197,6 +197,9 @@ class CekBahanBakuController extends BaseController
         $createdBy          = isset($header['created_by']) ? (int) $header['created_by'] : 0;
         $data['signature'] = signature_row_for_pdf($createdBy > 0 ? $createdBy : null);
 
+        $data['override_nama']   = $header['nama_sppg'] ?? null;
+        $data['override_alamat'] = $header['alamat_sppg'] ?? null;
+
         return view('cek_bahan/print', $data);
     }
 

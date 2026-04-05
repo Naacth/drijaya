@@ -15,7 +15,7 @@ class RouteModel extends Model
 
     public function getWithCreator()
     {
-        return $this->select('routes.*, users.nama as pembuat')
+        return $this->select('routes.*, users.nama as pembuat, users.sppg_id')
                     ->join('users', 'users.id = routes.created_by')
                     ->orderBy('routes.created_at', 'DESC');
     }

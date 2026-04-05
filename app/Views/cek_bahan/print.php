@@ -127,7 +127,10 @@
     <div class="page-container">
         
         <!-- HEADER -->
-        <?= view('layout/print_header') ?>
+        <?= view('layout/print_header', [
+            'override_nama'   => $override_nama   ?? null,
+            'override_alamat' => $override_alamat ?? null,
+        ]) ?>
 
         <table class="data-table print-dark-header">
             <thead>

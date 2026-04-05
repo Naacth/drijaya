@@ -28,6 +28,9 @@ class RouteController extends BaseController
 
         if ($role == 'aslap') {
             $query->where('routes.created_by', $userId);
+        } elseif ($role == 'admin' || $role == 'pic') {
+            $sppgId = session()->get('sppg_id');
+            if ($sppgId) $query->where('users.sppg_id', $sppgId);
         }
 
         if ($status) {
@@ -282,6 +285,14 @@ class RouteController extends BaseController
         if (!$header) throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
 
         $items = $this->itemModel->where('route_id', $id)->findAll();
+
+        // Fetch SPPG Details for Header (Address etc)
+        $sppgId = $header['sppg_id'] ?? null;
+        $sppgDetails = null;
+        if ($sppgId) {
+            $sppgModel = new \App\Models\SppgModel();
+            $sppgDetails = $sppgModel->find($sppgId);
+        }
         
         // Find signatures for this SPPG
         $sigModel = new \App\Models\SignatureModel();
@@ -305,6 +316,8 @@ class RouteController extends BaseController
             'items'           => $items,
             'signature'       => $signature,
             'user_signature'  => signature_row_for_pdf(isset($header['created_by']) ? (int) $header['created_by'] : null),
+            'override_nama'   => $sppgDetails['nama_sppg'] ?? null,
+            'override_alamat' => $sppgDetails['alamat'] ?? null,
         ];
 
         return view('route/surat_jalan', $data);

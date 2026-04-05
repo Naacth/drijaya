@@ -4,8 +4,8 @@
  *
  * @var bool $compact_print_header Mode ringkas untuk PDF (font/ margin lebih kecil, garis pemisah satu).
  */
-$sppg_nama   = session()->get('sppg_nama') ?? 'BUNAR SUKAMULYA';
-$sppg_alamat = session()->get('sppg_alamat') ?? 'Alamat Dapur SPPG';
+$sppg_nama   = $override_nama   ?? session()->get('sppg_nama')   ?? 'BUNAR SUKAMULYA';
+$sppg_alamat = $override_alamat ?? session()->get('sppg_alamat') ?? 'Alamat Dapur SPPG';
 
 $display_nama = str_ireplace('SPPG ', '', $sppg_nama);
 $__bgn        = public_asset_data_uri('bgn.png');

@@ -156,7 +156,11 @@
     <div class="page-container <?= $index !== count($items) - 1 ? 'page-break' : '' ?>">
         
         <!-- HEADER -->
-        <?= view('layout/print_header', ['compact_print_header' => true]) ?>
+        <?= view('layout/print_header', [
+            'compact_print_header' => true,
+            'override_nama'   => $override_nama   ?? null,
+            'override_alamat' => $override_alamat ?? null,
+        ]) ?>
 
         <div class="title-main">
             SURAT JALAN / DELIVERY ORDER<br>
