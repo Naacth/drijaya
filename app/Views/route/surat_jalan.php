@@ -283,9 +283,9 @@
                             <?php endif; ?>
                         </td>
                         <td class="sj-sig-space">
-                            <?php if (($__sig = signature_data_uri($signature ?? [], 'ttd_kepala_dapur')) !== ''): ?>
+                            <?php if (($__sig = signature_data_uri($signature ?? [], 'ttd_kepala_sppg')) !== ''): ?>
                                 <img src="<?= $__sig ?>" alt="">
-                            <?php elseif (($__sig = signature_data_uri($user_signature ?? [], 'ttd_kepala_koki')) !== ''): ?>
+                            <?php elseif (($__sig = signature_data_uri($user_signature ?? [], 'ttd_kepala_sppg')) !== ''): ?>
                                 <img src="<?= $__sig ?>" alt="">
                             <?php endif; ?>
                         </td>
@@ -319,14 +319,14 @@
                         <td class="sj-sig-name">
                             <span class="sj-sig-line">
                                 <?php
-                                    $nm_kd = $signature['nama_kepala_dapur'] ?? '';
-                                    if (empty($nm_kd) || strpos($nm_kd, '..........') !== false) {
-                                        $nm_kd = $user_signature['nama_kepala_koki'] ?? '';
+                                    $nm_ks = $signature['nama_kepala_sppg'] ?? '';
+                                    if (empty($nm_ks) || strpos($nm_ks, '..........') !== false) {
+                                        $nm_ks = $user_signature['nama_kepala_sppg'] ?? '';
                                     }
-                                    echo esc($nm_kd);
+                                    echo esc($nm_ks);
                                 ?>
                             </span>
-                            <small>(Kepala Dapur)</small>
+                            <small>(Kepala SPPG)</small>
                         </td>
                         <td class="sj-sig-name">
                             <span class="sj-sig-line">&nbsp;</span>
