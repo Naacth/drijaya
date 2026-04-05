@@ -20,8 +20,8 @@
             box-sizing: border-box;
         }
         html, body { width: 100%; }
-        /* Screen: fluid. Print: overridden to A4-safe width */
-        .page-container { width: 100%; margin: 0 auto; padding: 0; background: #fff; box-sizing: border-box; }
+        /* Container: use 98% to provide a tiny safety buffer at the edges */
+        .page-container { width: 98%; max-width: 98%; margin: 0 auto; padding: 0; background: #fff; box-sizing: border-box; }
         * { box-sizing: border-box; }
         
         /* Header Styling */
@@ -53,10 +53,11 @@
         }
         
         /* Info Area */
-        .info-section { width: 100%; margin-bottom: 8px; border-collapse: collapse; }
+        .info-section { width: 100%; margin-bottom: 8px; border-collapse: collapse; table-layout: fixed; }
         .info-section td { vertical-align: top; padding: 0; }
         .kepada-box { width: 50%; text-align: left; }
-        .detail-table { width: 100%; border-collapse: collapse; margin-left: auto; }
+        .detail-wrap { width: 45%; }
+        .detail-table { width: 100%; border-collapse: collapse; }
         .detail-table td { border: 1px solid #000; padding: 2px 5px; font-size: 9px; }
         .detail-table td:first-child { background: #f2f2f2; width: 85px; }
 
@@ -117,10 +118,10 @@
         /* Print Utilities */
         @media print { 
             .no-print { display: none !important; } 
-            body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            body { -webkit-print-color-adjust: exact; print-color-adjust: exact; margin: 0; padding: 0; }
             .page-break { page-break-after: always; }
             /* Use standard browser print logic for container with safety margin */
-            .page-container { width: 100%; max-width: 100%; margin: 0; padding: 0; }
+            .page-container { width: 98% !important; max-width: 98% !important; margin: 0 auto !important; padding: 0; }
             /* Force table not to exceed container */
             .main-table, .sj-sig-table, .detail-table, .info-section { width: 100% !important; table-layout: fixed; }
             /* Keep info side-by-side in print to save height */
