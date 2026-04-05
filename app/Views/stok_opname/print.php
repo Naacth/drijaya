@@ -110,7 +110,7 @@
                                 <img src="<?= $__sig ?>" alt="TTD" style="max-height: 55px; max-width: 150px; object-fit: contain;">
                             <?php endif; ?>
                         </div>
-                        <p>(<?= esc($header['nama_kepala_sppg'] ?? '.....................') ?>)</p>
+                        <p>(<?= !empty($signature['nama_kepala_sppg']) ? esc($signature['nama_kepala_sppg']) : esc($header['nama_kepala_sppg'] ?? '.....................') ?>)</p>
                     </td>
                     <td width="50%">
                         <p>&nbsp;</p>
@@ -120,7 +120,7 @@
                                 <img src="<?= $__sig ?>" alt="TTD" style="max-height: 55px; max-width: 150px; object-fit: contain;">
                             <?php endif; ?>
                         </div>
-                        <p>(<?= esc($header['nama_akuntan'] ?? '.....................') ?>)</p>
+                        <p>(<?= !empty($signature['nama_akuntan']) ? esc($signature['nama_akuntan']) : esc($header['nama_akuntan'] ?? '.....................') ?>)</p>
                     </td>
                 </tr>
             </table>

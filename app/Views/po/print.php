@@ -133,7 +133,7 @@
             <div class="sig-space">
                 <?php if ($__poCols[0] !== ''): ?><img src="<?= $__poCols[0] ?>" alt="TTD"><?php endif; ?>
             </div>
-            <div class="name">( Yusta Anjaya, S.AK )</div>
+            <div class="name">( <?= !empty($__sigPo['nama_akuntan']) ? esc($__sigPo['nama_akuntan']) : 'Yusta Anjaya, S.AK' ?> )</div>
             <div class="role">Dibuat Oleh</div>
         </div>
         <div class="signature-box">
@@ -141,7 +141,7 @@
             <div class="sig-space">
                 <?php if ($__poCols[1] !== ''): ?><img src="<?= $__poCols[1] ?>" alt="TTD"><?php endif; ?>
             </div>
-            <div class="name">( Desy Junesty, AMD.GZ )</div>
+            <div class="name">( <?= !empty($__sigPo['nama_ahli_gizi']) ? esc($__sigPo['nama_ahli_gizi']) : 'Desy Junesty, AMD.GZ' ?> )</div>
             <div class="role">Diketahui</div>
         </div>
         <div class="signature-box">
@@ -149,7 +149,7 @@
             <div class="sig-space">
                 <?php if ($__poCols[2] !== ''): ?><img src="<?= $__poCols[2] ?>" alt="TTD"><?php endif; ?>
             </div>
-            <div class="name">( Dera )</div>
+            <div class="name">( <?= !empty($__sigPo['nama_kepala_koki']) ? esc($__sigPo['nama_kepala_koki']) : 'Dera' ?> )</div>
             <div class="role">Diketahui</div>
         </div>
         <div class="signature-box">
@@ -157,7 +157,7 @@
             <div class="sig-space">
                 <?php if ($__poCols[3] !== ''): ?><img src="<?= $__poCols[3] ?>" alt="TTD"><?php endif; ?>
             </div>
-            <div class="name">( M.Rizki Waluya, S.P.W.K. )</div>
+            <div class="name">( <?= !empty($__sigPo['nama_kepala_sppg']) ? esc($__sigPo['nama_kepala_sppg']) : 'M.Rizki Waluya, S.P.W.K.' ?> )</div>
             <div class="role">Disetujui Oleh</div>
         </div>
     </div>

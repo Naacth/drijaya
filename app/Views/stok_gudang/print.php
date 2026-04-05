@@ -181,9 +181,9 @@
                     </td>
                 </tr>
                 <tr>
-                    <td><p class="sig-role">AHLI GIZI</p></td>
-                    <td><p class="sig-role">Akuntan</p></td>
-                    <td><p class="sig-role">Kepala sppg</p></td>
+                    <td><p class="sig-role" style="text-transform: uppercase;"><?= !empty($signature['nama_ahli_gizi']) ? esc($signature['nama_ahli_gizi']) : 'AHLI GIZI' ?></p></td>
+                    <td><p class="sig-role" style="text-transform: uppercase;"><?= !empty($signature['nama_akuntan']) ? esc($signature['nama_akuntan']) : 'AKUNTAN' ?></p></td>
+                    <td><p class="sig-role" style="text-transform: uppercase;"><?= !empty($signature['nama_kepala_sppg']) ? esc($signature['nama_kepala_sppg']) : 'KEPALA SPPG' ?></p></td>
                 </tr>
             </table>
         </div>

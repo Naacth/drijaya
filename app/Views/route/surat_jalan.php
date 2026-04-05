@@ -269,17 +269,23 @@
                 <tbody>
                     <tr>
                         <td class="sj-sig-space">
-                            <?php if (($__sig = signature_data_uri_with_aslap_fallback($signature ?? [], $user_signature ?? [], 'ttd_akuntan')) !== ''): ?>
+                            <?php if (($__sig = signature_data_uri($signature ?? [], 'ttd_akuntan')) !== ''): ?>
+                                <img src="<?= $__sig ?>" alt="">
+                            <?php elseif (($__sig = signature_data_uri($user_signature ?? [], 'ttd_akuntan')) !== ''): ?>
                                 <img src="<?= $__sig ?>" alt="">
                             <?php endif; ?>
                         </td>
                         <td class="sj-sig-space">
-                            <?php if (($__sig = signature_data_uri_with_aslap_fallback($signature ?? [], $user_signature ?? [], 'ttd_ahli_gizi')) !== ''): ?>
+                            <?php if (($__sig = signature_data_uri($signature ?? [], 'ttd_ahli_gizi')) !== ''): ?>
+                                <img src="<?= $__sig ?>" alt="">
+                            <?php elseif (($__sig = signature_data_uri($user_signature ?? [], 'ttd_ahli_gizi')) !== ''): ?>
                                 <img src="<?= $__sig ?>" alt="">
                             <?php endif; ?>
                         </td>
                         <td class="sj-sig-space">
-                            <?php if (($__sig = signature_data_uri_with_aslap_fallback($signature ?? [], $user_signature ?? [], 'ttd_kepala_dapur')) !== ''): ?>
+                            <?php if (($__sig = signature_data_uri($signature ?? [], 'ttd_kepala_dapur')) !== ''): ?>
+                                <img src="<?= $__sig ?>" alt="">
+                            <?php elseif (($__sig = signature_data_uri($user_signature ?? [], 'ttd_kepala_koki')) !== ''): ?>
                                 <img src="<?= $__sig ?>" alt="">
                             <?php endif; ?>
                         </td>
@@ -287,15 +293,33 @@
                     </tr>
                     <tr>
                         <td class="sj-sig-name">
-                            <span class="sj-sig-line"><?= esc($signature['nama_akuntan'] ?? '') ?></span>
+                            <span class="sj-sig-line">
+                                <?php
+                                    $nm_ak = $signature['nama_akuntan'] ?? '';
+                                    if(empty($nm_ak)) $nm_ak = $user_signature['nama_akuntan'] ?? '';
+                                    echo esc($nm_ak);
+                                ?>
+                            </span>
                             <small>(Akuntan)</small>
                         </td>
                         <td class="sj-sig-name">
-                            <span class="sj-sig-line"><?= esc($signature['nama_ahli_gizi'] ?? '') ?></span>
+                            <span class="sj-sig-line">
+                                <?php
+                                    $nm_ag = $signature['nama_ahli_gizi'] ?? '';
+                                    if(empty($nm_ag)) $nm_ag = $user_signature['nama_ahli_gizi'] ?? '';
+                                    echo esc($nm_ag);
+                                ?>
+                            </span>
                             <small>(Ahli Gizi)</small>
                         </td>
                         <td class="sj-sig-name">
-                            <span class="sj-sig-line"><?= esc($signature['nama_kepala_dapur'] ?? '') ?></span>
+                            <span class="sj-sig-line">
+                                <?php
+                                    $nm_kd = $signature['nama_kepala_dapur'] ?? '';
+                                    if(empty($nm_kd)) $nm_kd = $user_signature['nama_kepala_koki'] ?? '';
+                                    echo esc($nm_kd);
+                                ?>
+                            </span>
                             <small>(Kepala Dapur)</small>
                         </td>
                         <td class="sj-sig-name">

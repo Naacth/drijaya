@@ -91,14 +91,24 @@
         <tr>
             <td width="30%">
                 Mengetahui,<br>Kepala SPPG
-                <div class="signature-space"></div>
-                <strong><?= esc($header['kepala_sppg']) ?></strong>
+                <div class="signature-space" style="display: flex; align-items: end; justify-content: center;">
+                    <?php if (($__sig = signature_data_uri($signature ?? [], 'ttd_kepala_sppg')) !== ''): ?>
+                        <img src="<?= $__sig ?>" alt="TTD" style="max-height: 55px; max-width: 100%; object-fit: contain;">
+                    <?php endif; ?>
+                </div>
+                <strong><?= !empty($signature['nama_kepala_sppg']) ? esc($signature['nama_kepala_sppg']) : esc($header['kepala_sppg'] ?? '........................') ?></strong>
             </td>
             <td width="40%"></td>
             <td width="30%">
                 Tangerang, <?= date('d F Y') ?><br>Asisten Lapangan / Akuntan
-                <div class="signature-space"></div>
-                <strong><?= esc(session()->get('nama')) ?></strong>
+                <div class="signature-space" style="display: flex; align-items: end; justify-content: center;">
+                    <?php if (($__sig = signature_data_uri($signature ?? [], 'ttd_akuntan')) !== ''): ?>
+                        <img src="<?= $__sig ?>" alt="TTD" style="max-height: 55px; max-width: 100%; object-fit: contain;">
+                    <?php elseif (($__sig = signature_data_uri($signature ?? [], 'ttd_aslap')) !== ''): ?>
+                        <img src="<?= $__sig ?>" alt="TTD" style="max-height: 55px; max-width: 100%; object-fit: contain;">
+                    <?php endif; ?>
+                </div>
+                <strong><?= !empty($signature['nama_akuntan']) ? esc($signature['nama_akuntan']) : (!empty($signature['nama_aslap']) ? esc($signature['nama_aslap']) : esc(session()->get('nama'))) ?></strong>
             </td>
         </tr>
     </table>

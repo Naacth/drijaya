@@ -83,14 +83,22 @@
         <tr>
             <td width="30%">
                 Diketahui Oleh,<br>Kepala SPPG
-                <div class="signature-space"></div>
-                <strong>( .................................... )</strong>
+                <div class="signature-space" style="display: flex; align-items: end; justify-content: center;">
+                    <?php if (($__sig = signature_data_uri($signature ?? [], 'ttd_kepala_sppg')) !== ''): ?>
+                        <img src="<?= $__sig ?>" alt="TTD" style="max-height: 55px; max-width: 100%; object-fit: contain;">
+                    <?php endif; ?>
+                </div>
+                <strong>( <?= !empty($signature['nama_kepala_sppg']) ? esc($signature['nama_kepala_sppg']) : '....................................' ?> )</strong>
             </td>
             <td width="40%"></td>
             <td width="30%">
                 Tangerang, <?= date('d F Y') ?><br>Dibuat Oleh,<br>Akuntan
-                <div class="signature-space"></div>
-                <strong><?= session()->get('nama') ?></strong>
+                <div class="signature-space" style="display: flex; align-items: end; justify-content: center;">
+                    <?php if (($__sig = signature_data_uri($signature ?? [], 'ttd_akuntan')) !== ''): ?>
+                        <img src="<?= $__sig ?>" alt="TTD" style="max-height: 55px; max-width: 100%; object-fit: contain;">
+                    <?php endif; ?>
+                </div>
+                <strong><?= !empty($signature['nama_akuntan']) ? esc($signature['nama_akuntan']) : session()->get('nama') ?></strong>
             </td>
         </tr>
     </table>
