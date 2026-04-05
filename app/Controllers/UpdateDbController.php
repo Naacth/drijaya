@@ -1,25 +1,33 @@
 <?php
-
 namespace App\Controllers;
-
-class UpdateDbController extends BaseController
-{
-    public function index()
-    {
+use CodeIgniter\Controller;
+class UpdateDbController extends Controller {
+    public function index() {
         $db = \Config\Database::connect();
-        try {
-            $db->query("ALTER TABLE purchase_order_items ADD COLUMN harga_satuan DECIMAL(15,2) DEFAULT '0.00' AFTER satuan");
-        } catch (\Exception $e) {}
-        try {
-            $db->query("ALTER TABLE purchase_order_items ADD COLUMN tambahan DECIMAL(15,2) DEFAULT '0.00' AFTER harga_satuan");
-        } catch (\Exception $e) {}
-        try {
-            $db->query("ALTER TABLE purchase_order_items ADD COLUMN jumlah_faktual DECIMAL(10,2) DEFAULT '0.00' AFTER tambahan");
-        } catch (\Exception $e) {}
-        try {
-            $db->query("ALTER TABLE purchase_order_items ADD COLUMN total DECIMAL(15,2) DEFAULT '0.00' AFTER jumlah_faktual");
-        } catch (\Exception $e) {}
+        $forge = \Config\Database::forge();
+        
+        $fields = [
+            'nama_aslap' => ['type' => 'VARCHAR', 'constraint' => 255, 'null' => true],
+            'nama_kepala_sppg' => ['type' => 'VARCHAR', 'constraint' => 255, 'null' => true],
+            'nama_ahli_gizi' => ['type' => 'VARCHAR', 'constraint' => 255, 'null' => true],
+            'nama_kepala_koki' => ['type' => 'VARCHAR', 'constraint' => 255, 'null' => true],
+            'nama_akuntan' => ['type' => 'VARCHAR', 'constraint' => 255, 'null' => true]
+        ];
 
-        return "Successfully checked and added extra columns to purchase_order_items.";
+        try {
+            foreach ($fields as $fieldName => $fieldProps) {
+                if (!$db->fieldExists($fieldName, 'user_signatures')) {
+                    $forge->addColumn('user_signatures', [
+                        $fieldName => $fieldProps
+                    ]);
+                    echo "Added column: $fieldName<br>";
+                } else {
+                    echo "Column $fieldName already exists.<br>";
+                }
+            }
+            echo "Database update completed successfully.";
+        } catch (\Exception $e) {
+            echo "Error: " . $e->getMessage();
+        }
     }
 }

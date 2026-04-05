@@ -8,6 +8,11 @@ class UserSignatureModel extends Model
     protected $primaryKey = 'id';
     protected $useTimestamps = true;
     protected $allowedFields = [
-        'user_id', 'ttd_aslap', 'ttd_kepala_sppg', 'ttd_ahli_gizi', 'ttd_kepala_koki', 'ttd_akuntan'
+        'user_id', 
+        'ttd_aslap', 'nama_aslap', 
+        'ttd_kepala_sppg', 'nama_kepala_sppg', 
+        'ttd_ahli_gizi', 'nama_ahli_gizi', 
+        'ttd_kepala_koki', 'nama_kepala_koki', 
+        'ttd_akuntan', 'nama_akuntan'
     ];
 }

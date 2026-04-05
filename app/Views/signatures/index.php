@@ -27,6 +27,7 @@
                         <!-- TTD Aslap -->
                         <div class="col-md-6">
                             <label class="form-label fw-bold">1. Tanda Tangan Asisten Lapangan (Anda)</label>
+                            <input type="text" name="nama_aslap" class="form-control mb-2" placeholder="Masukkan nama Asisten Lapangan..." value="<?= esc($signature['nama_aslap'] ?? '') ?>">
                             <input type="file" name="ttd_aslap" class="form-control mb-2" accept="image/*" onchange="previewImage(this, 'preview-aslap')">
                             <div class="p-3 border rounded text-center bg-light mt-2" style="min-height: 120px; display: flex; align-items: center; justify-content: center;">
                                 <?php if (!empty($signature['ttd_aslap'])): ?>
@@ -41,6 +42,7 @@
                         <!-- TTD Kepala SPPG -->
                         <div class="col-md-6">
                             <label class="form-label fw-bold">2. Tanda Tangan Kepala SPPG</label>
+                            <input type="text" name="nama_kepala_sppg" class="form-control mb-2" placeholder="Masukkan nama Kepala SPPG..." value="<?= esc($signature['nama_kepala_sppg'] ?? '') ?>">
                             <input type="file" name="ttd_kepala_sppg" class="form-control mb-2" accept="image/*" onchange="previewImage(this, 'preview-kepala')">
                             <div class="p-3 border rounded text-center bg-light mt-2" style="min-height: 120px; display: flex; align-items: center; justify-content: center;">
                                 <?php if (!empty($signature['ttd_kepala_sppg'])): ?>
@@ -55,6 +57,7 @@
                         <!-- TTD Ahli Gizi -->
                         <div class="col-md-6">
                             <label class="form-label fw-bold">3. Tanda Tangan Ahli Gizi</label>
+                            <input type="text" name="nama_ahli_gizi" class="form-control mb-2" placeholder="Masukkan nama Ahli Gizi..." value="<?= esc($signature['nama_ahli_gizi'] ?? '') ?>">
                             <input type="file" name="ttd_ahli_gizi" class="form-control mb-2" accept="image/*" onchange="previewImage(this, 'preview-gizi')">
                             <div class="p-3 border rounded text-center bg-light mt-2" style="min-height: 120px; display: flex; align-items: center; justify-content: center;">
                                 <?php if (!empty($signature['ttd_ahli_gizi'])): ?>
@@ -69,6 +72,7 @@
                         <!-- TTD Kepala Koki -->
                         <div class="col-md-6">
                             <label class="form-label fw-bold">4. Tanda Tangan Kepala Koki Satuan Pelayanan</label>
+                            <input type="text" name="nama_kepala_koki" class="form-control mb-2" placeholder="Masukkan nama Kepala Koki..." value="<?= esc($signature['nama_kepala_koki'] ?? '') ?>">
                             <input type="file" name="ttd_kepala_koki" class="form-control mb-2" accept="image/*" onchange="previewImage(this, 'preview-koki')">
                             <div class="p-3 border rounded text-center bg-light mt-2" style="min-height: 120px; display: flex; align-items: center; justify-content: center;">
                                 <?php if (!empty($signature['ttd_kepala_koki'])): ?>
@@ -83,6 +87,7 @@
                         <!-- TTD Akuntan -->
                         <div class="col-md-6">
                             <label class="form-label fw-bold">5. Tanda Tangan Akuntan</label>
+                            <input type="text" name="nama_akuntan" class="form-control mb-2" placeholder="Masukkan nama Akuntan..." value="<?= esc($signature['nama_akuntan'] ?? '') ?>">
                             <input type="file" name="ttd_akuntan" class="form-control mb-2" accept="image/*" onchange="previewImage(this, 'preview-akuntan')">
                             <div class="p-3 border rounded text-center bg-light mt-2" style="min-height: 120px; display: flex; align-items: center; justify-content: center;">
                                 <?php if (!empty($signature['ttd_akuntan'])): ?>

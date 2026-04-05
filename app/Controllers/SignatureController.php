@@ -30,20 +30,29 @@ class SignatureController extends BaseController
             mkdir($uploadPath, 0777, true);
         }
 
-        $fields = ['ttd_aslap', 'ttd_kepala_sppg', 'ttd_ahli_gizi', 'ttd_kepala_koki', 'ttd_akuntan'];
+        $fields = ['aslap', 'kepala_sppg', 'ahli_gizi', 'kepala_koki', 'akuntan'];
 
-        foreach ($fields as $field) {
-            $file = $this->request->getFile($field);
+        foreach ($fields as $suffix) {
+            $fileField = 'ttd_' . $suffix;
+            $nameField = 'nama_' . $suffix;
+            
+            // Save Name
+            if ($this->request->getPost($nameField) !== null) {
+                $dataToSave[$nameField] = $this->request->getPost($nameField);
+            }
+
+            // Save File
+            $file = $this->request->getFile($fileField);
             if ($file && $file->isValid() && !$file->hasMoved()) {
                 $newName = $file->getRandomName();
                 $file->move($uploadPath, $newName);
                 
                 // Delete old file if exists
-                if ($existing && !empty($existing[$field])) {
-                    @unlink($uploadPath . '/' . $existing[$field]);
+                if ($existing && !empty($existing[$fileField])) {
+                    @unlink($uploadPath . '/' . $existing[$fileField]);
                 }
                 
-                $dataToSave[$field] = $newName;
+                $dataToSave[$fileField] = $newName;
             }
         }
 
