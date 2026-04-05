@@ -7,7 +7,8 @@
             <h4 class="fw-bold mb-0">Detail Purchase Order</h4>
             <p class="text-muted small">Informasi lengkap mengenai histori dan rincian item PO.</p>
         </div>
-        <div class="d-flex gap-2">
+        <div class="d-flex gap-2 align-items-center">
+            <?= $this->include('layout/print_blank_button', ['printBlankUrl' => 'po/export-pdf-blank', 'printBlankRoles' => ['admin', 'pic', 'akuntan'], 'printBlankWrapperClass' => 'mb-0']) ?>
             <a href="<?= base_url('po') ?>" class="btn btn-outline-secondary btn-sm">
                 <i class="bi bi-arrow-left me-1"></i> Kembali
             </a>

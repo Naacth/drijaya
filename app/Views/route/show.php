@@ -7,7 +7,8 @@
             <h4 class="fw-bold mb-0">Detail Rute Pengiriman</h4>
             <p class="text-muted small">Rincian alur pengiriman dan status monitoring.</p>
         </div>
-        <div class="d-flex gap-2">
+        <div class="d-flex gap-2 align-items-center">
+            <?= $this->include('layout/print_blank_button', ['printBlankUrl' => 'routes/export-pdf-blank', 'printBlankRoles' => ['aslap', 'admin', 'pic'], 'printBlankWrapperClass' => 'mb-0']) ?>
             <a href="<?= base_url('routes/surat-jalan/' . $header['id']) ?>" target="_blank" class="btn btn-primary btn-sm">
                 <i class="bi bi-printer me-1"></i> Cetak Surat Jalan
             </a>

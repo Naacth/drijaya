@@ -10,7 +10,8 @@
             <h4 class="fw-bold mb-0">Detail Absensi Relawan</h4>
             <p class="text-muted small mb-0">Laporan tanggal: <strong><?= date('d F Y', strtotime($absensi['tanggal'])) ?></strong></p>
         </div>
-        <div class="d-flex gap-2 flex-wrap">
+        <div class="d-flex gap-2 flex-wrap align-items-center">
+            <?= $this->include('layout/print_blank_button', ['printBlankUrl' => 'absensi/export-pdf-blank', 'printBlankRoles' => ['aslap', 'admin', 'pic'], 'printBlankWrapperClass' => 'mb-0']) ?>
             <?php if (session()->get('role') === 'aslap' && (int)($absensi['created_by'] ?? 0) === (int)session()->get('user_id')): ?>
             <a href="<?= site_url('absensi/edit/'.$absensi['id']) ?>" class="btn btn-primary px-4 shadow-sm">
                 <i class="bi bi-pencil-square me-2"></i>Ubah

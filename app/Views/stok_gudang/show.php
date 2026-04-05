@@ -9,7 +9,8 @@
         <h4 class="mb-1" style="font-weight: 700;">Detail Stok Gudang</h4>
         <p class="text-muted small mb-0"><?= esc($header['nama_sppg']) ?> — <?= date('d F Y', strtotime($header['tanggal'])) ?></p>
     </div>
-    <div class="d-flex gap-2 flex-wrap">
+    <div class="d-flex gap-2 flex-wrap align-items-center">
+        <?= $this->include('layout/print_blank_button', ['printBlankUrl' => 'stok-gudang/export-pdf-blank', 'printBlankRoles' => ['aslap', 'admin', 'pic'], 'printBlankWrapperClass' => 'mb-0']) ?>
         <?php if (session()->get('role') === 'admin' || session()->get('role') === 'aslap'): ?>
         <a href="<?= site_url('stok-gudang/edit/'.$header['id']) ?>" class="btn btn-primary">
             <i class="bi bi-pencil-square me-1"></i> Ubah

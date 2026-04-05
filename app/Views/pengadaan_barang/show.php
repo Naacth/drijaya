@@ -6,7 +6,8 @@
         <h4 class="mb-1 fw-bold">Detail Pengadaan Barang</h4>
         <p class="text-muted small mb-0">Informasi lengkap pengajuan pengadaan barang</p>
     </div>
-    <div class="d-flex gap-2">
+    <div class="d-flex gap-2 align-items-center">
+        <?= $this->include('layout/print_blank_button', ['printBlankUrl' => 'pengadaan-barang/export-pdf-blank', 'printBlankRoles' => ['pic', 'admin'], 'printBlankWrapperClass' => 'mb-0']) ?>
         <a href="<?= site_url('pengadaan-barang/export-pdf/' . $header['id']) ?>" target="_blank" class="btn btn-outline-danger btn-sm px-3 rounded-pill shadow-sm"><i class="bi bi-file-pdf me-1"></i> Cetak PDF</a>
         <a href="<?= site_url('pengadaan-barang/export-excel/' . $header['id']) ?>" class="btn btn-outline-success btn-sm px-3 rounded-pill shadow-sm"><i class="bi bi-file-excel me-1"></i> Export Excel</a>
     </div>

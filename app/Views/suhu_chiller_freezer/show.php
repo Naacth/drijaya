@@ -5,7 +5,8 @@
         <a href="<?= site_url('suhu-chiller-freezer') ?>" class="text-decoration-none text-muted mb-2 d-inline-block"><i class="bi bi-arrow-left me-1"></i> Kembali</a>
         <h4 class="mb-1" style="font-weight: 700;">Detail Suhu Chiller & Freezer</h4>
     </div>
-    <div class="d-flex gap-2">
+    <div class="d-flex gap-2 align-items-center">
+        <?= $this->include('layout/print_blank_button', ['printBlankUrl' => 'suhu-chiller-freezer/export-pdf-blank', 'printBlankRoles' => ['ahli_gizi', 'admin', 'pic'], 'printBlankWrapperClass' => 'mb-0']) ?>
         <?php if (session()->get('role') === 'ahli_gizi'): ?>
         <a href="<?= site_url('suhu-chiller-freezer/edit/' . $header['id']) ?>" class="btn btn-warning"><i class="bi bi-pencil me-1"></i> Edit</a>
         <?php endif; ?>
