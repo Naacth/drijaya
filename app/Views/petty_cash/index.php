@@ -7,7 +7,7 @@
         <p class="text-muted small mb-0">Kelola operasional dana kas kecil harian</p>
     </div>
     <div class="d-flex gap-2">
-        <?= $this->include('layout/print_blank_button', ['printBlankUrl' => 'petty-cash/export-pdf-blank', 'printBlankRoles' => ['akuntan', 'admin'], 'printBlankWrapperClass' => 'mb-0']) ?>
+        <?= $this->include('layout/print_blank_button', ['printBlankUrl' => 'petty-cash/export-pdf-blank', 'printBlankRoles' => ['akuntan', 'admin', 'pic'], 'printBlankWrapperClass' => 'mb-0']) ?>
         <a href="<?= site_url('petty-cash/report') ?>" class="btn btn-outline-primary px-4 shadow-sm">
             <i class="bi bi-file-earmark-bar-graph me-2"></i>Laporan & Export
         </a>

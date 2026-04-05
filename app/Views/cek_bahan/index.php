@@ -7,7 +7,7 @@
         <p class="text-muted small mb-0">Riwayat pemeriksaan kondisi dan kesesuaian bahan makanan.</p>
     </div>
     <div class="text-end">
-        <?= $this->include('layout/print_blank_button', ['printBlankUrl' => 'cek-bahan-baku/export-pdf-blank', 'printBlankRoles' => ['aslap', 'admin']]) ?>
+        <?= $this->include('layout/print_blank_button', ['printBlankUrl' => 'cek-bahan-baku/export-pdf-blank', 'printBlankRoles' => ['aslap', 'admin', 'pic']]) ?>
         <?php if (session()->get('role') === 'aslap' || session()->get('role') === 'admin'): ?>
         <a href="<?= site_url('cek-bahan-baku/create') ?>" class="btn btn-primary">
             <i class="bi bi-plus-lg me-1"></i> Buat Pemeriksaan Baru

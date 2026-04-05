@@ -7,7 +7,7 @@
         <p class="text-muted small mb-0">Riwayat pencatatan stok barang gudang.</p>
     </div>
     <div class="text-end">
-        <?= $this->include('layout/print_blank_button', ['printBlankUrl' => 'stok-gudang/export-pdf-blank', 'printBlankRoles' => ['aslap', 'admin']]) ?>
+        <?= $this->include('layout/print_blank_button', ['printBlankUrl' => 'stok-gudang/export-pdf-blank', 'printBlankRoles' => ['aslap', 'admin', 'pic']]) ?>
         <?php if (session()->get('role') === 'aslap'): ?>
         <a href="<?= site_url('stok-gudang/create') ?>" class="btn btn-primary">
             <i class="bi bi-plus-lg me-1"></i> Input Stok Baru

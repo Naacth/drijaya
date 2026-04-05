@@ -35,7 +35,7 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
         $routes->post('delete/(:num)', 'AbsensiController::delete/$1', ['filter' => 'role:admin']);
         $routes->get('show/(:num)', 'AbsensiController::show/$1');
         $routes->get('export-pdf/(:num)', 'AbsensiController::exportPdf/$1');
-        $routes->get('export-pdf-blank', 'AbsensiController::exportPdfBlank', ['filter' => 'role:aslap,admin']);
+        $routes->get('export-pdf-blank', 'AbsensiController::exportPdfBlank', ['filter' => 'role:aslap,admin,pic']);
         $routes->get('rekap', 'AbsensiController::rekap');
         $routes->get('rekap-pdf', 'AbsensiController::rekapPdf');
     });
@@ -113,7 +113,7 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
         $routes->post('reject/(:num)', 'BeneficiaryController::reject/$1');
         $routes->post('delete/(:num)', 'BeneficiaryController::delete/$1', ['filter' => 'role:admin']);
         $routes->get('export-pdf/(:num)', 'BeneficiaryController::exportPdf/$1');
-        $routes->get('export-pdf-blank', 'BeneficiaryController::exportPdfBlank', ['filter' => 'role:aslap,admin']);
+        $routes->get('export-pdf-blank', 'BeneficiaryController::exportPdfBlank', ['filter' => 'role:aslap,admin,pic']);
         $routes->get('export-excel/(:num)', 'BeneficiaryController::exportExcel/$1');
     });
 
@@ -130,7 +130,7 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
         $routes->post('reject/(:num)', 'RouteController::reject/$1');
         $routes->get('surat-jalan/(:num)', 'RouteController::suratJalanPdf/$1');
         $routes->get('export-pdf/(:num)', 'RouteController::exportPdf/$1');
-        $routes->get('export-pdf-blank', 'RouteController::exportPdfBlank', ['filter' => 'role:aslap,admin']);
+        $routes->get('export-pdf-blank', 'RouteController::exportPdfBlank', ['filter' => 'role:aslap,admin,pic']);
         $routes->get('export-excel/(:num)', 'RouteController::exportExcel/$1');
     });
 
@@ -143,7 +143,7 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
         $routes->post('update/(:num)', 'BarangDatangController::update/$1', ['filter' => 'role:aslap,admin']);
         $routes->get('show/(:num)', 'BarangDatangController::show/$1');
         $routes->get('export-pdf/(:num)', 'BarangDatangController::exportPdf/$1');
-        $routes->get('export-pdf-blank', 'BarangDatangController::exportPdfBlank', ['filter' => 'role:aslap,admin']);
+        $routes->get('export-pdf-blank', 'BarangDatangController::exportPdfBlank', ['filter' => 'role:aslap,admin,pic']);
         $routes->get('export-excel/(:num)', 'BarangDatangController::exportExcel/$1');
         $routes->post('delete/(:num)', 'BarangDatangController::delete/$1', ['filter' => 'role:admin']);
     });
@@ -157,7 +157,7 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
         $routes->post('update/(:num)', 'CekBahanBakuController::update/$1', ['filter' => 'role:aslap,admin']);
         $routes->get('show/(:num)', 'CekBahanBakuController::show/$1');
         $routes->get('export-pdf/(:num)', 'CekBahanBakuController::exportPdf/$1');
-        $routes->get('export-pdf-blank', 'CekBahanBakuController::exportPdfBlank', ['filter' => 'role:aslap,admin']);
+        $routes->get('export-pdf-blank', 'CekBahanBakuController::exportPdfBlank', ['filter' => 'role:aslap,admin,pic']);
         $routes->get('export-excel/(:num)', 'CekBahanBakuController::exportExcel/$1');
         $routes->post('delete/(:num)', 'CekBahanBakuController::delete/$1', ['filter' => 'role:admin']);
     });
@@ -171,7 +171,7 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
         $routes->post('update/(:num)', 'UjiOrganoleptikController::update/$1', ['filter' => 'role:aslap,admin']);
         $routes->get('show/(:num)', 'UjiOrganoleptikController::show/$1');
         $routes->get('export-pdf/(:num)', 'UjiOrganoleptikController::exportPdf/$1');
-        $routes->get('export-pdf-blank', 'UjiOrganoleptikController::exportPdfBlank', ['filter' => 'role:aslap,admin']);
+        $routes->get('export-pdf-blank', 'UjiOrganoleptikController::exportPdfBlank', ['filter' => 'role:aslap,admin,pic']);
         $routes->get('export-excel/(:num)', 'UjiOrganoleptikController::exportExcel/$1');
         $routes->post('delete/(:num)', 'UjiOrganoleptikController::delete/$1', ['filter' => 'role:admin']);
     });
@@ -185,7 +185,7 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
         $routes->post('update/(:num)', 'BaKehilanganController::update/$1', ['filter' => 'role:aslap,admin']);
         $routes->get('show/(:num)', 'BaKehilanganController::show/$1');
         $routes->get('export-pdf/(:num)', 'BaKehilanganController::exportPdf/$1');
-        $routes->get('export-pdf-blank', 'BaKehilanganController::exportPdfBlank', ['filter' => 'role:aslap,admin']);
+        $routes->get('export-pdf-blank', 'BaKehilanganController::exportPdfBlank', ['filter' => 'role:aslap,admin,pic']);
         $routes->post('delete/(:num)', 'BaKehilanganController::delete/$1', ['filter' => 'role:admin']);
     });
 
@@ -198,7 +198,7 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
         $routes->post('update/(:num)', 'PemberitahuanKerjaController::update/$1', ['filter' => 'role:aslap,admin']);
         $routes->get('show/(:num)', 'PemberitahuanKerjaController::show/$1');
         $routes->get('export-pdf/(:num)', 'PemberitahuanKerjaController::exportPdf/$1');
-        $routes->get('export-pdf-blank', 'PemberitahuanKerjaController::exportPdfBlank', ['filter' => 'role:aslap,admin']);
+        $routes->get('export-pdf-blank', 'PemberitahuanKerjaController::exportPdfBlank', ['filter' => 'role:aslap,admin,pic']);
         $routes->post('delete/(:num)', 'PemberitahuanKerjaController::delete/$1', ['filter' => 'role:admin']);
     });
 
@@ -211,7 +211,7 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
         $routes->post('update/(:num)', 'StokGudangController::update/$1', ['filter' => 'role:aslap,admin']);
         $routes->get('show/(:num)', 'StokGudangController::show/$1');
         $routes->get('export-pdf/(:num)', 'StokGudangController::exportPdf/$1');
-        $routes->get('export-pdf-blank', 'StokGudangController::exportPdfBlank', ['filter' => 'role:aslap,admin']);
+        $routes->get('export-pdf-blank', 'StokGudangController::exportPdfBlank', ['filter' => 'role:aslap,admin,pic']);
         $routes->get('export-excel/(:num)', 'StokGudangController::exportExcel/$1');
         $routes->post('delete/(:num)', 'StokGudangController::delete/$1', ['filter' => 'role:admin']);
     });
@@ -225,7 +225,7 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
         $routes->post('update/(:num)', 'StokOpnameController::update/$1', ['filter' => 'role:aslap,admin']);
         $routes->get('show/(:num)', 'StokOpnameController::show/$1');
         $routes->get('export-pdf/(:num)', 'StokOpnameController::exportPdf/$1');
-        $routes->get('export-pdf-blank', 'StokOpnameController::exportPdfBlank', ['filter' => 'role:aslap,admin']);
+        $routes->get('export-pdf-blank', 'StokOpnameController::exportPdfBlank', ['filter' => 'role:aslap,admin,pic']);
         $routes->get('export-excel/(:num)', 'StokOpnameController::exportExcel/$1');
         $routes->post('delete/(:num)', 'StokOpnameController::delete/$1', ['filter' => 'role:admin']);
     });
@@ -239,7 +239,7 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
         $routes->post('update/(:num)', 'RekapPorsiController::update/$1', ['filter' => 'role:aslap,admin']);
         $routes->get('show/(:num)', 'RekapPorsiController::show/$1');
         $routes->get('export-pdf/(:num)', 'RekapPorsiController::exportPdf/$1');
-        $routes->get('export-pdf-blank', 'RekapPorsiController::exportPdfBlank', ['filter' => 'role:aslap,admin']);
+        $routes->get('export-pdf-blank', 'RekapPorsiController::exportPdfBlank', ['filter' => 'role:aslap,admin,pic']);
         $routes->get('export-excel/(:num)', 'RekapPorsiController::exportExcel/$1');
         $routes->post('delete/(:num)', 'RekapPorsiController::delete/$1', ['filter' => 'role:admin']);
     });
@@ -266,7 +266,7 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
         $routes->post('delete/(:num)', 'BukuKasController::delete/$1', ['filter' => 'role:admin']);
         $routes->get('report', 'BukuKasController::report');
         $routes->get('export-pdf', 'BukuKasController::exportPdf');
-        $routes->get('export-pdf-blank', 'BukuKasController::exportPdfBlank', ['filter' => 'role:akuntan,admin']);
+        $routes->get('export-pdf-blank', 'BukuKasController::exportPdfBlank', ['filter' => 'role:akuntan,admin,pic']);
         $routes->get('export-excel', 'BukuKasController::exportExcel');
     });
 
@@ -280,7 +280,7 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
         $routes->post('delete/(:num)', 'PettyCashController::delete/$1', ['filter' => 'role:admin']);
         $routes->get('report', 'PettyCashController::report');
         $routes->get('export-pdf', 'PettyCashController::exportPdf');
-        $routes->get('export-pdf-blank', 'PettyCashController::exportPdfBlank', ['filter' => 'role:akuntan,admin']);
+        $routes->get('export-pdf-blank', 'PettyCashController::exportPdfBlank', ['filter' => 'role:akuntan,admin,pic']);
         $routes->get('export-excel', 'PettyCashController::exportExcel');
     });
 
@@ -356,7 +356,7 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
             $routes->post('delete/(:num)', "$controller::delete/$1", ['filter' => 'role:admin']);
             $routes->get('print/(:num)', "$controller::print/$1");
             $routes->get('export-pdf/(:num)', "$controller::exportPdf/$1");
-            $routes->get('export-pdf-blank', "$controller::exportPdfBlank", ['filter' => 'role:ahli_gizi,admin']);
+            $routes->get('export-pdf-blank', "$controller::exportPdfBlank", ['filter' => 'role:ahli_gizi,admin,pic']);
             $routes->get('export-excel/(:num)', "$controller::exportExcel/$1");
         });
     }

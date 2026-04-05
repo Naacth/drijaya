@@ -6,7 +6,7 @@
         <p class="text-muted small mb-0">Validasi kualitas rasa dan kesesuaian porsi masakan.</p>
     </div>
     <div class="text-end d-flex gap-2 align-items-center flex-wrap justify-content-end">
-        <?= $this->include('layout/print_blank_button', ['printBlankUrl' => 'uji-cita-rasa/export-pdf-blank', 'printBlankRoles' => ['ahli_gizi', 'admin'], 'printBlankWrapperClass' => 'mb-0']) ?>
+        <?= $this->include('layout/print_blank_button', ['printBlankUrl' => 'uji-cita-rasa/export-pdf-blank', 'printBlankRoles' => ['ahli_gizi', 'admin', 'pic'], 'printBlankWrapperClass' => 'mb-0']) ?>
         <?php if (in_array(session()->get('role'), ['ahli_gizi'])): ?>
     <a href="<?= site_url('uji-cita-rasa/create') ?>" class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i> Buat Baru</a>
     <?php endif; ?>

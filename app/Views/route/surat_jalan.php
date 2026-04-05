@@ -21,8 +21,7 @@
         }
         html, body { width: 100%; }
         /* Screen: fluid. Print: overridden to A4-safe width */
-        /* Container: limit to A4 printable width (~190mm) with safety margin */
-        .page-container { width: 100%; max-width: 185mm; margin: 0 auto; padding: 0; background: #fff; box-sizing: border-box; }
+        .page-container { width: 100%; margin: 0 auto; padding: 0; background: #fff; box-sizing: border-box; }
         * { box-sizing: border-box; }
         
         /* Header Styling */
@@ -54,11 +53,12 @@
         }
         
         /* Info Area */
-        .info-section { display: flex; justify-content: space-between; margin-bottom: 8px; }
-        .kepada-box { width: 45%; }
-        .detail-table { width: 45%; border-collapse: collapse; }
+        .info-section { width: 100%; margin-bottom: 8px; border-collapse: collapse; }
+        .info-section td { vertical-align: top; padding: 0; }
+        .kepada-box { width: 50%; text-align: left; }
+        .detail-table { width: 100%; border-collapse: collapse; margin-left: auto; }
         .detail-table td { border: 1px solid #000; padding: 2px 5px; font-size: 9px; }
-        .detail-table td:first-child { background: #f2f2f2; width: 90px; }
+        .detail-table td:first-child { background: #f2f2f2; width: 85px; }
 
         /* Table Data Styling */
         .main-table { width: 100%; border-collapse: collapse; margin-bottom: 15px; table-layout: fixed; }
@@ -120,14 +120,12 @@
             body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             .page-break { page-break-after: always; }
             /* Use standard browser print logic for container with safety margin */
-            .page-container { width: 185mm; max-width: 185mm; margin: 0 auto; padding: 0; }
+            .page-container { width: 100%; max-width: 100%; margin: 0; padding: 0; }
             /* Force table not to exceed container */
-            .main-table, .sj-sig-table, .detail-table { width: 100% !important; table-layout: fixed; }
+            .main-table, .sj-sig-table, .detail-table, .info-section { width: 100% !important; table-layout: fixed; }
             /* Keep info side-by-side in print to save height */
-            .info-section { display: flex !important; justify-content: space-between; }
-            .kepada-box { width: 45%; }
-            .detail-table { width: 45%; }
-            .kepada-box { margin-bottom: 0; }
+            .kepada-box { width: 50%; }
+            .detail-wrap { width: 45%; }
             /* Avoid splitting table rows across pages */
             table { page-break-inside: auto; }
             tr { page-break-inside: avoid; page-break-after: auto; }
@@ -168,33 +166,38 @@
         </div>
 
         <!-- INFO -->
-        <div class="info-section">
-            <div class="kepada-box">
-                <p style="margin-top: 0;"><u>Kepada :</u> <?= esc($item['nama_sekolah']) ?></p>
-            </div>
-            <table class="detail-table">
-                <tr>
-                    <td>No. Surat</td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>Hari/Tanggal</td>
-                    <td><?= $namaHari ?>, <?= $tanggalIndo ?></td>
-                </tr>
-                <tr>
-                    <td>Waktu Pengiriman</td>
-                    <td><?= date('H:i', strtotime($item['jam_antar'])) ?></td>
-                </tr>
-                <tr>
-                    <td>Driver</td>
-                    <td><?= esc($header['driver']) ?></td>
-                </tr>
-                <tr>
-                    <td>Nopol Kendaraan</td>
-                    <td><?= esc($header['mobil']) ?></td>
-                </tr>
-            </table>
-        </div>
+        <table class="info-section">
+            <tr>
+                <td class="kepada-box">
+                    <p style="margin-top: 0; font-size: 10px;"><u>Kepada :</u><br><strong><?= esc($item['nama_sekolah']) ?></strong></p>
+                </td>
+                <td width="5%"></td>
+                <td class="detail-wrap">
+                    <table class="detail-table">
+                        <tr>
+                            <td>No. Surat</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Hari/Tanggal</td>
+                            <td><?= $namaHari ?>, <?= $tanggalIndo ?></td>
+                        </tr>
+                        <tr>
+                            <td>Waktu Pengiriman</td>
+                            <td><?= date('H:i', strtotime($item['jam_antar'])) ?></td>
+                        </tr>
+                        <tr>
+                            <td>Driver</td>
+                            <td><?= esc($header['driver']) ?></td>
+                        </tr>
+                        <tr>
+                            <td>Nopol Kendaraan</td>
+                            <td><?= esc($header['mobil']) ?></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
 
         <!-- MAIN TABLE -->
         <table class="main-table">
@@ -207,9 +210,9 @@
                     <th rowspan="2">Keterangan</th>
                 </tr>
                 <tr>
-                    <th width="65">Sebelum</th>
-                    <th width="65">Sesudah</th>
-                    <th width="55">Sisa</th>
+                    <th width="50">Sebelum</th>
+                    <th width="50">Sesudah</th>
+                    <th width="45">Sisa</th>
                 </tr>
             </thead>
             <tbody>

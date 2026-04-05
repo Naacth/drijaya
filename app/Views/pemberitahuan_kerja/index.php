@@ -7,7 +7,7 @@
         <p class="text-muted small mb-0">Riwayat form pemberitahuan PIC per divisi.</p>
     </div>
     <div class="text-end d-flex gap-2 align-items-center flex-wrap justify-content-end">
-        <?= $this->include('layout/print_blank_button', ['printBlankUrl' => 'pemberitahuan-kerja/export-pdf-blank', 'printBlankRoles' => ['aslap', 'admin'], 'printBlankWrapperClass' => 'mb-0']) ?>
+        <?= $this->include('layout/print_blank_button', ['printBlankUrl' => 'pemberitahuan-kerja/export-pdf-blank', 'printBlankRoles' => ['aslap', 'admin', 'pic'], 'printBlankWrapperClass' => 'mb-0']) ?>
     <?php if (session()->get('role') === 'aslap'): ?>
     <a href="<?= site_url('pemberitahuan-kerja/create') ?>" class="btn btn-primary">
         <i class="bi bi-plus-lg me-1"></i> Buat Form Baru

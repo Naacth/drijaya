@@ -7,7 +7,7 @@
         <p class="text-muted small mb-0">Pencatatan stok opname mingguan (hanya hari Jumat).</p>
     </div>
     <div class="text-end d-flex gap-2 align-items-center flex-wrap justify-content-end">
-        <?= $this->include('layout/print_blank_button', ['printBlankUrl' => 'stok-opname/export-pdf-blank', 'printBlankRoles' => ['aslap', 'admin'], 'printBlankWrapperClass' => 'mb-0']) ?>
+        <?= $this->include('layout/print_blank_button', ['printBlankUrl' => 'stok-opname/export-pdf-blank', 'printBlankRoles' => ['aslap', 'admin', 'pic'], 'printBlankWrapperClass' => 'mb-0']) ?>
     <?php if (session()->get('role') === 'aslap'): ?>
         <?php if (!empty($is_friday)): ?>
         <a href="<?= site_url('stok-opname/create') ?>" class="btn btn-primary">

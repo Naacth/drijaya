@@ -6,7 +6,7 @@
         <p class="text-muted small mb-0">Dokumentasi distribusi bahan dari gudang ke dapur.</p>
     </div>
     <div class="text-end d-flex gap-2 align-items-center flex-wrap justify-content-end">
-        <?= $this->include('layout/print_blank_button', ['printBlankUrl' => 'serah-terima-bahan/export-pdf-blank', 'printBlankRoles' => ['ahli_gizi', 'admin'], 'printBlankWrapperClass' => 'mb-0']) ?>
+        <?= $this->include('layout/print_blank_button', ['printBlankUrl' => 'serah-terima-bahan/export-pdf-blank', 'printBlankRoles' => ['ahli_gizi', 'admin', 'pic'], 'printBlankWrapperClass' => 'mb-0']) ?>
         <?php if (session()->get('role') === 'ahli_gizi'): ?>
     <a href="<?= site_url('serah-terima-bahan/create') ?>" class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i> Buat Baru</a>
     <?php endif; ?>

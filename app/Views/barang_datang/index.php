@@ -7,7 +7,7 @@
         <p class="text-muted small mb-0">Kelola riwayat input penerimaan barang.</p>
     </div>
     <div class="text-end">
-        <?= $this->include('layout/print_blank_button', ['printBlankUrl' => 'barang-datang/export-pdf-blank', 'printBlankRoles' => ['aslap', 'admin']]) ?>
+        <?= $this->include('layout/print_blank_button', ['printBlankUrl' => 'barang-datang/export-pdf-blank', 'printBlankRoles' => ['aslap', 'admin', 'pic']]) ?>
         <?php if (session()->get('role') === 'aslap' || session()->get('role') === 'admin'): ?>
         <a href="<?= site_url('barang-datang/create') ?>" class="btn btn-primary">
             <i class="bi bi-plus-lg me-1"></i> Buat Laporan Baru

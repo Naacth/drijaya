@@ -6,7 +6,7 @@
         <p class="text-muted small mb-0">Memastikan suhu internal masakan mencapai standar keamanan pangan.</p>
     </div>
     <div class="text-end d-flex gap-2 align-items-center flex-wrap justify-content-end">
-        <?= $this->include('layout/print_blank_button', ['printBlankUrl' => 'monitoring-suhu-masak/export-pdf-blank', 'printBlankRoles' => ['ahli_gizi', 'admin'], 'printBlankWrapperClass' => 'mb-0']) ?>
+        <?= $this->include('layout/print_blank_button', ['printBlankUrl' => 'monitoring-suhu-masak/export-pdf-blank', 'printBlankRoles' => ['ahli_gizi', 'admin', 'pic'], 'printBlankWrapperClass' => 'mb-0']) ?>
         <?php if (session()->get('role') === 'ahli_gizi'): ?>
     <a href="<?= site_url('monitoring-suhu-masak/create') ?>" class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i> Buat Baru</a>
     <?php endif; ?>

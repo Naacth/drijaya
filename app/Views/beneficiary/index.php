@@ -8,7 +8,7 @@
             <p class="text-muted small">Daftar sekolah dan rekapan porsi makanan harian.</p>
         </div>
         <div class="d-flex gap-2 align-items-center">
-            <?= $this->include('layout/print_blank_button', ['printBlankUrl' => 'penerima-manfaat/export-pdf-blank', 'printBlankRoles' => ['aslap', 'admin'], 'printBlankWrapperClass' => 'mb-0']) ?>
+            <?= $this->include('layout/print_blank_button', ['printBlankUrl' => 'penerima-manfaat/export-pdf-blank', 'printBlankRoles' => ['aslap', 'admin', 'pic'], 'printBlankWrapperClass' => 'mb-0']) ?>
         <?php if (session()->get('role') == 'aslap'): ?>
             <a href="<?= base_url('penerima-manfaat/create') ?>" class="btn btn-primary btn-sm shadow-sm">
                 <i class="bi bi-plus-lg me-1"></i> Input Data Baru
