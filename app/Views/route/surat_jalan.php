@@ -296,7 +296,9 @@
                             <span class="sj-sig-line">
                                 <?php
                                     $nm_ak = $signature['nama_akuntan'] ?? '';
-                                    if(empty($nm_ak)) $nm_ak = $user_signature['nama_akuntan'] ?? '';
+                                    if (empty($nm_ak) || strpos($nm_ak, '..........') !== false) {
+                                        $nm_ak = $user_signature['nama_akuntan'] ?? '';
+                                    }
                                     echo esc($nm_ak);
                                 ?>
                             </span>
@@ -306,7 +308,9 @@
                             <span class="sj-sig-line">
                                 <?php
                                     $nm_ag = $signature['nama_ahli_gizi'] ?? '';
-                                    if(empty($nm_ag)) $nm_ag = $user_signature['nama_ahli_gizi'] ?? '';
+                                    if (empty($nm_ag) || strpos($nm_ag, '..........') !== false) {
+                                        $nm_ag = $user_signature['nama_ahli_gizi'] ?? '';
+                                    }
                                     echo esc($nm_ag);
                                 ?>
                             </span>
@@ -316,7 +320,9 @@
                             <span class="sj-sig-line">
                                 <?php
                                     $nm_kd = $signature['nama_kepala_dapur'] ?? '';
-                                    if(empty($nm_kd)) $nm_kd = $user_signature['nama_kepala_koki'] ?? '';
+                                    if (empty($nm_kd) || strpos($nm_kd, '..........') !== false) {
+                                        $nm_kd = $user_signature['nama_kepala_koki'] ?? '';
+                                    }
                                     echo esc($nm_kd);
                                 ?>
                             </span>
