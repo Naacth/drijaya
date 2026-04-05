@@ -67,15 +67,23 @@ class PicController extends BaseController
         }
 
         $alamat = $this->request->getPost('alamat');
+        $nama_sppg = $this->request->getPost('nama_sppg');
 
         $sppgModel = new SppgModel();
-        $sppgModel->update($sppgId, [
-            'alamat' => $alamat
-        ]);
+        $updateData = ['alamat' => $alamat];
+        
+        if ($nama_sppg) {
+            $updateData['nama_sppg'] = $nama_sppg;
+        }
+
+        $sppgModel->update($sppgId, $updateData);
 
         // Update session as well
         session()->set('sppg_alamat', $alamat);
+        if ($nama_sppg) {
+            session()->set('sppg_nama', $nama_sppg);
+        }
 
-        return redirect()->to('/pic/settings')->with('success', 'Alamat SPPG berhasil diperbarui.');
+        return redirect()->to('/pic/settings')->with('success', 'Profil SPPG berhasil diperbarui.');
     }
 }

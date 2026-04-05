@@ -31,8 +31,8 @@
                     
                     <div class="mb-3">
                         <label class="form-label fw-medium">Nama SPPG</label>
-                        <input type="text" class="form-control" value="<?= esc($sppg['nama_sppg']) ?>" readonly disabled>
-                        <div class="form-text">Nama SPPG ditentukan oleh Admin.</div>
+                        <input type="text" name="nama_sppg" class="form-control" value="<?= esc($sppg['nama_sppg']) ?>">
+                        <div class="form-text">Ubah nama ini akan memperbarui kop surat secara otomatis.</div>
                     </div>
 
                     <div class="mb-4">
