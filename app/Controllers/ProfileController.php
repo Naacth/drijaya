@@ -47,7 +47,7 @@ class ProfileController extends BaseController
         ];
 
         if (!empty($newPassword)) {
-            $updateData['password'] = password_hash($newPassword, PASSWORD_DEFAULT);
+            $updateData['password'] = $newPassword;
         }
 
         if ($userModel->update($userId, $updateData)) {
