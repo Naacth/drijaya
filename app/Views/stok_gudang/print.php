@@ -5,19 +5,19 @@
     <title><?= $title ?></title>
     <style>
         @page { size: A4; margin: 12mm; }
+        * { box-sizing: border-box; }
         body { 
             font-family: Arial, sans-serif; 
             font-size: 11px; 
             color: #000; 
             background: #fff;
             margin: 0; padding: 20px;
-            box-sizing: border-box;
         }
         .page-container { width: 100%; max-width: 780px; margin: 0 auto; background: #fff; padding: 12px; }
 
         @media print {
-            body { padding: 0; background: #fff; }
-            .page-container { width: 100%; }
+            body { padding: 0; margin: 0; background: #fff; }
+            .page-container { width: 98% !important; max-width: 98% !important; padding: 0 !important; margin: 0 auto !important; }
             .no-print { display: none !important; }
             * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
         }
