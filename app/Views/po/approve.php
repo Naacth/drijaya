@@ -43,7 +43,7 @@
                                     <span class="fw-medium d-block"><?= $item['nama_barang'] ?></span>
                                     <small class="text-muted"><?= $item['catatan'] ?></small>
                                 </td>
-                                <td class="text-center"><?= $item['jumlah_faktual'] ?> <?= $item['satuan'] ?></td>
+                                <td class="text-center"><?= ($item['jumlah_faktual'] ?? 0) + 0 ?> <?= $item['satuan'] ?></td>
                                 <td class="text-end">Rp <?= number_format($item['harga_satuan'], 0, ',', '.') ?></td>
                                 <td class="text-end fw-bold">Rp <?= number_format($item['total'], 0, ',', '.') ?></td>
                             </tr>

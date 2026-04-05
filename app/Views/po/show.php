@@ -45,7 +45,7 @@
                                 <?php foreach ($items as $index => $item): ?>
                                     <tr>
                                         <td class="text-center"><?= $index + 1 ?></td>
-                                        <td class="text-center"><?= $item['qty'] ?></td>
+                                        <td class="text-center"><?= $item['qty'] + 0 ?></td>
                                         <td class="text-center text-muted small"><?= $item['satuan'] ?></td>
                                         <td>
                                             <span class="fw-medium"><?= $item['nama_barang'] ?></span>
@@ -55,7 +55,7 @@
                                         </td>
                                         <td class="text-end">Rp <?= number_format($item['harga_satuan'] ?? 0, 0, ',', '.') ?></td>
                                         <td class="text-end">Rp <?= number_format($item['tambahan'] ?? 0, 0, ',', '.') ?></td>
-                                        <td class="text-center fw-medium"><?= $item['jumlah_faktual'] ?? '' ?></td>
+                                        <td class="text-center fw-medium"><?= ($item['jumlah_faktual'] ?? 0) + 0 ?></td>
                                         <td class="text-end fw-bold">Rp <?= number_format($item['total'] ?? 0, 0, ',', '.') ?></td>
                                     </tr>
                                 <?php endforeach; ?>

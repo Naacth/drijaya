@@ -90,12 +90,12 @@
             <?php foreach ($items as $index => $item): ?>
                 <tr>
                     <td style="border: 1px solid #000; padding: 5px; text-align: center;"><?= $index + 1 ?></td>
-                    <td style="border: 1px solid #000; padding: 5px; text-align: center;"><?= number_format($item['qty'] ?? 0, 2, ',', '.') ?></td>
+                    <td style="border: 1px solid #000; padding: 5px; text-align: center;"><?= ($item['qty'] ?? 0) + 0 ?></td>
                     <td style="border: 1px solid #000; padding: 5px; text-align: center;"><?= $item['satuan'] ?? '' ?></td>
                     <td style="border: 1px solid #000; padding: 5px;"><?= $item['nama_barang'] ?? '' ?></td>
                     <td style="border: 1px solid #000; padding: 5px; text-align: right;">Rp <?= number_format($item['harga_satuan'] ?? 0, 0, ',', '.') ?></td>
                     <td style="border: 1px solid #000; padding: 5px; text-align: right;">Rp <?= number_format($item['tambahan'] ?? 0, 0, ',', '.') ?></td>
-                    <td style="border: 1px solid #000; padding: 5px; text-align: center;"><?= number_format($item['jumlah_faktual'] ?? 0, 2, ',', '.') ?></td>
+                    <td style="border: 1px solid #000; padding: 5px; text-align: center;"><?= ($item['jumlah_faktual'] ?? 0) + 0 ?></td>
                     <td style="border: 1px solid #000; padding: 5px; text-align: right;">Rp <?= number_format($item['total'] ?? 0, 0, ',', '.') ?></td>
                     <td style="border: 1px solid #000; padding: 5px;"><?= $item['catatan'] ?? '' ?></td>
                 </tr>

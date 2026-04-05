@@ -44,25 +44,25 @@
                                 <tr class="price-row" data-id="<?= $item['id'] ?>">
                                     <td class="fw-medium"><?= $item['nama_barang'] ?></td>
                                     <td>
-                                        <span class="qty-display"><?= $item['qty'] ?></span>
-                                        <input type="hidden" class="qty-hidden" value="<?= $item['qty'] ?>">
+                                        <span class="qty-display"><?= $item['qty'] + 0 ?></span>
+                                        <input type="hidden" class="qty-hidden" value="<?= $item['qty'] + 0 ?>">
                                     </td>
                                     <td><?= $item['satuan'] ?></td>
                                     <td>
                                         <div class="input-group input-group-sm">
                                             <span class="input-group-text bg-light">Rp</span>
                                             <input type="number" name="items[<?= $item['id'] ?>][harga_satuan]" 
-                                                   class="form-control price-input" required step="0.01" value="<?= $item['harga_satuan'] ?>"
+                                                   class="form-control price-input" required step="0.01" value="<?= $item['harga_satuan'] + 0 ?>"
                                                    placeholder="Contoh: 100000 (tanpa titik)">
                                         </div>
                                     </td>
                                     <td>
                                         <input type="number" name="items[<?= $item['id'] ?>][tambahan]" 
-                                               class="form-control form-control-sm extra-input" step="0.01" value="0">
+                                               class="form-control form-control-sm extra-input" step="0.01" value="<?= $item['tambahan'] + 0 ?>">
                                     </td>
                                     <td>
                                         <input type="number" name="items[<?= $item['id'] ?>][jumlah_faktual]" 
-                                               class="form-control form-control-sm factual-input" step="0.01" value="<?= $item['qty'] ?>">
+                                               class="form-control form-control-sm factual-input" step="0.01" value="<?= $item['jumlah_faktual'] + 0 ?>">
                                     </td>
                                     <td class="text-end fw-bold">
                                         <span class="item-total">0</span>

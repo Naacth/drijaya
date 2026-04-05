@@ -111,12 +111,12 @@
                             <?php foreach ($items as $index => $item): ?>
                             <tr class="item-row">
                                 <td class="row-number text-center"><?= $index + 1 ?></td>
-                                <td><input type="number" step="0.01" name="items[<?= $index ?>][qty]" class="form-control form-control-sm qty-input" required value="<?= $item['qty'] ?>"></td>
+                                <td><input type="number" step="0.01" name="items[<?= $index ?>][qty]" class="form-control form-control-sm qty-input" required value="<?= $item['qty'] + 0 ?>"></td>
                                 <td><input type="text" name="items[<?= $index ?>][satuan]" class="form-control form-control-sm" required placeholder="Kg/Pcs" value="<?= $item['satuan'] ?>"></td>
                                 <td><input type="text" name="items[<?= $index ?>][nama_barang]" class="form-control form-control-sm" required value="<?= $item['nama_barang'] ?>"></td>
-                                <td><input type="number" step="0.01" name="items[<?= $index ?>][harga_satuan]" class="form-control form-control-sm harga-input" value="<?= $item['harga_satuan'] ?>"></td>
-                                <td><input type="number" step="0.01" name="items[<?= $index ?>][tambahan]" class="form-control form-control-sm tambahan-input" value="<?= $item['tambahan'] ?>"></td>
-                                <td><input type="number" step="0.01" name="items[<?= $index ?>][jumlah_faktual]" class="form-control form-control-sm faktual-input" value="<?= $item['jumlah_faktual'] ?>"></td>
+                                <td><input type="number" step="0.01" name="items[<?= $index ?>][harga_satuan]" class="form-control form-control-sm harga-input" value="<?= $item['harga_satuan'] + 0 ?>"></td>
+                                <td><input type="number" step="0.01" name="items[<?= $index ?>][tambahan]" class="form-control form-control-sm tambahan-input" value="<?= $item['tambahan'] + 0 ?>"></td>
+                                <td><input type="number" step="0.01" name="items[<?= $index ?>][jumlah_faktual]" class="form-control form-control-sm faktual-input" value="<?= $item['jumlah_faktual'] + 0 ?>"></td>
                                 <td><input type="text" class="form-control form-control-sm text-end row-total bg-light" value="Rp <?= number_format($item['total'], 0, ',', '.') ?>" readonly></td>
                                 <td><input type="text" name="items[<?= $index ?>][catatan]" class="form-control form-control-sm" value="<?= $item['catatan'] ?>"></td>
                                 <td class="text-end">
