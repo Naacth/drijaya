@@ -21,7 +21,7 @@
         }
         html, body { width: 100%; }
         /* Screen: fluid. Print: overridden to A4-safe width */
-        .page-container { width: 100%; margin: 0 auto; padding: 0; max-width: 190mm; }
+        .page-container { width: 100%; margin: 0 auto; padding: 0; max-width: 190mm; background: #fff; }
         
         /* Header Styling */
         .header-block { border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 15px; }
@@ -47,28 +47,28 @@
             text-align: center; 
             font-size: 13px; 
             font-weight: bold; 
-            margin: 10px 0; 
+            margin: 5px 0; 
             text-transform: uppercase;
         }
         
         /* Info Area */
-        .info-section { display: flex; justify-content: space-between; margin-bottom: 10px; }
+        .info-section { display: flex; justify-content: space-between; margin-bottom: 8px; }
         .kepada-box { width: 45%; }
-        .detail-table { width: 50%; border-collapse: collapse; }
-        .detail-table td { border: 1px solid #000; padding: 3px 6px; font-size: 10px; }
-        .detail-table td:first-child { background: #f2f2f2; width: 100px; }
+        .detail-table { width: 45%; border-collapse: collapse; }
+        .detail-table td { border: 1px solid #000; padding: 2px 5px; font-size: 9px; }
+        .detail-table td:first-child { background: #f2f2f2; width: 90px; }
 
         /* Table Data Styling */
         .main-table { width: 100%; border-collapse: collapse; margin-bottom: 15px; table-layout: fixed; }
         .main-table th, .main-table td { 
             border: 1px solid #000; 
-            padding: 4px 2px; 
+            padding: 3px 2px; 
             word-wrap: break-word;
             overflow-wrap: break-word;
             font-size: 9px;
             text-align: center;
         }
-        .main-table th { background-color: #f2f2f2; font-weight: normal; }
+        .main-table th { background-color: #f2f2f2; font-weight: bold; }
         .text-start { text-align: left !important; padding-left: 5px !important; }
 
         /* Prevent accidental horizontal overflow */
@@ -78,11 +78,11 @@
         .sig-section { width: 100%; margin-top: 10px; page-break-inside: avoid; }
         .sj-sig-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
         .sj-sig-table th, .sj-sig-table td { border: 1px solid #000; width: 25%; text-align: center; padding: 4px; }
-        .sj-sig-table th { background: #f2f2f2; font-weight: normal; border-bottom: none; }
+        .sj-sig-table th { background: #f2f2f2; font-weight: bold; border-bottom: none; }
         .sj-sig-table td.sj-sig-space {
-            height: 68px;
-            min-height: 68px;
-            padding: 8px 4px !important;
+            height: 55px;
+            min-height: 55px;
+            padding: 4px !important;
             vertical-align: middle !important;
             text-align: center !important;
             /* override global .sig-space (flex + max-width) */
@@ -99,10 +99,10 @@
         }
         .sj-sig-table td.sj-sig-name {
             border-top: 1px solid #000;
-            padding: 8px 4px !important;
+            padding: 4px !important;
             vertical-align: top;
-            font-size: 10px;
-            line-height: 1.35;
+            font-size: 9px;
+            line-height: 1.2;
         }
         .sj-sig-table td.sj-sig-name .sj-sig-line {
             display: block;
@@ -117,13 +117,13 @@
             .no-print { display: none !important; } 
             body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             .page-break { page-break-after: always; }
-            /* Hard cap to printable width to prevent right cut-off */
-            html, body { width: 210mm; }
-            .page-container { width: 190mm; max-width: none; margin: 0 auto; }
-            /* Avoid cut-off due to flex in print */
-            .info-section { display: block; }
-            .kepada-box, .detail-table { width: 100%; }
-            .kepada-box { margin-bottom: 6px; }
+            /* Use standard browser print logic for container */
+            .page-container { width: 100%; max-width: none; margin: 0 auto; }
+            /* Keep info side-by-side in print to save height */
+            .info-section { display: flex !important; justify-content: space-between; }
+            .kepada-box { width: 45%; }
+            .detail-table { width: 45%; }
+            .kepada-box { margin-bottom: 0; }
             /* Avoid splitting table rows across pages */
             table { page-break-inside: auto; }
             tr { page-break-inside: avoid; page-break-after: auto; }
@@ -152,7 +152,7 @@
     <div class="page-container <?= $index !== count($items) - 1 ? 'page-break' : '' ?>">
         
         <!-- HEADER -->
-        <?= view('layout/print_header') ?>
+        <?= view('layout/print_header', ['compact_print_header' => true]) ?>
 
         <div class="title-main">
             SURAT JALAN / DELIVERY ORDER<br>
@@ -162,7 +162,7 @@
         <!-- INFO -->
         <div class="info-section">
             <div class="kepada-box">
-                <p><u>Kepada :</u> <?= esc($item['nama_sekolah']) ?></p>
+                <p style="margin-top: 0;"><u>Kepada :</u> <?= esc($item['nama_sekolah']) ?></p>
             </div>
             <table class="detail-table">
                 <tr>
