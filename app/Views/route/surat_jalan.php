@@ -21,7 +21,9 @@
         }
         html, body { width: 100%; }
         /* Screen: fluid. Print: overridden to A4-safe width */
-        .page-container { width: 100%; margin: 0 auto; padding: 0; max-width: 190mm; background: #fff; }
+        /* Container: limit to A4 printable width (~190mm) with safety margin */
+        .page-container { width: 100%; max-width: 185mm; margin: 0 auto; padding: 0; background: #fff; box-sizing: border-box; }
+        * { box-sizing: border-box; }
         
         /* Header Styling */
         .header-block { border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 15px; }
@@ -117,8 +119,10 @@
             .no-print { display: none !important; } 
             body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             .page-break { page-break-after: always; }
-            /* Use standard browser print logic for container */
-            .page-container { width: 100%; max-width: none; margin: 0 auto; }
+            /* Use standard browser print logic for container with safety margin */
+            .page-container { width: 185mm; max-width: 185mm; margin: 0 auto; padding: 0; }
+            /* Force table not to exceed container */
+            .main-table, .sj-sig-table, .detail-table { width: 100% !important; table-layout: fixed; }
             /* Keep info side-by-side in print to save height */
             .info-section { display: flex !important; justify-content: space-between; }
             .kepada-box { width: 45%; }
