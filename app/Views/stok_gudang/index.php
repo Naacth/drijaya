@@ -6,11 +6,11 @@
         <h4 class="mb-1" style="font-weight: 700;">Stok Barang di Gudang</h4>
         <p class="text-muted small mb-0">Riwayat pencatatan stok barang gudang.</p>
     </div>
-    <div class="text-end">
-        <?= $this->include('layout/print_blank_button', ['printBlankUrl' => 'stok-gudang/export-pdf-blank', 'printBlankRoles' => ['aslap', 'admin', 'pic']]) ?>
+    <div class="d-flex gap-2 align-items-center">
+        <?= $this->include('layout/print_blank_button', ['printBlankUrl' => 'stok-gudang/export-pdf-blank', 'printBlankRoles' => ['aslap', 'admin', 'pic'], 'isInline' => true]) ?>
         <?php if (session()->get('role') === 'aslap'): ?>
-        <a href="<?= site_url('stok-gudang/create') ?>" class="btn btn-primary">
-            <i class="bi bi-plus-lg me-1"></i> Input Stok Baru
+        <a href="<?= site_url('stok-gudang/create') ?>" class="btn btn-primary d-flex align-items-center">
+            <i class="bi bi-plus-lg me-2"></i> Input Stok Baru
         </a>
         <?php endif; ?>
     </div>

@@ -6,11 +6,11 @@
         <h4 class="mb-1" style="font-weight: 700;">Formulir Barang Datang</h4>
         <p class="text-muted small mb-0">Kelola riwayat input penerimaan barang.</p>
     </div>
-    <div class="text-end">
-        <?= $this->include('layout/print_blank_button', ['printBlankUrl' => 'barang-datang/export-pdf-blank', 'printBlankRoles' => ['aslap', 'admin', 'pic']]) ?>
+    <div class="d-flex gap-2 align-items-center mb-3 mb-md-0 justify-content-md-end">
+        <?= $this->include('layout/print_blank_button', ['printBlankUrl' => 'barang-datang/export-pdf-blank', 'printBlankRoles' => ['aslap', 'admin', 'pic'], 'isInline' => true]) ?>
         <?php if (session()->get('role') === 'aslap' || session()->get('role') === 'admin'): ?>
-        <a href="<?= site_url('barang-datang/create') ?>" class="btn btn-primary">
-            <i class="bi bi-plus-lg me-1"></i> Buat Laporan Baru
+        <a href="<?= site_url('barang-datang/create') ?>" class="btn btn-primary d-flex align-items-center">
+            <i class="bi bi-plus-lg me-2"></i> Buat Laporan Baru
         </a>
         <?php endif; ?>
     </div>
