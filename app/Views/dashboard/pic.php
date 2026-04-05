@@ -91,37 +91,43 @@
 <h5 class="fw-bold mb-3" style="color: #334155;">Ringkasan Data</h5>
 <div class="row g-4 mb-5">
     <div class="col-12 col-sm-6 col-lg-4 animate-in" style="animation-delay: 0.1s;">
-        <div class="stat-card">
-            <div class="stat-icon" style="background: linear-gradient(135deg, #6366f1, #4f46e5);">
-                <i class="bi bi-receipt-cutoff"></i>
+        <a href="<?= site_url('po') ?>" class="text-decoration-none">
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #6366f1, #4f46e5);">
+                    <i class="bi bi-receipt-cutoff"></i>
+                </div>
+                <div class="stat-info">
+                    <h3><?= number_format($totalPO) ?></h3>
+                    <p>Purchase Order</p>
+                </div>
             </div>
-            <div class="stat-info">
-                <h3><?= number_format($totalPO) ?></h3>
-                <p>Purchase Order</p>
-            </div>
-        </div>
+        </a>
     </div>
     <div class="col-12 col-sm-6 col-lg-4 animate-in" style="animation-delay: 0.2s;">
-        <div class="stat-card">
-            <div class="stat-icon" style="background: linear-gradient(135deg, #ef4444, #dc2626);">
-                <i class="bi bi-tools"></i>
+        <a href="<?= site_url('pengajuan-barang-rusak') ?>" class="text-decoration-none">
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #ef4444, #dc2626);">
+                    <i class="bi bi-tools"></i>
+                </div>
+                <div class="stat-info">
+                    <h3><?= number_format($barangRusakCount) ?></h3>
+                    <p>Barang Rusak</p>
+                </div>
             </div>
-            <div class="stat-info">
-                <h3><?= number_format($barangRusakCount) ?></h3>
-                <p>Barang Rusak</p>
-            </div>
-        </div>
+        </a>
     </div>
     <div class="col-12 col-sm-6 col-lg-4 animate-in" style="animation-delay: 0.3s;">
-        <div class="stat-card">
-            <div class="stat-icon" style="background: linear-gradient(135deg, #10b981, #059669);">
-                <i class="bi bi-cart-plus"></i>
+        <a href="<?= site_url('pengadaan-barang') ?>" class="text-decoration-none">
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #10b981, #059669);">
+                    <i class="bi bi-cart-plus"></i>
+                </div>
+                <div class="stat-info">
+                    <h3><?= number_format($pengadaanCount) ?></h3>
+                    <p>Pengadaan Barang</p>
+                </div>
             </div>
-            <div class="stat-info">
-                <h3><?= number_format($pengadaanCount) ?></h3>
-                <p>Pengadaan Barang</p>
-            </div>
-        </div>
+        </a>
     </div>
 </div>
 

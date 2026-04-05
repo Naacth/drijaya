@@ -93,51 +93,59 @@
 <div class="row g-4 mb-5">
     <!-- Stat 1 -->
     <div class="col-12 col-sm-6 col-lg-3 animate-in" style="animation-delay: 0.1s;">
-        <div class="stat-card">
-            <div class="stat-icon" style="background: linear-gradient(135deg, #06b6d4, #0891b2);">
-                <i class="bi bi-box-seam"></i>
+        <a href="<?= site_url('barang-datang') ?>" class="text-decoration-none">
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #06b6d4, #0891b2);">
+                    <i class="bi bi-box-seam"></i>
+                </div>
+                <div class="stat-info">
+                    <h3><?= number_format($stats['barang_datang']) ?></h3>
+                    <p>Barang Datang</p>
+                </div>
             </div>
-            <div class="stat-info">
-                <h3><?= number_format($stats['barang_datang']) ?></h3>
-                <p>Barang Datang</p>
-            </div>
-        </div>
+        </a>
     </div>
     <!-- Stat 2 -->
     <div class="col-12 col-sm-6 col-lg-3 animate-in" style="animation-delay: 0.2s;">
-        <div class="stat-card">
-            <div class="stat-icon" style="background: linear-gradient(135deg, #10b981, #059669);">
-                <i class="bi bi-clipboard-check"></i>
+        <a href="<?= site_url('cek-bahan-baku') ?>" class="text-decoration-none">
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #10b981, #059669);">
+                    <i class="bi bi-clipboard-check"></i>
+                </div>
+                <div class="stat-info">
+                    <h3><?= number_format($stats['cek_bahan']) ?></h3>
+                    <p>Cek Bahan</p>
+                </div>
             </div>
-            <div class="stat-info">
-                <h3><?= number_format($stats['cek_bahan']) ?></h3>
-                <p>Cek Bahan</p>
-            </div>
-        </div>
+        </a>
     </div>
     <!-- Stat 3 -->
     <div class="col-12 col-sm-6 col-lg-3 animate-in" style="animation-delay: 0.3s;">
-        <div class="stat-card">
-            <div class="stat-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
-                <i class="bi bi-eyedropper"></i>
+        <a href="<?= site_url('uji-organoleptik') ?>" class="text-decoration-none">
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                    <i class="bi bi-eyedropper"></i>
+                </div>
+                <div class="stat-info">
+                    <h3><?= number_format($stats['uji_organoleptik']) ?></h3>
+                    <p>Uji Organoleptik</p>
+                </div>
             </div>
-            <div class="stat-info">
-                <h3><?= number_format($stats['uji_organoleptik']) ?></h3>
-                <p>Uji Organoleptik</p>
-            </div>
-        </div>
+        </a>
     </div>
     <!-- Stat 4 -->
     <div class="col-12 col-sm-6 col-lg-3 animate-in" style="animation-delay: 0.4s;">
-        <div class="stat-card">
-            <div class="stat-icon" style="background: linear-gradient(135deg, #ef4444, #dc2626);">
-                <i class="bi bi-exclamation-triangle"></i>
+        <a href="<?= site_url('ba-kehilangan') ?>" class="text-decoration-none">
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #ef4444, #dc2626);">
+                    <i class="bi bi-exclamation-triangle"></i>
+                </div>
+                <div class="stat-info">
+                    <h3><?= number_format($stats['ba_kehilangan']) ?></h3>
+                    <p>BA Kehilangan</p>
+                </div>
             </div>
-            <div class="stat-info">
-                <h3><?= number_format($stats['ba_kehilangan']) ?></h3>
-                <p>BA Kehilangan</p>
-            </div>
-        </div>
+        </a>
     </div>
 </div>
 

@@ -53,16 +53,16 @@ class DashboardController extends BaseController
         
         // Modules for cards
         $topModules = [
-            'Purchase Order'     => ['table' => 'purchase_orders', 'icon' => 'bi-receipt', 'color' => '#6366f1'],
-            'Absensi Relawan'    => ['table' => 'absensi', 'icon' => 'bi-calendar-check', 'color' => '#8b5cf6'],
-            'Barang Datang'      => ['table' => 'barang_datang', 'icon' => 'bi-box-seam', 'color' => '#06b6d4'],
-            'Uji Organoleptik'   => ['table' => 'uji_organoleptik', 'icon' => 'bi-eyedropper', 'color' => '#f59e0b'],
-            'BA Kehilangan'      => ['table' => 'ba_kehilangan', 'icon' => 'bi-exclamation-triangle', 'color' => '#ef4444'],
-            'Uji Cita Rasa'      => ['table' => 'uji_cita_rasa', 'icon' => 'bi-palette', 'color' => '#14b8a6'],
-            'Checklist Masakan'  => ['table' => 'checklist_masakan', 'icon' => 'bi-clipboard-check', 'color' => '#ec4899'],
-            'Monitoring Suhu'    => ['table' => 'monitoring_suhu_masak', 'icon' => 'bi-thermometer-high', 'color' => '#f97316'],
-            'Stok Opname'        => ['table' => 'stok_opname', 'icon' => 'bi-calculator', 'color' => '#0ea5e9'],
-            'Sanitasi Ruangan'   => ['table' => 'sanitasi_ruangan', 'icon' => 'bi-door-closed', 'color' => '#10b981'],
+            'Purchase Order'     => ['table' => 'purchase_orders', 'icon' => 'bi-receipt', 'color' => '#6366f1', 'url' => 'po'],
+            'Absensi Relawan'    => ['table' => 'absensi', 'icon' => 'bi-calendar-check', 'color' => '#8b5cf6', 'url' => 'absensi'],
+            'Barang Datang'      => ['table' => 'barang_datang', 'icon' => 'bi-box-seam', 'color' => '#06b6d4', 'url' => 'barang-datang'],
+            'Uji Organoleptik'   => ['table' => 'uji_organoleptik', 'icon' => 'bi-eyedropper', 'color' => '#f59e0b', 'url' => 'uji-organoleptik'],
+            'BA Kehilangan'      => ['table' => 'ba_kehilangan', 'icon' => 'bi-exclamation-triangle', 'color' => '#ef4444', 'url' => 'ba-kehilangan'],
+            'Uji Cita Rasa'      => ['table' => 'uji_cita_rasa', 'icon' => 'bi-palette', 'color' => '#14b8a6', 'url' => 'uji-cita-rasa'],
+            'Checklist Masakan'  => ['table' => 'checklist_masakan', 'icon' => 'bi-clipboard-check', 'color' => '#ec4899', 'url' => 'checklist-masakan'],
+            'Monitoring Suhu'    => ['table' => 'monitoring_suhu_masak', 'icon' => 'bi-thermometer-high', 'color' => '#f97316', 'url' => 'monitoring-suhu-masak'],
+            'Stok Opname'        => ['table' => 'stok_opname', 'icon' => 'bi-calculator', 'color' => '#0ea5e9', 'url' => 'stok-opname'],
+            'Sanitasi Ruangan'   => ['table' => 'sanitasi_ruangan', 'icon' => 'bi-door-closed', 'color' => '#10b981', 'url' => 'sanitasi-ruangan'],
         ];
 
         $moduleStats = [];

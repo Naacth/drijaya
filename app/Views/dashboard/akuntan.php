@@ -30,26 +30,30 @@
 <div class="row g-4 mb-5">
     <!-- Stat Cards -->
     <div class="col-12 col-md-4 animate-in" style="animation-delay: 0.1s;">
-        <div class="stat-card">
-            <div class="stat-icon" style="background: linear-gradient(135deg, #0ea5e9, #0284c7);">
-                <i class="bi bi-file-earmark-bar-graph"></i>
+        <a href="#history" class="text-decoration-none w-100">
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #0ea5e9, #0284c7);">
+                    <i class="bi bi-file-earmark-bar-graph"></i>
+                </div>
+                <div class="stat-info">
+                    <h3><?= number_format($totalReports) ?></h3>
+                    <p>Laporan Diupload</p>
+                </div>
             </div>
-            <div class="stat-info">
-                <h3><?= number_format($totalReports) ?></h3>
-                <p>Laporan Diupload</p>
-            </div>
-        </div>
+        </a>
     </div>
     <div class="col-12 col-md-4 animate-in" style="animation-delay: 0.2s;">
-        <div class="stat-card">
-            <div class="stat-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
-                <i class="bi bi-clock-history"></i>
+        <a href="#history" class="text-decoration-none w-100">
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                    <i class="bi bi-clock-history"></i>
+                </div>
+                <div class="stat-info">
+                    <h3><?= number_format($pendingReports) ?></h3>
+                    <p>Status Pending</p>
+                </div>
             </div>
-            <div class="stat-info">
-                <h3><?= number_format($pendingReports) ?></h3>
-                <p>Status Pending</p>
-            </div>
-        </div>
+        </a>
     </div>
     <div class="col-12 col-md-4 animate-in" style="animation-delay: 0.3s;">
         <a href="<?= site_url('po') ?>" class="text-decoration-none w-100">
@@ -117,7 +121,7 @@
 <!-- History -->
 <div class="row g-4 animate-in" style="animation-delay: 0.5s;">
     <div class="col-12">
-        <div class="data-card">
+        <div class="data-card" id="history">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h6><i class="bi bi-clock-history me-2"></i>Riwayat Upload Laporan</h6>
             </div>

@@ -1,6 +1,13 @@
 <?= $this->extend('layout/main') ?>
 <?= $this->section('content') ?>
 
+<style>
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1) !important;
+    }
+</style>
+
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h4 class="fw-bold mb-0">Dashboard Admin</h4>
     <div class="dropdown">
@@ -31,37 +38,41 @@
 <div class="row g-3 row-cols-2 row-cols-md-3 row-cols-lg-5 mb-4">
     <?php foreach ($moduleStats as $name => $meta): ?>
     <div class="col animate-in">
-        <div class="stat-card h-100 py-2 border-0 shadow-sm" style="border-radius: 16px;">
-            <div class="card-body p-3">
-                <div class="d-flex flex-column align-items-center text-center gap-2">
-                    <div class="stat-icon-sm mb-1" style="background: <?= $meta['color'] ?>15; color: <?= $meta['color'] ?>; width: 45px; height: 45px; font-size: 1.25rem; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
-                        <i class="<?= $meta['icon'] ?>"></i>
-                    </div>
-                    <div>
-                        <h4 class="fw-bold mb-0" style="font-size: 1.25rem; color: #1e293b;"><?= number_format($meta['count']) ?></h4>
-                        <p class="mb-0 text-muted fw-semibold" style="font-size: 0.75rem; white-space: nowrap;"><?= $name ?></p>
+        <a href="<?= site_url($meta['url']) ?>" class="text-decoration-none">
+            <div class="stat-card h-100 py-2 border-0 shadow-sm" style="border-radius: 16px; transition: transform 0.2s; cursor: pointer;">
+                <div class="card-body p-3">
+                    <div class="d-flex flex-column align-items-center text-center gap-2">
+                        <div class="stat-icon-sm mb-1" style="background: <?= $meta['color'] ?>15; color: <?= $meta['color'] ?>; width: 45px; height: 45px; font-size: 1.25rem; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                            <i class="<?= $meta['icon'] ?>"></i>
+                        </div>
+                        <div>
+                            <h4 class="fw-bold mb-0" style="font-size: 1.25rem; color: #1e293b;"><?= number_format($meta['count']) ?></h4>
+                            <p class="mb-0 text-muted fw-semibold" style="font-size: 0.75rem; white-space: nowrap;"><?= $name ?></p>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </a>
     </div>
     <?php endforeach; ?>
 
     <!-- Additional Quick Stats -->
     <div class="col animate-in">
-        <div class="stat-card h-100 py-2 border-0 shadow-sm" style="border-radius: 16px; background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);">
-            <div class="card-body p-3">
-                <div class="d-flex flex-column align-items-center text-center gap-2">
-                    <div class="stat-icon-sm mb-1 bg-white shadow-sm" style="color: #64748b; width: 45px; height: 45px; font-size: 1.25rem; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
-                        <i class="bi bi-people-fill"></i>
-                    </div>
-                    <div>
-                        <h4 class="fw-bold mb-0" style="font-size: 1.25rem; color: #1e293b;"><?= number_format($totalUsers) ?></h4>
-                        <p class="mb-0 text-muted fw-semibold" style="font-size: 0.75rem;">Total Pengguna</p>
+        <a href="<?= site_url('admin/users') ?>" class="text-decoration-none">
+            <div class="stat-card h-100 py-2 border-0 shadow-sm" style="border-radius: 16px; background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); transition: transform 0.2s; cursor: pointer;">
+                <div class="card-body p-3">
+                    <div class="d-flex flex-column align-items-center text-center gap-2">
+                        <div class="stat-icon-sm mb-1 bg-white shadow-sm" style="color: #64748b; width: 45px; height: 45px; font-size: 1.25rem; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                            <i class="bi bi-people-fill"></i>
+                        </div>
+                        <div>
+                            <h4 class="fw-bold mb-0" style="font-size: 1.25rem; color: #1e293b;"><?= number_format($totalUsers) ?></h4>
+                            <p class="mb-0 text-muted fw-semibold" style="font-size: 0.75rem;">Total Pengguna</p>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </a>
     </div>
 </div>
 

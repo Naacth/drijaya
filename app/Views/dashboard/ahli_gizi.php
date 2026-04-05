@@ -68,26 +68,30 @@
 
 <div class="row g-4 mb-4">
     <div class="col-12 col-sm-6 col-lg-4 animate-in" style="animation-delay: 0.1s;">
-        <div class="stat-card">
-            <div class="stat-icon" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
-                <i class="bi bi-egg-fried"></i>
+        <a href="#history" class="text-decoration-none w-100">
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+                    <i class="bi bi-egg-fried"></i>
+                </div>
+                <div class="stat-info">
+                    <h3><?= number_format($totalMenu) ?></h3>
+                    <p>Total Menu Upload</p>
+                </div>
             </div>
-            <div class="stat-info">
-                <h3><?= number_format($totalMenu) ?></h3>
-                <p>Total Menu Upload</p>
-            </div>
-        </div>
+        </a>
     </div>
     <div class="col-12 col-sm-6 col-lg-4 animate-in" style="animation-delay: 0.2s;">
-        <div class="stat-card">
-            <div class="stat-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
-                <i class="bi bi-hourglass-split"></i>
+        <a href="#history" class="text-decoration-none w-100">
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                    <i class="bi bi-hourglass-split"></i>
+                </div>
+                <div class="stat-info">
+                    <h3><?= number_format($pendingMenu) ?></h3>
+                    <p>Menunggu Review</p>
+                </div>
             </div>
-            <div class="stat-info">
-                <h3><?= number_format($pendingMenu) ?></h3>
-                <p>Menunggu Review</p>
-            </div>
-        </div>
+        </a>
     </div>
     <div class="col-12 col-sm-6 col-lg-4 animate-in" style="animation-delay: 0.3s;">
         <a href="<?= site_url('checklist-masakan') ?>" class="text-decoration-none w-100">
@@ -145,7 +149,7 @@
 
     <!-- History -->
     <div class="col-lg-7 animate-in" style="animation-delay: 0.5s;">
-        <div class="data-card">
+        <div class="data-card" id="history">
             <div class="card-header">
                 <h6><i class="bi bi-clock-history me-2"></i>Riwayat Upload Menu</h6>
             </div>
