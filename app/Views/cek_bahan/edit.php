@@ -70,7 +70,7 @@
                         </td>
                         <td>
                             <select name="items[<?= $i ?>][satuan]" class="form-select form-select-sm" required>
-                                <?php foreach (['kg', 'Liter', 'Kantong', 'Ikat', 'Pcs', 'Karung', 'Lainnya'] as $su): ?>
+                                <?php foreach (['kg', 'Liter', 'Botol', 'Kantong', 'Ikat', 'Pcs', 'Karung', 'Lainnya'] as $su): ?>
                                 <option value="<?= $su ?>" <?= ($it['satuan'] === $su) ? 'selected' : '' ?>><?= $su ?></option>
                                 <?php endforeach; ?>
                             </select>
@@ -123,6 +123,7 @@
                     <select name="items[${index}][satuan]" class="form-select form-select-sm" required>
                         <option value="kg">kg</option>
                         <option value="Liter">Liter</option>
+                        <option value="Botol">Botol</option>
                         <option value="Kantong">Kantong</option>
                         <option value="Ikat">Ikat</option>
                         <option value="Pcs">Pcs</option>

@@ -53,7 +53,7 @@
                 <td class="text-right fw-bold">Rp <?= number_format($saldoAwal, 0, ',', '.') ?></td>
             </tr>
             <?php 
-            <?php
+           
             $runningSaldo = $saldoAwal;
             if (empty($entries) && empty($blank)):
             ?>

@@ -75,6 +75,7 @@
                             <select name="items[0][satuan]" class="form-select form-select-sm" required>
                                 <option value="kg">kg</option>
                                 <option value="Liter">Liter</option>
+                                <option value="Botol">Botol</option>
                                 <option value="Kantong">Kantong</option>
                                 <option value="Ikat">Ikat</option>
                                 <option value="Pcs">Pcs</option>
@@ -129,6 +130,7 @@
                     <select name="items[${index}][satuan]" class="form-select form-select-sm" required>
                         <option value="kg">kg</option>
                         <option value="Liter">Liter</option>
+                        <option value="Botol">Botol</option>
                         <option value="Kantong">Kantong</option>
                         <option value="Ikat">Ikat</option>
                         <option value="Pcs">Pcs</option>
