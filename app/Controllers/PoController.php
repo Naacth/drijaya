@@ -33,7 +33,7 @@ class PoController extends BaseController
 
         if ($role == 'ahli_gizi') {
             $query->where('purchase_orders.user_id', $userId);
-        } elseif ($role == 'admin' || $role == 'pic') {
+        } elseif (in_array($role, ['admin', 'pic', 'akuntan'])) {
             $sppgId = session()->get('sppg_id');
             if ($sppgId) $query->where('users.sppg_id', $sppgId);
         }
@@ -170,8 +170,8 @@ class PoController extends BaseController
         $isCreator = ($po['user_id'] == session()->get('user_id'));
         $canEdit = in_array($role, ['admin', 'pic', 'akuntan']) || $isCreator;
 
-        if (!in_array($po['status'], ['draft', 'rejected']) || !$canEdit) {
-            return redirect()->to('/po')->with('error', 'Purchase Order tidak dapat diubah.');
+        if ($po['status'] === 'approved' || !$canEdit) {
+            return redirect()->to('/po')->with('error', 'Purchase Order tidak dapat diubah (Sudah disetujui).');
         }
 
         $data['title'] = 'Edit Purchase Order';
@@ -196,8 +196,8 @@ class PoController extends BaseController
         $isCreator = ($po['user_id'] == session()->get('user_id'));
         $canEdit = in_array($role, ['admin', 'pic', 'akuntan']) || $isCreator;
 
-        if (!in_array($po['status'], ['draft', 'rejected']) || !$canEdit) {
-            return redirect()->to('/po')->with('error', 'Purchase Order tidak dapat diubah.');
+        if ($po['status'] === 'approved' || !$canEdit) {
+            return redirect()->to('/po')->with('error', 'Purchase Order tidak dapat diubah (Sudah disetujui).');
         }
 
         // Validation

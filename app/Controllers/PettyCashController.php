@@ -24,7 +24,7 @@ class PettyCashController extends BaseController
         
         $entryBuilder = $this->pettyCashModel->orderBy('tanggal', 'DESC');
         
-        if ($role == 'admin' || $role == 'pic') {
+        if (in_array($role, ['admin', 'pic', 'akuntan'])) {
             if ($sppgId) {
                 $totalBuilder->where('sppg_id', $sppgId);
                 $entryBuilder->where('sppg_id', $sppgId);

@@ -134,7 +134,7 @@
                                                 <i class="bi bi-eye"></i>
                                             </a>
                                             
-                                            <?php if (in_array($po['status'], ['draft', 'rejected'])): ?>
+                                            <?php if ($po['status'] !== 'approved'): ?>
                                                 <a href="<?= base_url('po/edit/' . $po['id']) ?>" class="btn btn-warning text-white" title="Edit">
                                                     <i class="bi bi-pencil"></i>
                                                 </a>

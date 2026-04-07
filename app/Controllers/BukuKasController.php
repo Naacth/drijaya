@@ -20,7 +20,7 @@ class BukuKasController extends BaseController
         $sppgId = session()->get('sppg_id');
         $builder = $this->bukuKasModel->orderBy('tanggal', 'DESC');
         
-        if ($role == 'admin' || $role == 'pic') {
+        if (in_array($role, ['admin', 'pic', 'akuntan'])) {
             if ($sppgId) $builder->where('sppg_id', $sppgId);
         }
 
