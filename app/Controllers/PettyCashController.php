@@ -17,28 +17,28 @@ class PettyCashController extends BaseController
     public function index()
     {
         $role = session()->get('role');
-        $sppgId = session()->get('sppg_id');
+        $sppgId = $this->resolveUserSppgId();
         
+        // Sum totals
         $totalBuilder = $this->pettyCashModel->selectSum('pemasukkan', 'in')
                                             ->selectSum('pengeluaran', 'out');
-        
-        $entryBuilder = $this->pettyCashModel->orderBy('tanggal', 'DESC');
-        
-        if (in_array($role, ['admin', 'pic', 'akuntan'])) {
-            if ($sppgId) {
-                $totalBuilder->where('sppg_id', $sppgId);
-                $entryBuilder->where('sppg_id', $sppgId);
-            }
+        if (in_array($role, ['admin', 'pic', 'akuntan']) && $sppgId) {
+            $totalBuilder->where('sppg_id', $sppgId);
         }
-        
         $totalAll = $totalBuilder->first();
 
+        // Fetch entries (fresh builder automatically since first() reset the model)
+        $entryBuilder = $this->pettyCashModel->orderBy('tanggal', 'DESC');
+        if (in_array($role, ['admin', 'pic', 'akuntan']) && $sppgId) {
+            $entryBuilder->where('sppg_id', $sppgId);
+        }
+        
         $data = [
             'title'        => 'Laporan Petty Cash',
             'entries'      => $entryBuilder->findAll(100),
             'summary'      => $this->pettyCashModel->getSummary($sppgId, date('Y-m-01'), date('Y-m-t')),
             'currentSaldo' => ($totalAll['in'] ?? 0) - ($totalAll['out'] ?? 0),
-            'user_sppg_id' => $this->resolveUserSppgId(),
+            'user_sppg_id' => $sppgId,
         ];
 
         return view('petty_cash/index', $data);
@@ -290,21 +290,6 @@ class PettyCashController extends BaseController
         
         $this->pettyCashModel->delete($id);
         return redirect()->back()->with('success', 'Catatan berhasil dihapus.');
-    }
-
-    private function resolveUserSppgId(): ?int
-    {
-        $sppgId = session()->get('sppg_id');
-        $userId = session()->get('user_id');
-        if (!$sppgId && $userId) {
-            $user = (new \App\Models\UserModel())->find($userId);
-            $sppgId = $user['sppg_id'] ?? null;
-            if ($sppgId) {
-                session()->set('sppg_id', $sppgId);
-            }
-        }
-
-        return $sppgId !== null && $sppgId !== '' ? (int) $sppgId : null;
     }
 
     private function userCanEditPettyCash(array $row): bool

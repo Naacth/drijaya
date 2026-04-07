@@ -17,18 +17,18 @@ class BukuKasController extends BaseController
     public function index()
     {
         $role = session()->get('role');
-        $sppgId = session()->get('sppg_id');
-        $builder = $this->bukuKasModel->orderBy('tanggal', 'DESC');
+        $sppgId = $this->resolveUserSppgId();
         
-        if (in_array($role, ['admin', 'pic', 'akuntan'])) {
-            if ($sppgId) $builder->where('sppg_id', $sppgId);
+        $builder = $this->bukuKasModel->orderBy('tanggal', 'DESC');
+        if (in_array($role, ['admin', 'pic', 'akuntan']) && $sppgId) {
+            $builder->where('sppg_id', $sppgId);
         }
 
         $data = [
             'title'         => 'Buku Kas Operasional',
             'entries'       => $builder->findAll(100),
             'summary'       => $this->bukuKasModel->getSummary($sppgId, date('Y-m-01'), date('Y-m-t')),
-            'user_sppg_id'  => $this->resolveUserSppgId(),
+            'user_sppg_id'  => $sppgId,
         ];
 
         return view('buku_kas/index', $data);
@@ -259,21 +259,6 @@ class BukuKasController extends BaseController
         
         $this->bukuKasModel->delete($id);
         return redirect()->back()->with('success', 'Data berhasil dihapus.');
-    }
-
-    private function resolveUserSppgId(): ?int
-    {
-        $sppgId = session()->get('sppg_id');
-        $userId = session()->get('user_id');
-        if (!$sppgId && $userId) {
-            $user = (new \App\Models\UserModel())->find($userId);
-            $sppgId = $user['sppg_id'] ?? null;
-            if ($sppgId) {
-                session()->set('sppg_id', $sppgId);
-            }
-        }
-
-        return $sppgId !== null && $sppgId !== '' ? (int) $sppgId : null;
     }
 
     private function userCanEditBukuKas(array $row): bool

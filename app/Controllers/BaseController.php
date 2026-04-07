@@ -25,7 +25,7 @@ abstract class BaseController extends Controller
      * The creation of dynamic property is deprecated in PHP 8.2.
      */
 
-    // protected $session;
+    protected $session;
 
     /**
      * @return void
@@ -41,5 +41,20 @@ abstract class BaseController extends Controller
 
         // Preload any models, libraries, etc, here.
         $this->session = service('session');
+    }
+    protected function resolveUserSppgId(): ?int
+    {
+        $sppgId = session()->get('sppg_id');
+        $userId = session()->get('user_id');
+        if (!$sppgId && $userId) {
+            $userModel = new \App\Models\UserModel();
+            $user = $userModel->find($userId);
+            $sppgId = $user['sppg_id'] ?? null;
+            if ($sppgId) {
+                session()->set('sppg_id', $sppgId);
+            }
+        }
+
+        return $sppgId !== null && $sppgId !== '' ? (int) $sppgId : null;
     }
 }

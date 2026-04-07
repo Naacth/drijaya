@@ -61,8 +61,9 @@
                     <?php else: ?>
                         <?php foreach ($entries as $e):
                             $role = session()->get('role');
-                            $usppg = $user_sppg_id ?? null;
-                            $showEdit = ($role === 'admin') || ($role === 'akuntan' && $usppg !== null && (int) ($e['sppg_id'] ?? 0) === (int) $usppg);
+                            $usppg = (int) ($user_sppg_id ?? 0);
+                            $esppg = (int) ($e['sppg_id'] ?? 0);
+                            $showEdit = ($role === 'admin') || ($role === 'akuntan' && ($usppg === 0 || $esppg === 0 || $usppg === $esppg));
                             ?>
                             <tr>
                                 <td class="ps-4">

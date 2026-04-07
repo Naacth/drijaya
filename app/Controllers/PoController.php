@@ -34,7 +34,7 @@ class PoController extends BaseController
         if ($role == 'ahli_gizi') {
             $query->where('purchase_orders.user_id', $userId);
         } elseif (in_array($role, ['admin', 'pic', 'akuntan'])) {
-            $sppgId = session()->get('sppg_id');
+            $sppgId = $this->resolveUserSppgId();
             if ($sppgId) $query->where('users.sppg_id', $sppgId);
         }
 
